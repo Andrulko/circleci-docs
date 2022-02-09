@@ -29,4 +29,7 @@ export function expandImageOnClick() {
   span.onclick = function () {
     modal.style.display = 'none';
   };
+  modal.onclick = function () {
+    modal.style.display = 'none';
+  };
 }
