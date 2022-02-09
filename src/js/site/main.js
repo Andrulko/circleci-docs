@@ -1,5 +1,6 @@
 import { createPopper } from '@popperjs/core';
 import { highlightURLHash } from './highlightURLHash';
+import { expandImageOnClick } from './expandImage';
 
 hljs.initHighlightingOnLoad();
 
@@ -286,6 +287,8 @@ $(document).ready(function () {
 
 // Currently this function is only used for the insights table
 $(highlightURLHash);
+
+$(expandImageOnClick);
 
 // update date shown to be X ago tooltip code
 $(function () {
