@@ -21,7 +21,7 @@ export function expandImageOnClick() {
       modal.style.display = 'block';
       // add image only when source is defined because of HTTPproofer rules
       let modalImg = document.getElementById('modalImg');
-      modalImg.innerHTML = `<img src="${this.src}" class="modal-content">`
+      modalImg.innerHTML = `<img src="${this.src}" class="modal-content">`;
       captionText.innerHTML = this.alt;
     };
     img.classList.add('enlarge');
