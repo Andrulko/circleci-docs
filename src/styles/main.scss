@@ -758,6 +758,10 @@ Fixing styling for the code example tables in the "Migrating From..." pages
 /*
 * enlarge image on click
 */
+.enlarge {
+  cursor: zoom-in;
+}
+
 .modal {
   display: none;
 

@@ -16,12 +16,14 @@ export function expandImageOnClick() {
 
   for (let i = 0; i < images.length; i++) {
     let img = images[i];
+    
     // and attach our click listener for this image.
     img.onclick = function () {
       modal.style.display = 'block';
       // add image only when source is defined because of HTTPproofer rules
       let modalImg = document.getElementById('modalImg');
       modalImg.innerHTML = `<img src="${this.src}" class="modal-content">`;
+      modalImg.stylemaxWidth = img.width;
       captionText.innerHTML = this.alt;
     };
     img.classList.add('enlarge');
