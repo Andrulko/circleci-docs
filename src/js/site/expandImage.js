@@ -3,7 +3,7 @@
  */
 export function expandImageOnClick() {
   // create references to the modal...
-  var modal = document.getElementById('expandModal');
+  let modal = document.getElementById('expandModal');
 
   // get all images without class icon or logo, inside or article but also have src `.png`
   // it is most likely that a icon or logo is src `.svg`

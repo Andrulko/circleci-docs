@@ -758,12 +758,9 @@ Fixing styling for the code example tables in the "Migrating From..." pages
 /*
 * enlarge image on click
 */
-.enlarge {
-  cursor: pointer;
-}
-
 .modal {
   display: none;
+
   /* Hidden by default */
   position: fixed;
   /* Stay in place */
@@ -801,12 +798,6 @@ Fixing styling for the code example tables in the "Migrating From..." pages
   height: 150px;
 }
 
-.modal-content,
-#caption {
-  animation-name: zoom;
-  animation-duration: 0.6s;
-}
-
 @keyframes zoom {
   from {
     transform: scale(0)
@@ -818,8 +809,8 @@ Fixing styling for the code example tables in the "Migrating From..." pages
 
 .close {
   position: absolute;
-  top: 65px;
-  right: 35px;
+  top: 90px;
+  right: 30px;
   color: #f1f1f1;
   font-size: 40px;
   font-weight: bold;
