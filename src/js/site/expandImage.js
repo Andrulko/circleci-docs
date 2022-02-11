@@ -16,24 +16,27 @@ export function expandImageOnClick() {
 
   for (let i = 0; i < images.length; i++) {
     let img = images[i];
-    
+
     // and attach our click listener for this image.
     img.onclick = function () {
-      modal.style.display = 'block';
+      modal.classList.remove('hidden');
+      modal.classList.add('visible');
       // add image only when source is defined because of HTTPproofer rules
       let modalImg = document.getElementById('modalImg');
       modalImg.innerHTML = `<img src="${this.src}" class="modal-content">`;
-      modalImg.stylemaxWidth = img.width;
+      modalImg.style.maxWidth = img.width;
       captionText.innerHTML = this.alt;
     };
     img.classList.add('enlarge');
   }
 
-  let span = document.getElementsByClassName('close')[0];
+  let span = document.getElementById('closeImg');
   span.onclick = function () {
-    modal.style.display = 'none';
+    modal.classList.remove('visible');
+    modal.classList.add('hidden');
   };
   modal.onclick = function () {
-    modal.style.display = 'none';
+    modal.classList.remove('visible');
+    modal.classList.add('hidden');
   };
 }

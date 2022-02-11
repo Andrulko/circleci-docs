@@ -762,9 +762,7 @@ Fixing styling for the code example tables in the "Migrating From..." pages
   cursor: zoom-in;
 }
 
-.modal {
-  display: none;
-
+#expandModal {
   /* Hidden by default */
   position: fixed;
   /* Stay in place */
@@ -811,7 +809,7 @@ Fixing styling for the code example tables in the "Migrating From..." pages
   }
 }
 
-.close {
+#closeImg {
   position: absolute;
   top: 90px;
   right: 30px;
@@ -821,8 +819,8 @@ Fixing styling for the code example tables in the "Migrating From..." pages
   transition: 0.3s;
 }
 
-.close:hover,
-.close:focus {
+#closeImg:hover,
+#closeImg:focus {
   opacity: 0.5;
   text-decoration: none;
   cursor: pointer;

@@ -48,8 +48,8 @@
             {% include_cached doc-footer.html page=page site=site %}
             {% endif %}
 
-            <div id="expandModal" class="modal">
-              <img class="close" src="{{ site.baseurl }}/assets/img/docs/close-path.svg">
+            <div id="expandModal" class="hidden">
+              <img id="closeImg" src="{{ site.baseurl }}/assets/img/docs/close-path.svg">
               <span id="modalImg"></span>
               <div id="caption"></div>
             </div>
