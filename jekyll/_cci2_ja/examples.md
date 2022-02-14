@@ -1,16 +1,16 @@
 ---
 layout: classic-docs
-title: "CircleCI 設定ファイルのサンプル"
-description: "構成例を掲載しているドキュメントの一覧"
+title: "CircleCI Config Examples"
+description: "Examples Documentation"
 ---
 
-CircleCI 設定ファイルのサンプルは、以下の各ドキュメントを参照してください。
+Refer to the following documents for CircleCI configuration examples:
 
-- [チュートリアル]({{ site.baseurl }}/2.0/tutorials/)
-- [config.yml のサンプル ファイル]({{ site.baseurl }}/2.0/sample-config/)
+- [Tutorials]({{ site.baseurl }}/2.0/tutorials/)
+- [Sample config.yml Files]({{ site.baseurl }}/2.0/sample-config/)
 - [Hello World]({{ site.baseurl }}/2.0/hello-world/)
-- [macOS での Hello World]({{ site.baseurl }}/2.0/hello-world-macos/)
-- [構成クックブック]({{ site.baseurl }}/2.0/configuration-cookbook/)
-- [データベースの構成例]({{ site.baseurl }}/2.0/postgres-config/)
-- [パブリック リポジトリの例]({{ site.baseurl }}/2.0/example-configs/)
-- [デプロイの構成例]({{ site.baseurl }}/2.0/deployment-integrations/)
+- [macOS Hello World]({{ site.baseurl }}/2.0/hello-world-macos/)
+- [Configuration Cookbook]({{ site.baseurl }}/2.0/configuration-cookbook/)
+- [Database Config Examples]({{ site.baseurl }}/2.0/postgres-config/)
+- [Example Public Repos]({{ site.baseurl }}/2.0/example-configs/)
+- [Deployment Examples]({{ site.baseurl }}/2.0/deployment-integrations/)

@@ -1,11 +1,10 @@
-= 運用ガイド: AWS /プライベートインフラ上での CircleCI Server 管理者向けガイド
-docs@circleci.com
+= OPERATIONS GUIDE: A guide for administrators of CircleCI Server installations on AWS and private infrastructure.
 :media: screen
 :title-page-background-image: image:pdf-header.png[]
 :imagesdir: ../assets/img/docs/
 :doctype: book
 :toc:
-:toc-title: 目次
+:toc-title: Contents
 :icons: font
 :page-liquid:
 :source-highlighter: rouge
@@ -14,7 +13,6 @@ docs@circleci.com
 :idseparator: -
 :sectanchors:
 :autofit-option:
-
 :leveloffset: +1
 
 include::overview.adoc[]
@@ -60,5 +58,4 @@ include::customizations.adoc[]
 include::architecture.adoc[]
 
 include::storage-lifecycle.adoc[]
-
 :leveloffset: -1

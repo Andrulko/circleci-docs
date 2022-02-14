@@ -1,14 +1,14 @@
 ---
 layout: classic-docs
-title: "静的インストール スクリプトの使用"
+title: "CircleCI Server Static Installation"
 category:
-  - 管理
+  - administration
 order: 1
-description: "こちらのドキュメントページでは、システム管理者の方々も参考にできる非AWS環境での CircleCI 2.0の静的インストールに関する情報とスクリプト使用に関する情報を提供しています。"
+description: "Using CircleCI server in non-AWS environments."
 hide: false
 version:
-  - Services VM
-  - 管理者
+  - Server v2.x
+  - Server Admin
 ---
 
 If you would like to work with a CircleCI Solutions Engineer on setting up CircleCI server in a non-AWS environment, get started by [opening a support ticket](https://support.circleci.com/hc/en-us/requests/new).

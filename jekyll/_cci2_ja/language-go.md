@@ -1,34 +1,34 @@
 ---
 layout: classic-docs
-title: "言語ガイド: Go"
+title: "Language Guide: Go"
 short-title: "Go"
-description: "CircleCI  での Go (Golang) を使用したビルドとテスト"
+description: "Building and Testing with Go (Golang) on CircleCI"
 categories:
   - language-guides
 order: 3
 version:
-  - クラウド
+  - Cloud
   - Server v3.x
   - Server v2.x
 ---
 
-CircleCI では、Docker イメージにインストール可能な任意のバージョンの Go を使用して、Go プロジェクトをビルドできます。 お急ぎの場合は、後述の設定ファイルの例をプロジェクトのルート ディレクトリにある [`.circleci/config.yml`]({{ site.baseurl }}/ja/2.0/configuration-reference/) に貼り付け、ビルドを開始してください。
+CircleCI supports building Go projects using any version of Go that can be installed in a Docker image. If you’re in a rush, just copy the sample configuration below into a [`.circleci/config.yml`]({{ site.baseurl }}/2.0/configuration-reference/) in your project’s root directory and start building.
 
-* 目次
+* TOC
 {:toc}
 
-## クイック スタート: デモ用の Go リファレンス プロジェクト
+## Quickstart: Demo Go reference project
 {: #quickstart-demo-go-reference-project }
 
 We maintain a reference Go project to show how to build on CircleCI:
 
-- <a href="https://github.com/CircleCI-Public/circleci-demo-go" target="_blank">GitHub 上の Go デモ プロジェクト</a>
-- [CircleCI でビルドされた Go デモ プロジェクト](https://circleci.com/gh/CircleCI-Public/circleci-demo-go){:rel="nofollow"}
+- <a href="https://github.com/CircleCI-Public/circleci-demo-go" target="_blank">Demo Go Project on GitHub</a>
+- [Demo Go Project building on CircleCI](https://circleci.com/gh/CircleCI-Public/circleci-demo-go){:rel="nofollow"}
 
-このプロジェクトには、コメント付きの CircleCI 設定ファイル <a href="https://github.com/CircleCI-Public/circleci-demo-go/blob/master/.circleci/config.yml" target="_blank"><code>.circleci/config.yml</code></a> が含まれます。 This file shows best practice for using CircleCI with Go projects.
+In the project you will find a commented CircleCI configuration file <a href="https://github.com/CircleCI-Public/circleci-demo-go/blob/master/.circleci/config.yml" target="_blank">`.circleci/config.yml`</a>. This file shows best practice for using CircleCI with Go projects.
 
 
-## 設定ファイルの例
+## Sample configuration
 {: #sample-configuration }
 
 {% raw %}
@@ -39,12 +39,12 @@ jobs: # basic units of work in a run
   build: # runs not using Workflows must have a `build` job as entry point
     docker: # run the steps with Docker
       # CircleCI Go images available at: https://hub.docker.com/r/circleci/golang/
-      - image: circleci/golang:1.16
+      - image: cimg/go:1.16
         auth:
           username: mydockerhub-user
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
       # CircleCI PostgreSQL images available at: https://hub.docker.com/r/circleci/postgres/
-      - image: circleci/postgres:9.6-alpine
+      - image: cimg/postgres:9.6
         auth:
           username: mydockerhub-user
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
@@ -117,38 +117,38 @@ workflows:
 
 {% endraw %}
 
-### CircleCI のビルド済み Docker イメージ
+### Pre-built CircleCI Docker images
 {: #pre-built-circleci-docker-images }
 {:.no_toc}
 
-CircleCI のビルド済みイメージを使用することをお勧めします。 このイメージには、CI 環境で役立つツールがプリインストールされています。 Docker Hub (<https://hub.docker.com/r/circleci/golang/>) から必要なバージョンを選択できます。 デモ プロジェクトでは、公式 CircleCI イメージを使用しています。
+We recommend using a CircleCI pre-built image that comes pre-installed with tools that are useful in a CI environment. You can select the version you need from Docker Hub: <https://hub.docker.com/r/circleci/golang/>. The demo project uses an official CircleCI image.
 
-### デモ プロジェクトのビルド
+### Build the demo project yourself
 {: #build-the-demo-project-yourself }
 {:.no_toc}
 
-CircleCI を初めて使用する際は、プロジェクトをご自身でビルドしてみることをお勧めします。 以下に、ユーザー自身のアカウントを使用して <a href="https://github.com/CircleCI-Public/circleci-demo-go" target="_blank">Go デモ プロジェクト</a>をビルドする方法を示します。
+A good way to start using CircleCI is to build a project yourself. Here's how to build the <a href="https://github.com/CircleCI-Public/circleci-demo-go" target="_blank">Demo Go Project</a> with your own account:
 
-1. お使いのアカウントに、GitHub 上の <a href="https://github.com/CircleCI-Public/circleci-demo-go" target="_blank">Go デモ プロジェクト</a>をフォークします。
-2. CircleCI アプリケーションの[プロジェクトダッシュボード](https://app.circleci.com/projects/){:rel="nofollow"}に行き、フォークしたプロジェクトの隣にある**[Follow Project (プロジェクトをフォローする)]**ボタンをクリックします。
-3. 変更を加えるには、`.circleci/config.yml` ファイルを編集してコミットします。 コミットを GitHub にプッシュすると、CircleCI がそのプロジェクトをビルドしてテストします。
+1. Fork the <a href="https://github.com/CircleCI-Public/circleci-demo-go" target="_blank">Demo Go Project on GitHub</a> to your own account
+2. Go to the [**Projects**](https://app.circleci.com/projects/){:rel="nofollow"} dashboard in the CircleCI app and click the **Follow Project** button next to the project you just forked.
+3. To make changes you can edit the `.circleci/config.yml` file and make a commit. When you push a commit to GitHub, CircleCI will build and test the project.
 
-変更をローカルでテストする場合は、[CircleCI の CLI ツール](https://circleci.com/ja/docs/2.0/local-jobs/)を使用して `circleci build` を実行します。
+If you want to test your changes locally, use [our CLI tool](https://circleci.com/docs/2.0/local-jobs/) and run `circleci build`.
 
 ---
 
-## 設定ファイルの詳細
+## Config walkthrough
 {: #config-walkthrough }
 
-このセクションでは、`.circleci/config.yml` 内のコマンドについて説明します。
+This section explains the commands in `.circleci/config.yml`
 
-`config.yml` は必ず [`version`]({{ site.baseurl }}/ja/2.0/configuration-reference/#version) キーから始めます。 このキーは、互換性を損なう変更に関する警告を表示するために使用します。
+Every `config.yml` starts with the [`version`]({{ site.baseurl }}/2.0/configuration-reference/#version) key. This key is used to issue warnings about breaking changes.
 
 ```yaml
 version: 2
 ```
 
-次に、`jobs` キーを記述します。 ワークフローを使用せず、ジョブが1つしかない場合は、 `build`という名前にする必要があります。 Below, our job specifies to use the `docker` executor as well as the CircleCI created docker-image for golang 1.12. Next, we use a *secondary image* so that our job can also make use of Postgres. Finally, we use the `environment` key to specify environment variables for the Postgres container.
+Next, we have a `jobs` key. If we do not use workflows and have only one job, it must be named `build`. Below, our job specifies to use the `docker` executor as well as the CircleCI created docker-image for golang 1.12. Next, we use a *secondary image* so that our job can also make use of Postgres. Finally, we use the `environment` key to specify environment variables for the Postgres container.
 
 
 ```yaml
@@ -156,12 +156,12 @@ jobs: # basic units of work in a run
   build: # runs not using Workflows must have a `build` job as entry point
     docker: # run the steps with Docker
       # CircleCI Go images available at: https://hub.docker.com/r/circleci/golang/
-      - image: circleci/golang:1.16
+      - image: cimg/go:1.16
         auth:
           username: mydockerhub-user
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
       # CircleCI PostgreSQL images available at: https://hub.docker.com/r/circleci/postgres/
-      - image: circleci/postgres:9.6-alpine
+      - image: cimg/postgres:9.6
         auth:
           username: mydockerhub-user
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
@@ -170,29 +170,29 @@ jobs: # basic units of work in a run
           POSTGRES_DB: circle_test
 ```
 
-Docker をセットアップしたら、テスト結果のパスを格納しておく環境変数を設定します。 Note, this environment variable is set for the entirety of the _job_ whereas the environment variables set for `POSTGRES_USER` and `POSTGRES_DB` are specifically for the Postgres container.
+After setting up Docker we will set an environment variable to store the path to our test results. Note, this environment variable is set for the entirety of the _job_ whereas the environment variables set for `POSTGRES_USER` and `POSTGRES_DB` are specifically for the Postgres container.
 
 ```yaml
     environment:
       TEST_RESULTS: /tmp/test-results
 ```
 
-`build` ジョブ内にいくつかの `steps` を追加します。 ジョブの大半を占めるのがステップです。
+Now we need to add several `steps` within the `build` job. Steps make up the bulk of a job.
 
-[`checkout`]({{ site.baseurl }}/ja/2.0/configuration-reference/#checkout) ステップを使用して、ソース コードをチェックアウトします。
+Use the [`checkout`]({{ site.baseurl }}/2.0/configuration-reference/#checkout) step to check out source code.
 
 ```yaml
     steps:
       - checkout
 ```
 
-次に、テスト結果を収集するためのディレクトリを作成します。
+Next we create a directory for collecting test results
 
 ```yaml
       - run: mkdir -p $TEST_RESULTS
 ```
 
-その後、キャッシュをプルダウンします (存在する場合)。 初回実行時にはこの処理は実行されません。
+Then we pull down the cache (if present). If this is your first run, this won't do anything.
 
 {% raw %}
 ```yaml
@@ -202,17 +202,17 @@ Docker をセットアップしたら、テスト結果のパスを格納して�
 ```
 {% endraw %}
 
-JUnit レポート作成ツールの Go 実装とアプリケーションの他の依存関係をインストールします。 これらは、プライマリ コンテナにプリインストールしておくと便利です。
+And install the Go implementation of the JUnit reporting tool and other dependencies for our application. These are good candidates to be pre-installed in primary container.
 
-両方のコンテナ (プライマリと Postgres) が同時に起動されます。 ただし、Postgres の準備には少し時間がかかるため、 その前にテストが開始するとジョブが失敗します。 このため、依存サービスが準備できるまで待機することをお勧めします。 ここでは Postgres のみを使用するため、以下のようにステップを追加します。
+Both containers (primary and postgres) start simultaneously. Postgres, however, may require some time to get ready. If our tests start before Postgres is available, the job will fail. It is good practice to wait until dependent services are ready; in this example Postgres is the only dependent service.
 
 ```yaml
       - run:
-          name: Postgres が準備できるまで待機
+          name: Waiting for Postgres to be ready
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
 ```
 
-次はテストの実行です。 そのためには、データベースの URL と DB 移行ファイルのパスを指定する環境変数を設定する必要があります。 このステップには、以下のようにいくつかの追加コマンドを記述します。
+Now we run our tests. To do that, we need to set an environment variable for our database's URL and path to the DB migrations files. This step has some additional commands, we'll explain them below.
 
 {% raw %}
 ```yaml
@@ -241,7 +241,7 @@ Next we run our actual build command using `make` - the Go sample project uses m
 ```
 
 
-デプロイ ターゲットの構成例については、「[デプロイの構成]({{ site.baseurl }}/ja/2.0/deployment-integrations/)」を参照してください。
+Now we will start the Postgres dependent service, using `curl` to ping it to validate that the service is up and running.
 
 {% raw %}
 ```yaml
@@ -263,7 +263,7 @@ Next we run our actual build command using `make` - the Go sample project uses m
 
 If all went well, the service ran and successfully responded to the post request at `localhost:8080`.
 
-最後に、テスト結果を保存するパスを指定します。 The `store_test_results` step allows you to leverage insights to view how your test results are doing over time, while using the `store_artifacts` step allows you to upload any type of file; in this case, also the test logs if one would like to inspect them manually.
+Finally, let's specify a path to store the results of the tests. The `store_test_results` step allows you to leverage insights to view how your test results are doing over time, while using the `store_artifacts` step allows you to upload any type of file; in this case, also the test logs if one would like to inspect them manually.
 
 ```yaml
       - store_artifacts: # upload test summary for display in Artifacts
@@ -286,13 +286,13 @@ workflows:
       - build
 ```
 
-完了です。 You just set up CircleCI for a Go app. CircleCI でビルドを行うとどのように表示されるかについては、[ジョブ ページ](https://circleci.com/gh/CircleCI-Public/circleci-demo-go){:rel="nofollow"}を参照してください。
+Success! You just set up CircleCI for a Go app. Check out our [Job page](https://circleci.com/gh/CircleCI-Public/circleci-demo-go){:rel="nofollow"} to see how this looks when building on CircleCI.
 
-## 関連項目
+## See also
 {: #see-also }
 
-デプロイ ターゲットの構成例については、「[デプロイの構成]({{ site.baseurl }}/2.0/deployment-integrations/)」を参照してください。
+See the [Deploy]({{ site.baseurl }}/2.0/deployment-integrations/) document for example deploy target configurations.
 
 How to use [workflows]({{ site.baseurl }}/2.0/workflows), which are particularly useful for optimizing your pipelines and orchestrating more complex projects.
 
-キャッシュの活用方法については、「[依存関係のキャッシュ]({{ site.baseurl }}/ja/2.0/caching/)」を参照してください。
+Refer to the [Caching Dependencies]({{ site.baseurl }}/2.0/caching/) document for more caching strategies.

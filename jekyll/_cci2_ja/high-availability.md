@@ -1,13 +1,13 @@
 ---
 layout: classic-docs
-title: "高い可用性を実現するために外部データベースホストを追加する"
+title: "Adding External Database Hosts for High Availability"
 category:
-  - 管理
+  - administration
 order: 20
-description: "CircleCI の高い可用性を実現するための設定"
+description: "Configuring High Availability for CircleCI"
 version:
-  - サーバー管理者
+  - Server Admin
 ---
 
-高い可用性により、ダウンタイムやサービスの中断なく CircleCI のデータを複製し、単一のデータベースインスタンスの障害からのリカバリを自動化することができます。 CircleCI ソリューションエンジニアと共に、可用性の高いカスタム設定をセットアップしましょう (Platinum サポートが必要です）。 まずは[サポート チケットをオープン](https://support.circleci.com/hc/ja/requests/new)してください。
+High availability gives you the ability to replicate your CircleCI data and automate recovery from a single database instance failure, without downtime or service disruption. Work with a CircleCI Solutions Engineer to set up a custom HA configuration (requires Platinum Support). Get started by [opening a support ticket](https://support.circleci.com/hc/en-us/requests/new).
 

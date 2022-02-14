@@ -1,69 +1,69 @@
 ---
 layout: classic-docs
-title: "はじめてのビルドの成功（グリーンビルド）"
-short-title: "はじめてのビルドの成功"
-description: "CircleCI を使用してはじめてビルドを成功させるためのチュートリアル"
+title: "Your First Green Build"
+short-title: "Your First Green Build"
+description: "A tutorial for getting your first green CircleCI build"
 categories:
-  - はじめよう
+  - getting-started
 order: 41
 ---
 
-CircleCI ではじめてビルドを成功 (グリーンビルド) させるためのステップについて詳しくご説明します。
+This document provides a step-by-step tutorial for getting your first successful (green) build on CircleCI.
 
-* 目次
+* TOC
 {:toc}
 
-## はじめてのビルド実行に必要な前提条件
+## Prerequisites for running your first build
 {: #prerequisites-for-running-your-first-build }
 {:.no_toc}
 
-* Git の基礎知識
-* ログイン済みの GitHub または Bitbucket アカウント。 このガイドでは GitHub を使用しますが、必要に応じて同じプロセスを Bitbucket で実行してもかまいません。
-* CircleCI のアカウント
-* ターミナルまたは `bash` に関する基本知識と、コマンド ラインの使用経験があると役立ちます。
+* Some basic knowledge of Git.
+* A GitHub or Bitbucket account, of which you are logged into. We will use GitHub for this guide but you can follow the equivalent processes for Bitbucket if required.
+* An account on CircleCI.
+* Some basic terminal or `bash` knowledge and prior experience using the command line is helpful.
 
-## リポジトリを作成する
-CircleCI アカウントをまだお持ちでない場合は、[ユーザー登録ページ](https://circleci.com/ja/signup/)に移動し、**[GitHub でログイン]** をクリックしてアカウントを作成します。
+## Creating a repository
+{: #creating-a-repository }
 
-最初に、GitHub でリポジトリを新規作成します。 既存のリポジトリを使用する場合は、このセクションをスキップしてください。
+Begin by creating a new repository on GitHub. You may skip this section if you intend to use an existing repository.
 
-1. GitHub に移動して、[新規リポジトリを作成](https://github.com/new)します。
-1. リポジトリの名前 (ここでは "hello-world") を入力して、README ファイルを使ってリポジトリを初期化するを選択します。 最後に、**[Create repository (リポジトリを作成)]** をクリックします。
+1. Navigate to GitHub and [create a new repository](https://github.com/new).
+1. Input the name of your repository, in this case "hello-world", then select the option to initialize the repository with a README file. Finally, click **Create repository**.
 
-## CircleCI をセットアップする
+## Setting up CircleCI
 {: #setting-up-circleci }
 
-CircleCI アカウントをまだお持ちでない場合は、[ユーザー登録ページ](https://circleci.com/ja/signup/)に移動し、**[GitHub で登録]** をクリックしてアカウントを作成します。
+If you have not yet, create an account on CircleCI by navigating to [the signup page](https://circleci.com/signup/) and clicking on **Sign Up with GitHub**.
 
-1. CircleCI の [Project ページ](https://app.circleci.com/projects/)に移動します。
-1. 組織の下に新しいリポジトリを作成した場合は、CircleCI へのログイン時にその組織名を選択する必要があります。
-1. Project ページで、使用するプロジェクトを選択します (今回は、`hello-world`)。
-1. config.yml のスターターテンプレートの使用を選択し、**[Set Up Project]**をクリックします。
-1. 次に、設定サンプルリストから言語を選択して、プロジェクト向けの推奨ベストプラクティスがあらかじめ記述されている config.yml ファイルを取得します。 この例では、空のリポジトリを用意したので、リスト下部にある `Hello World` 設定サンプルを使用します。
+1. Navigate to the CircleCI [Project Page](https://app.circleci.com/projects/).
+1. If you created your new repository under an organization you will need to select the organization name when you login to CircleCI.
+1. Once on the Project page, select the project you are using (in our case `hello-world`).
+1. Select the option to use a starter config.yml template, and click **Set Up Project**.
+1. Next, choose a language from the list of sample configs to get a pre-populated config.yml file with suggested best practices for your project. For this example, because we have an empty repository, we will use the `Hello World` configuration example.
 
-    **注:** 選択した言語に応じて、参考ドキュメントが画面右側のサイドバーに表示されます。
-1. **[Commit and Run]** をクリックします。 リポジトリのルートで、`circleci-project-setup` という名前の新規ブランチに `.circleci/config.yml` ファイルが作成されます。 この設定で問題がなければ、後にメインブランチにマージする、もしくは引き続き変更を行うことができます。
+    **Note:** Based on which language you choose, you can view related documentation in the sidebar on the right of the screen.
+1. Click **Commit and Run**. This will create a file `.circleci/config.yml` at the root of your repository on a new branch called `circle-ci-setup`. If you are happy with this configuration, you can merge it into your main branch later, or continue to make changes.
 
-## はじめて作成したパイプラインを掘り下げる
+## Digging into your first pipeline
 {: #digging-into-your-first-pipeline }
 
-ここまでの手順を終えると、自動的にパイプラインの実行が開始され、成功するのを確認できます。 実行結果を確認しましょう。 パイプラインの緑色の **[Success]** ボタンをクリックして、実行について以下の部分を確認しましょう。
+You should see your pipeline start to run automatically—and pass! So, what just happened? Click on the green **Success** button on your pipeline to investigate the following parts of the run:
 
-1. **実行されたワークフローを確認する**: **[Success]** をクリックすると、実行されたジョブの一覧ページに移動します。 はじめてのビルドであれば、**1 つのジョブ** だけが実行されているはずです (**1 つのワークフロー**内で自動的に実行されます) 。  今回は、 `say-hello`という名前のジョブだけが実行されました。 `say-hello` をクリックして、ジョブのステップを調査してみましょう。
+1. **Which workflows ran?**: After clicking **Success**, we are taken to a page listing the jobs that ran. If this is your first build, you probably only ran **one job**  (which automatically runs inside **one workflow**).  In our case, we only ran one job, called `say-hello`. Click on `say-hello` and let's investigate the steps of our job.
 
-1. **ステップの結果を表示する:** どのジョブも、一連のステップから構成されています。 [`checkout`]({{site.baseurl}}/2.0/configuration-reference/#checkout) などの一部のステップは、CircleCI で指定されている特別なコマンドです。 他のステップは、ユーザーがそれぞれの目的に合わせて指定します。 この Hello World のサンプル設定では、`checkout` と [`run`]({{site.baseurl}}/2.0/configuration-reference/#run) の両方を使います。
+1. **View step results:** Every job is made up of a series of steps - some steps, like [`checkout`]({{site.baseurl}}/2.0/configuration-reference/#checkout) are special, reserved commands in CircleCI. Other steps are specified by a user to achieve a specific purpose. In our Hello World example config, we use both `checkout` and [`run`]({{site.baseurl}}/2.0/configuration-reference/#run).
 
-リポジトリに実際のソースコードがなく、`config.yml` に実際のテストが設定されていなくても、すべてのステップが問題なく完了したため ([終了コード](https://en.wikipedia.org/wiki/Exit_status) 0 が返されたため)、CircleCI はビルドが "成功した" と見なします。 実際のプロジェクトは、これよりもはるかに複雑で、複数の Docker イメージと複数のステップを使用し、膨大な数のテストを行います。 `config.yml` ファイルで使用できるすべてのステップの詳細については、[設定のリファレンス](https://circleci.com/docs/2.0/configuration-reference)を参照してください。
+Even though there was no actual source code in your repo, and no actual tests configured in your `config.yml`, CircleCI considers your build to have "succeeded" because all steps completed successfully (returned an [exit code](https://en.wikipedia.org/wiki/Exit_status) of 0). Most projects are far more complicated, oftentimes with multiple Docker images and multiple steps, including a large number of tests. You can learn more about all the possible steps one may put in a `config.yml` file in the [Configuration Reference](https://circleci.com/docs/2.0/configuration-reference).
 
-### ビルドを意図的に失敗させる
+### Breaking your build!
 {: #breaking-your-build }
 {:.no_toc}
 
-もう少し複雑なことをしてみましょう。 `.circleci/config.yml` ファイルを編集してみます。 ファイルの編集は、GitHub で直接行うことができます。 以下の URL のリポジトリ名とユーザー名 (`{ }` で囲まれたテキスト) を自分のものに置き換えて、ブラウザーに貼り付けます。 Git に慣れている方は、テキスト エディターを使用し、変更を Git にプッシュしてもかまいません。
+Let's get a bit more complex. Let's edit our `.circleci/config.yml` file now. On GitHub, it is possible to edit files directly. Use the URL below and substitute the name of your repository and username (replace the text with `{brackets}`) and then paste it in your browser. If you are already familiar with Git, use your text-editor and push your changes with git.
 
 `https://github.com/{username}/{repo}/edit/circleci-project-setup/.circleci/config.yml`
 
-今回は、[Node Orb](https://circleci.com/ja/developer/orbs/orb/circleci/node) を使用してみましょう。 以下の内容を `config.yml` に貼り付けます。
+Let's use the [Node orb](https://circleci.com/developer/orbs/orb/circleci/node). Paste the following into your `config.yml`
 
 ```yaml
 version: 2.1
@@ -83,95 +83,95 @@ jobs:
 ```
 
 
-次に、GitHub のエディターで変更をコミットし、CircleCI の Projects ページに戻ります。 新しいパイプラインが実行され失敗することが確認できます。 何が起こったのでしょうか。
+Then, commit your change in the GitHub editor and return to the Projects page in CircleCI. You should see a new pipelines running... and it will fail! What's going on?
 
-Node Orb は、一般的な Node タスクを実行します。 今回は空のリポジトリで Node スクリプト `npm run test` を実行したので、設定が失敗したのです。  修正するには、 リポジトリで Node プロジェクトをセットアップする必要があります。その方法は、別のチュートリアルで説明します。 参考として、[デモ アプリケーション]({{site.baseurl}}/2.0/demo-apps/)で、さまざまな言語とフレームワークで CircleCI をセットアップする方法をご覧ください。
+The Node orb runs some common Node tasks. Because we are working with an empty repository, running `npm run test`, a Node script, causes our configuration to fail.  How would we fix this? You would need to setup a Node project in your repository;  a topic for another tutorial. You can view several [demo applications]({{site.baseurl}}/2.0/demo-apps/) that go into more detail on setting up CircleCI with various languages and frameworks.
 
-## ワークフロー機能を使用する
+## Using the workflows functionality
 {: #using-the-workflows-functionality }
 {:.no_toc}
 
-CircleCI を使用する際には、必ずしも Orb を使用する必要はありません。 次の例では、カスタム設定ファイルの作成方法を説明します。この例でも、CircleCI の[ワークフロー機能]({{site.baseurl}}/2.0/workflows)を使用します。
+You do not have to use orbs to use CircleCI. The following example details how to create a custom configuration that also uses the [workflow feature]({{site.baseurl}}/2.0/workflows) of CircleCI.
 
-1. 以下のコードブロックと付記されているコメントを読み進めます。 面倒だとしても、どのような処理をしているのかを理解しないままコードをコピー & ペーストするのはやめてください。 読み終えたら、ワークフローの動作を確認するために、`.circleci/config.yml` ファイルを編集して以下のテキストをコピー & ペーストします。
+1. Take a moment and read the comments in the code block below. Of course, we do not want to be copying and pasting code without understanding what we are doing. Now, to see Workflows in action, edit your `.circleci/config.yml` file and copy and paste the following text into it.
 
    ```yaml
    version: 2
-   jobs: # 今回は 2 つのジョブを用意し、ワークフロー機能でジョブの調整を行います。
-     one: # 1 つ目のジョブ
-       docker: # Docker Executor を使用します。
-         - image: circleci/ruby:2.4.1 # Ruby 2.4.1 を含む Docker イメージを指定します。
+   jobs: # we now have TWO jobs, so that a workflow can coordinate them!
+     one: # This is our first job.
+       docker: # it uses the docker executor
+         - image: cimg/ruby:2.6.8 # specifically, a docker image with ruby 2.6.8
            auth:
              username: mydockerhub-user
-             password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数の参照
-       # ステップは、上記の Docker コンテナ内で実行するコマンドのリストです
+             password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+       # Steps are a list of commands to run inside the docker container above.
        steps:
-         - checkout # GitHub からコードをプルします
-         - run: echo "A first hello" # "A first hello" を stdout に出力します
-         - run: sleep 25 # 25 秒間スリープするようにジョブに指示するコマンドです。
-     two: # 2 つ目のジョブ
-       docker: # 前述と同様に Docker イメージ内で実行します。
-         - image: circleci/ruby:2.4.1
+         - checkout # this pulls code down from GitHub
+         - run: echo "A first hello" # This prints "A first hello" to stdout.
+         - run: sleep 25 # a command telling the job to "sleep" for 25 seconds.
+     two: # This is our second job.
+       docker: # it runs inside a docker image, the same as above.
+         - image: cimg/ruby:3.0.2
            auth:
              username: mydockerhub-user
-             password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数の参照
+             password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
        steps:
          - checkout
-         - run: echo "A more familiar hi" # 前述のコマンドに類似した echo コマンドを実行します。
-         - run: sleep 15 # 15 秒間スリープします
-   # このワークフローでは、マッピングを行い、上記で定義した 2 つのジョブを調整することができます。
+         - run: echo "A more familiar hi" # We run a similar echo command to above.
+         - run: sleep 15 # and then sleep for 15 seconds.
+   # Under the workflows: map, we can coordinate our two jobs, defined above.
    workflows:
      version: 2
-     one_and_two: # ワークフローの名前
-       jobs: # 実行するジョブをここにリストします
+     one_and_two: # this is the name of our workflow
+       jobs: # and here we list the jobs we are going to run.
          - one
          - two
    ```
 
 
-1. この変更をリポジトリにコミットし、CircleCI パイプライン ページに戻ります。 CircleCI パイプラインが実行中であると表示されます。
+1. Commit these changes to your repository and navigate back over to the CircleCI Pipelines page. You should see your CircleCI pipeline running.
 
-1. 実行中のパイプラインをクリックし、作成したワークフローを表示します。 2 つのジョブが同時に実行された (または現在実行されている) ことがわかります。
+1. Click on the running pipeline to view the workflow you have created. You should see that two jobs ran (or are currently running!) concurrently.
 
-ワークフローの詳細については、[ワークフローのオーケストレーション](https://circleci.com/docs/2.0/workflows/#overview)を参照してください。
+Read more about workflows in the [Orchestrating Workflows](https://circleci.com/docs/2.0/workflows/#overview) documentation.
 
-### 変更を追加してワークスペース機能を使用する
+### Adding some changes to use the workspaces functionality
 {: #adding-some-changes-to-use-the-workspaces-functionality }
 {:.no_toc}
 
-各ワークフローには 1 つのワークスペースが関連付けられ、ワークフローの進行に伴って後続のジョブにファイルを転送するために使用されます。 ワークスペースを使用して、後続のジョブに必要な、実行ごとに固有のデータを渡すことができます。 試しに下記に `config.yml` を書き換えてみてください。
+Each workflow has an associated workspace which can be used to transfer files to downstream jobs as the workflow progresses. You can use workspaces to pass along data that is unique to this run and which is needed for downstream jobs. Try updating `config.yml` to the following:
 
 ```yml
 version: 2
 jobs:
   one:
     docker:
-      - image: circleci/ruby:2.4.1
+      - image: cimg/ruby:3.0.2
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  #  コンテキスト/プロジェクト UI 環境変数の参照
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
       - checkout
       - run: echo "A first hello"
       - run: mkdir -p my_workspace
       - run: echo "Trying out workspaces" > my_workspace/echo-output
       - persist_to_workspace:
-          # 絶対パスまたは working_directory からの相対パスでなければなりません。
+          # Must be an absolute path, or relative path from working_directory
           root: my_workspace
-          # ルートからの相対パスでなければなりません。
+          # Must be relative path from root
           paths:
-            - echo-output      
+            - echo-output
   two:
     docker:
-      - image: circleci/ruby:2.4.1
+      - image: cimg/ruby:3.0.2
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  #  コンテキスト/プロジェクト UI 環境変数の参照
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
       - checkout
-      - run: echo "A more familiar hi"  
+      - run: echo "A more familiar hi"
       - attach_workspace:
-          # 絶対パスまたは working_directory からの相対パスでなければなりません。
+          # Must be absolute path or relative path from working_directory
           at: my_workspace
 
       - run: |
@@ -190,67 +190,67 @@ workflows:
             - one
 ```
 
-Workspace については[こちら](https://circleci.com/docs/2.0/workflows/#using-workspaces-to-share-data-among-jobs)でより詳しく説明しています。
+Read more about workspaces [here](https://circleci.com/docs/2.0/workflows/#using-workspaces-to-share-data-among-jobs).
 
-### SSH での{% comment %}TODO: Job {% endcomment %}ビルドへの接続
+### SSH into your {% comment %} todo: job {% endcomment %}build
 {: #ssh-into-your-percent-comment-percent-todo-job-percent-endcomment-percentbuild }
 {:.no_toc}
 
-ターミナルの操作に慣れている場合は、CircleCI に直接 SSH 接続し、SSH 対応のオプション付きで{% comment %} TODO: Job {% endcomment %}ビルドを実行して、ビルドに関する問題のトラブルシューティングを行うことができます。
+If you are comfortable with the terminal, you can SSH directly into your CircleCI jobs to troubleshoot issues with your builds by rerunning your {% comment %} TODO: Job {% endcomment %}build with the SSH enabled option.
 
-*SSH 公開鍵を GitHub アカウントに登録する必要があることにご注意ください。詳細は[こちら](https://help.github.com/articles/connecting-to-github-with-ssh/)。*
+*Note that you will need to add your SSH keys to your GitHub account: <https://help.github.com/articles/connecting-to-github-with-ssh/>*.
 
 
 {:.tab.switcher.Cloud}
-![SSH でのリビルド]( {{ site.baseurl }}/assets/img/docs/rebuild-with-SSH_newui.png)
+![Rebuild With SSH]( {{ site.baseurl }}/assets/img/docs/rebuild-with-SSH_newui.png)
 
 {:.tab.switcher.Server_3}
-![SSH でのリビルド]( {{ site.baseurl }}/assets/img/docs/rebuild-with-SSH_newui.png)
+![Rebuild With SSH]( {{ site.baseurl }}/assets/img/docs/rebuild-with-SSH_newui.png)
 
 {:.tab.switcher.Server_2}
-![SSH でのリビルド]( {{ site.baseurl }}/assets/img/docs/rebuild-with-SSH.png)
+![Rebuild With SSH]( {{ site.baseurl }}/assets/img/docs/rebuild-with-SSH.png)
 
 
-ビルドの SSH 有効化セクションから `ssh` の接続先をコピーします。 ターミナルを開き、`ssh` の接続先を貼り付けます。
+Copy the `ssh` string from the enabling SSH section of your build. Open a terminal and paste in the `ssh` string.
 
-以下のコマンドを使用して、ワークスペースで作成したファイルの内容を表示できるかどうかを確認します。
+Using some of the following commands, see if you can find and view the contents of the file you created using workspaces:
 
 ```
-pwd                  #  "print what directory" の略で、ファイル システム内のどこにいるかを確認できます。
-ls -al               # 現在のディレクトリに含まれるファイルとディレクトリを一覧表示します。
-cd <directory_name>  # 現在のディレクトリを <directory_name> ディレクトリに変更します。
-cat <file_name>      # ファイル <file_name> の内容を表示します。
+pwd                  #  print what directory, find out where you are in the file system
+ls -al               # list what files and directories are in the current directory
+cd <directory_name>  # change directory to the <directory_name> directory
+cat <file_name>      # show me the contents of the file <file_name>
 ```
-**注:** `rerun job with ssh`を実行するには、 [ジョブにSSHキーを追加する](https://circleci.com/docs/2.0/add-ssh-key/#adding-ssh-keys-to-a-job)という手順が必要です。
+**Note** To enable `rerun job with ssh`, you will need to follow the steps to [add ssh keys to your job](https://circleci.com/docs/2.0/add-ssh-key/#adding-ssh-keys-to-a-job).
 
-## チームメイトと協力する
+## Collaborating with teammates
 {: #collaborating-with-teammates }
 
-チームメイトやコラボレーターは、簡単にプロジェクトを閲覧したりフォローしたりできます。 チームメイトは、コードをまったくコミットしていないとしても、いつでも無料の CircleCI アカウントを作成してパイプラインを閲覧できます。
+It is easy for teammates and collaborators to view and follow your projects. Teammates can make a free CircleCI account at any time to view your pipelines, even if they are not committing any code.
 
-## 関連項目
+## See also
 {: #see-also }
 {:.no_toc}
 
-Git フックを使用してコミットごとに CircleCI `config.yml` を検証する方法については、[こちらの Blog 記事](https://circleci.com/ja/blog/circleci-hacks-validate-circleci-config-on-every-commit-with-a-git-hook/)を参照してください。
+[Blog post](https://circleci.com/blog/circleci-hacks-validate-circleci-config-on-every-commit-with-a-git-hook/) on how to validate the CircleCI `config.yml` on every commit with a git hook.
 
 ### CircleCI
 {: #circleci }
 {:.no_toc}
 
-* [CircleCI Blog](https://circleci.com/blog/)
-* [継続的インテグレーションとは](https://circleci.com/blog/what-is-continuous-integration/)
-* CircleCI のアカウント: [GitHub](https://github.com/circleci) (英語)、[Twitter](https://twitter.com/circleci) (英語)、[Facebook](https://www.facebook.com/circleci) (英語)
+* The [CircleCI blog](https://circleci.com/blog/).
+* [What is continuous integration?](https://circleci.com/blog/what-is-continuous-integration/)
+* CircleCI on [GitHub](https://github.com/circleci), [Twitter](https://twitter.com/circleci) and [Facebook](https://www.facebook.com/circleci)
 
-### 継続的インテグレーション
+### Continuous integration
 {: #continuous-integration }
 {:.no_toc}
 
-* [Martin Fowler 氏 - Continuous Integration (継続的インテグレーション) (英語)](https://martinfowler.com/articles/continuousIntegration.html)
-* [ベストプラクティス](https://en.wikipedia.org/wiki/Continuous_integration#Best_practices)
+* [Martin Fowler - Continuous Integration](https://martinfowler.com/articles/continuousIntegration.html)
+* [Best Practices](https://en.wikipedia.org/wiki/Continuous_integration#Best_practices)
 
 ### YAML
 {: #yaml }
 {:.no_toc}
 
-* [より詳しい概念 (英語)](https://en.wikipedia.org/wiki/YAML#Advanced_components)
+* [Advanced Concepts](https://en.wikipedia.org/wiki/YAML#Advanced_components)

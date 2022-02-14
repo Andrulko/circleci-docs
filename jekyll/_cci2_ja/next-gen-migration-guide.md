@@ -1,61 +1,68 @@
 ---
 layout: classic-docs
-title: "次世代   CircleCI イメージへの移行"
-short-title: "次世代 CircleCI イメージへの移行"
-description: "従来のイメージから次世代イメージへの移行ガイド"
+title: "Migrating to next-gen Convenience Images"
+short-title: "Migrating to next-gen Convenience Images"
+description: "A guide for migrating from using legacy images to next-gen images."
 order: 30
 version:
-  - クラウド
+  - Cloud
   - Server v3.x
   - Server v2.x
 ---
 
-* 目次
+* TOC
 {:toc}
 
 
-## 概要
+## Overview
 {: #overview }
 
-2020 年より、CircleCI では CircleCI イメージの次世代版の展開を開始しました。 これらのイメージは、[CircleCI 2.0 ](https://circleci.com/ja/blog/say-hello-to-circleci-2-0/)の発表時にリリースされた従来の CircleCI イメージに代わるものです。 次世代版は CI/CD 環境に合わせてゼロから設計されており、 従来よりもスピードと効率、そしてなによりも信頼性が大きく向上しています。 次世代 CircleCI イメージの特徴について詳しくは、[こちらのブログ記事](https://circleci.com/ja/blog/announcing-our-next-generation-convenience-images-smaller-faster-more-deterministic/)をご覧ください。 従来イメージが今後廃止されることに伴い、ここでは新しいイメージへの移行プロセスについて説明します。
+In 2020 CircleCI introduced the next generation (next-gen) of convenience images. These new images are designed to replace the legacy convenience images that were released during the [announcement of CircleCI 2.0](https://circleci.com/blog/say-hello-to-circleci-2-0/). The next-gen CircleCI convenience images are designed from the ground up for a CI/CD environment. They are designed to be faster, more efficient, and most importantly, more reliable. You can learn more about all of the features [on our blog post](https://circleci.com/blog/announcing-our-next-generation-convenience-images-smaller-faster-more-deterministic/). As we begin to deprecate the legacy images, this document provides information on the migration process.
 
-従来のイメージから次世代版に移行するには、名前空間を変更する必要があります。 イメージの Docker 名前空間について、従来のものはすべて `circleci` でしたが、次世代イメージでは `cimg` に変わります。 たとえば、従来の Ruby および Python のイメージを次世代版に移行するには、それぞれ次のように変更します。
+Moving from a legacy to next-gen image requires a change to the namespace. All legacy images have a Docker namespace of `circleci`, while next-gen images have a Docker namespace of `cimg`. For example, migrating from the legacy Ruby or Python image to the respective next-gen image can be done as follows:
 
-* `circleci/ruby:2.3.0` -> `cimg/ruby:2.3.0`
-* `circleci/python:3.8.4` -> `cimg/python:3.8.4`
+```diff
+- circleci/ruby:2.7.4
++ cimg/ruby:2.7.4
+```
 
-## 変更点
+```diff
+- circleci/python:3.8.4
++ cimg/python:3.8.4
+```
+
+## Changes
 {: #changes }
 
-### イメージの廃止
+### Deprecated images
 {: #deprecated-images }
 
-既存のイメージについて、今後いくつかの変更が行われる予定です。 以下のイメージは廃止され、次世代イメージへの置き換えは行われません。
+Several changes are being made to existing images. The following images will be deprecated without next-gen equivalents:
 
 * `buildpack-deps`
 * `JRuby`
 * `DynamoDB`
 
-`buildpack-deps` イメージを現在使用している場合は、新しい CircleCI ベース イメージ `cimg/base` に移行することをお勧めします。 他の 2 つのイメージについては、ベース イメージにソフトウェアをご自身でインストールするか、サードパーティのイメージを使用してください。
+If you are using the `buildpack-deps` image, the suggestion is to use the new CircleCI Base image, `cimg/base`. For the other two images, you can install the software yourself in the base image or use a 3rd-party image instead.
 
-また、以下のイメージの名称が変更されます。
+Also, the following image will be renamed:
 
-* Go イメージ: `golang` から `go` に変更
+* The Go image will be changed from `golang` to `go`
 
-従来版と次世代版のイメージの変更点は下表のとおりです。
+All Legacy to Next-Gen image changes are captured below in this table:
 
-| 従来版のイメージ                | 次世代版のイメージ |
-| ----------------------- | --------- |
-| circleci/buildpack-deps | cimg/base |
-| circleci/jruby          | 対応イメージなし  |
-| circleci/dynamodb       | 対応イメージなし  |
-| circleci/golang         | cimg/go   |
+| Legacy Image            | Next-Gen Image    |
+| ----------------------- | ----------------- |
+| circleci/buildpack-deps | cimg/base         |
+| circleci/jruby          | No suggested path |
+| circleci/dynamodb       | No suggested path |
+| circleci/golang         | cimg/go           |
 {: class="table table-striped"}
 
-### ブラウザー テスト
+### Browser Testing
 {: #browser-testing }
 
-従来のイメージでは、ブラウザー テストを行う場合、利用可能なバリアント タグが 4 種類存在していました。 たとえば、Python v3.7.0 イメージでブラウザー テストを行う場合、circleci/python:3.7.0-browsers という Docker イメージを使用していたかも知れません。 今後、これら 4 つのタグは、[CircleCI Browser Tools Orb](https://circleci.com/developer/ja/orbs/orb/circleci/browser-tools) との併用を前提とした単一のタグに統合されます。
+With legacy images, there were 4 different variant tags you could use to get browser testing for a particular image. For example, if you were doing browser testing with the Python v3.7.0 image, you might have used Docker image: circleci/python:3.7.0-browsers. These 4 tags have now been consolidated into a single tag designed to be used together with the [CircleCI Browser Tools orb](https://circleci.com/developer/orbs/orb/circleci/browser-tools).
 
 | Legacy variant tags     | Next-gen variant tags           |
 | ----------------------- | ------------------------------- |
@@ -65,24 +72,24 @@ version:
 | `-node-browsers-legacy` |                                 |
 {: class="table table-striped"}
 
-ブラウザー テスト用の新しいバリアント タグには、Node.js およびブラウザー テスト用の一般的なユーティリティ (Selenium など) が含まれていますが、実際のブラウザーは含まれていません。 タグの統合に伴い、ブラウザーはプリインストールされなくなります。 代わりに、Google Chrome や Firefox などのブラウザー、および Chromedriver や Gecko などのドライバーは、`browsers-tools` Orb でインストールします。 これにより、CircleCI から提供されるツールに縛られることなく、ビルドで必要なブラウザーのバージョンを柔軟に組み合わせることができます。 この Orb の使用例については、[こちら](https://circleci.com/developer/ja/orbs/orb/circleci/browser-tools#usage-install_browsers)を参照してください。
+The new, single browsers variant tag includes Node.js, common utilities to use in browser testing such as Selenium, but not the actual browsers. Please note the browsers are no longer pre-installed. Instead, browsers such as Google Chrome and Firefox, as well as their drivers Chromedriver and Gecko, are installed via the `browsers-tools` orb. This provides the flexibility to mix and match the browser versions you need in a build rather than using strictly what CircleCI provides. You can find examples of how to use this orb [here](https://circleci.com/developer/orbs/orb/circleci/browser-tools#usage-install_browsers).
 
-ベース OS の Ubuntu への統一
+Using Ubuntu as the Single Base OS
 
-従来のイメージでは、バリアント タグによってベース オペレーティング システム (OS) が異なっていました。 たとえば、Debian と Ubuntu のバージョンのイメージがある一方、別のイメージでは異なるベース OS が提供されていました。 こうした状態を解消するため、  次世代の CircleCI イメージはすべて、Ubuntu の最新 LTS リリースがベース OS となります。
+Legacy images had variant tags for several different base operating systems. Some images were versions of Debian and Ubuntu, while other images provided several different bases. This is no longer the case. All CircleCI next-gen images are based on the latest LTS release of Ubuntu.
 
-ベース イメージでは、少なくとも 2 つ以上の LTS リリースと、EOL 前の標準リリースがサポートされます。
+With the base image, at least two LTS releases and non-EOL’d standard releases will be supported.
 
 
-## トラブルシューティング
+## Troubleshooting
 {: #troubleshooting }
 
-次世代イメージへの移行では、ソフトウェア関連の問題が発生することがあります。 よくある問題を以下に示します。
-* 使用していたライブラリのバージョンが変わる
-* apt パッケージがプリインストールされなくなる。 この場合は、次のコマンドでパッケージをインストールしてください。
+When migrating to a next-gen image, there might be some software issues. Common issues include:
+* A library you were using now has a different version.
+* An apt package is no longer pre-installed. In this scenario simply install that package using:
 
 ```bash
 sudo apt-get update && sudo apt-get install -y <the-package>
 ```
 
-各イメージには、構築元となる GitHub リポジトリが用意されており、 [こちら](https://github.com/CircleCI-Public?q=cimg-&type=&language=&sort=)から参照可能です。 これらのリポジトリでは、各イメージの詳細や構成内容を確認できるほか、GitHub 上で Issue の報告やプルリクエストの投稿を行えます。 イメージに関して、特に移行に関する問題がある場合は、GitHub 上で Issue をオープンし、問題を報告してください。 [サポート チケットを作成する](https://support.circleci.com/hc/ja-jp/requests/new)、または [CircleCI Discuss](https://discuss.circleci.com/t/legacy-convenience-image-deprecation/41034) に投稿していただくことも可能です。
+Each image has its own GitHub repository. You can find them [here](https://github.com/CircleCI-Public?q=cimg-&type=&language=&sort=). These repositories are where you can learn more about an image, what makes up the image, open GitHub issues, and contribute PRs. If you are having an issue with an image, especially if it is a migration issue, you can open up a GitHub issue and ask questions. You can also [open a support ticket](https://support.circleci.com/hc/en-us/requests/new) or reach out on [CircleCI Discuss](https://discuss.circleci.com/t/legacy-convenience-image-deprecation/41034).

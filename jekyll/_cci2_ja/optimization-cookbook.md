@@ -1,13 +1,13 @@
 ---
 layout: classic-docs
-title: "CircleCI 最適化クックブック"
-short-title: "最適化クックブック"
-description: "最適化クックブック入門編"
+title: "CircleCI Optimizations Cookbook"
+short-title: "Optimizations Cookbook"
+description: "Starting point for Optimizations Cookbook"
 categories:
-  - はじめよう
+  - getting-started
 order: 1
 version:
-  - クラウド
+  - Cloud
   - Server v3.x
   - Server v2.x
 ---
@@ -16,10 +16,10 @@ The *CircleCI Optimizations Cookbook* is a collection of individual use cases (r
 
 The recipes in this guide will enable you to quickly and easily perform repeatable optimization tasks on the CircleCI platform.
 
-* 目次
+* TOC
 {:toc}
 
-## はじめに
+## Introduction
 {: #introduction }
 
 Sometimes when you are using the CircleCI platform, you may encounter unexpected lags in pipeline performance, which can negatively affect your ability to perform critical organizational functions. These performance bottlenecks can not only impact overall performance, but also cause workflow and build failures. These "hiccups" can cost you money in terms of credit usage, resources, and individual time spent reducing bottlenecks.
@@ -27,38 +27,13 @@ Sometimes when you are using the CircleCI platform, you may encounter unexpected
 ## Using caching to optimize builds and workflows
 {: #using-caching-to-optimize-builds-and-workflows }
 
-One of the quickest and easiest ways to optimize your builds and workflows is to implement specific caching strategies so you can use existing data from previous builds and workflows. Whether you choose to use a package management application (e.g. Yarn, Bundler, etc), or manually configure your caching, utilizing the best and most effective caching strategy may improve overall performance. In this section, several different use cases are described that may assist you in determining which caching method is best for your implementation.
+One of the quickest and easiest ways to optimize your builds and workflows is to implement specific caching strategies so you can use existing data from previous builds and workflows. Whether you choose to use a package management application (e.g. Yarn, Bundler, etc), or manually configure your caching, utilizing the best and most effective caching strategy may improve overall performance.
 
-If a job fetches data at any point, it is likely that you can make use of caching. A common example is the use of a package/dependency manager. If your project uses Yarn, Bundler, or Pip, for example, the dependencies downloaded during a job can be cached for later use rather than being re-downloaded on every build. The example below shows how you can use caching for a package manager.
+If a job fetches data at any point, it is likely that you can make use of caching. A common example is the use of a package/dependency manager. If your project uses Yarn, Bundler, or Pip, for example, the dependencies downloaded during a job can be cached for later use rather than being re-downloaded on every build.
 
-{% raw %}
-```yaml
-version: 2
-jobs:
-  build:
-    steps: # a collection of executable commands making up the 'build' job
-      - checkout # pulls source code to the working directory
-      - restore_cache: # **restores saved dependency cache if the Branch key template or requirements.txt files have not changed since the previous run**
-          key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
-      - run: # install and activate virtual environment with pip
-          command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            pip install -r requirements.txt
-      - save_cache: # ** special step to save dependency cache **
-          key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
-          paths:
-            - "venv"
-```
-{% endraw %}
+You can find an example of caching dependencies on the [Optimizations]({{site.baseurl}}/2.0/optimizations/#caching-dependencies) page. _Please note: Persisting data is project specific, and the examples on the Optimizations page are not meant to be copied and pasted into your own projects without some customization._
 
-Notice in the above example that you can use a `checksum` in the cache key. This is used to calculate when a specific dependency-management file (such as a `package.json` or `requirements.txt` in this case) changes so the cache will be updated accordingly. Also note that the `restore_cache` example uses interpolation to put dynamic values into the cache-key, allowing more control in what exactly constitutes the need to update a cache.
-
-**Note:** Before adding any caching steps to your workflow, verify the dependencies installation step succeeds. Caching a failed dependency step will require you to change the cache key in order to avoid failed builds due to a bad cache.
-
-Because caching is a such a critical aspect of optimizing builds and workflows, you should first familiarize yourself with the following page that describes caching and how various strategies can be used to optimize your config:
-
-- [Caching](https://circleci.com/docs/ja/2.0/caching/)
+Because caching is a such a critical aspect of optimizing builds and workflows, you should first familiarize yourself with the [Caching]({{site.baseurl}}/2.0/caching/) page that describes caching, and how various strategies can be used to optimize your config.
 
 ## Improving test performance
 {: #improving-test-performance }
@@ -247,7 +222,7 @@ workflows:
 The time difference includes the lag described above plus the duration of the pipeline run and elapsed time between when a developer finished a change and when the scheduled build runs. All of this time adds up and the more confidence developers have in the quality of their code the higher their deployment frequency.
 
 
-## 関連項目
+## See also
 {: #see-also }
 {:.no_toc}
 

@@ -1,36 +1,36 @@
 ---
 layout: classic-docs
-title: "ステータス"
-short-title: "ステータス"
-description: "ステータス ダッシュボード"
+title: "Status"
+short-title: "Status"
+description: "Status dashboard"
 categories:
-  - はじめよう
+  - getting-started
 order: 1
 version:
-  - クラウド
+  - Cloud
   - Server v3.x
   - Server v2.x
 ---
 
 <hr />
 
-| バッジ                                                                                     | デバッグ                                                                                          |
-| --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| インテグレーションを利用して、[他の Web ページにステータス バッジを追加]({{ site.baseurl }}/2.0/status-badges/)ことができます。 | ビルドのトラブルシューティングが必要なときは、[SSH を使用して、失敗したビルドをデバッグ]({{ site.baseurl }}/2.0/ssh-access-jobs/)できます。 |
+| Badges                                                                                                       | Debugging                                                                                                            |
+| ------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------- |
+| Integrations enable you to [include status badges in other web pages]({{ site.baseurl }}/2.0/status-badges/) | If you need to troubleshoot a job, you can [debug failed builds using SSH]({{ site.baseurl }}/2.0/ssh-access-jobs/). |
 
 <hr />
 
-| キューイング                                                                                                                                                                                                  |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ジョブの待機時間が発生している場合は、[Performance プランまたは Custom プラン](https://circleci.com/ja/pricing/)への切り替えによって解消できる可能性があります。 For further information see our guide to [using credits]({{ site.baseurl }}/2.0/credits/). |
+| Queuing                                                                                                                                                                                                      |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| If your jobs are queuing, you can switch to either a [performance or custom plan](https://circleci.com/pricing/). For further information see our guide to [using credits]({{ site.baseurl }}/2.0/credits/). |
 
 <hr />
 
-![ワークフローの図]( {{ site.baseurl }}/assets/img/docs/job_status.png)
+![workflow illustration]( {{ site.baseurl }}/assets/img/docs/job_status.png)
 
-CircleCI の統合ダッシュボードでは、最後に完了したジョブ実行について以下のステータスが表示されます。
+CircleCI provides an integrated dashboard showing status of the last completed job run:
 
-- SUCCESS: すべてのジョブが成功
-- FAILED: 1 つ以上のジョブが失敗
+- SUCCESS: All jobs passed successfully
+- FAILED: One or more jobs failed
 
-[ワークフロー]({{ site.baseurl}}/ja/2.0/workflows/#概要)を使用している場合は、上記に加えて[ワークフロー固有のステータス]({{ site.baseurl}}/ja/2.0/workflows/#ステータス)が表示されます。
+If you are using [workflows]({{ site.baseurl}}/2.0/workflows/#overview) you may see other [workflow-specific statuses]({{ site.baseurl}}/2.0/workflows/#states).

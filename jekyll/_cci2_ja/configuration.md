@@ -1,8 +1,8 @@
 ---
 layout: classic-docs
-title: CircleCI の設定ファイル
-description: .circleci/config.yml に関するリファレンス
-redirect: /ja/docs/2.0/configuration-reference/
+title: CircleCI configuration
+description: Reference for .circleci/config.yml
+redirect: /docs/2.0/configuration-reference/
 ---
 
-<h2>このページは移動しました。 自動的に移動しない場合は、<a href="/docs/ja/2.0/configuration-reference/">ここ</a>をクリックしてください。</h2>
+<h2>This page has moved. You should be automatically redirected, but if that didn't work you can <a href="/docs/2.0/configuration-reference/">click here</a>.</h2>

@@ -1,53 +1,53 @@
 ---
 layout: classic-docs
-title: "Windows での Hello World"
-short-title: "Windows での Hello World"
+title: "Hello World On Windows"
+short-title: "Hello World On Windows"
 description: "First Windows project on CircleCI"
 categories:
-  - はじめよう
+  - getting-started
 order: 4
 version:
-  - クラウド
+  - Cloud
   - Server v3.x
   - Server v2.x
 ---
 
 This document describes how to get started with continuous integration on **Windows execution environments** on CircleCI. If this is your first time setting up CircleCI, we recommend checking out the [Getting Started guide]({{ site.baseurl}}/2.0/getting-started/).
 
-* 目次
+* TOC
 {:toc}
 
 
-## 前提条件
+## Prerequisites
 {: #prerequisites }
 
-作業を行う前に、以下を準備しておく必要があります。
+To follow along with this document you will need:
 
-* CircleCI の[アカウント](https://circleci.com/ja/signup/)。
-* Free プラン (デフォルト) または [Performance プラン](https://circleci.com/ja/pricing/)。 CircleCI Server をお使いの方向けには以下に別のコード例を掲載していますので、そちらをご参照ください。
-* クラウド版をお使いの場合にプロジェクトで Windows を使用するには、[パイプラインを有効化]({{site.baseurl}}/ja/2.0/build-processing/)する必要があります。
+* An [account](https://circleci.com/signup/) on CircleCI.
+* Either the Free, Performance, or Scale [plan](https://circleci.com/pricing/usage/). If you are running CircleCI server there are alternative code examples below.
+* For the Cloud version, pipelines must be [enabled]({{site.baseurl}}/2.0/build-processing/) for your project to use Windows.
 
-## Windows Executor の概要
+## Overview of the Windows executor
 {: #overview-of-the-windows-executor }
 
-The Windows execution environment (or `executor`) gives users the tools to build Windows projects, such as a Universal Windows Platform (UWP) application, a .NET executable, or Windows-specific (like the .NET framework) projects. Windows Executor の仕様と機能は以下のとおりです。
+The Windows execution environment (or `executor`) gives users the tools to build Windows projects, such as a Universal Windows Platform (UWP) application, a .NET executable, or Windows-specific (like the .NET framework) projects. The following specifications detail the capacities and included features of the Windows executor:
 
-- VM ベースでジョブの完全分離を保証
-- Windows Server 2019 Datacenter エディションの Server Core バージョンを使用
-- PowerShell がデフォルトのシェル (Bash と cmd を手動で選択可能)
-- Windows コンテナの実行に Docker Engine - Enterprise を使用可能
+- Is VM-based to guarantee full job isolation.
+- Uses the Server Core version of Windows Server 2019 Datacenter Edition.
+- Powershell is the default shell (Bash and cmd are available to be manually selected).
+- Docker Engine - Enterprise is available for running Windows containers.
 
-**備考:**
+**Notes:**
 
-- メモ: Windows Executor は現時点で Windows コンテナのみをサポートしています。 現在、Windows で Linux コンテナを実行することはできません。
+- The Windows executor currently only supports Windows containers. Running Linux containers on Windows is not possible for now.
 - Orb usage is not supported on CircleCI Server v2.x (please view the "server" code samples for server usage.)
 
-## Windows Executor イメージ
+## Windows executor images
 {: #windows-executor-images }
 
-現在、CircleCI は Windows イメージとして Windows Server 2019 with Visual Studio 2019 のみをサポートしています。 このイメージの完全な内容については、このドキュメント末尾の[インストール済みソフトウェアの一覧](#windows-イメージにプリインストールされているソフトウェア)を参照してください。 CircleCI Server の Windows イメージに何が含まれているのか、詳しい情報についてはシステム管理者にお問い合わせください。
+Currently CircleCI supports a single Windows image: Windows Server 2019 with Visual Studio 2019. Please see the full contents of the image in the [list of installed software](#software-pre-installed-in-the-windows-image) further along in this document. Contact your systems administrator for details of what is included in CircleCI Server Windows images.
 
-なお、WindowsのDockerコンテナは、このようにWindowsのExecutorで実行することも可能です。
+Please note that it is possible to run Windows Docker Containers on the Windows executor like so:
 
 {:.tab.windowsblockone.Cloud}
 ```yaml
@@ -113,25 +113,25 @@ jobs:
 ```
 
 
-## 既知の問題
+## Known issues
 {: #known-issues }
 
-Windows Executor には以下に挙げる問題が確認されており、可能な限り早期の対処を目指しています。
+These are the issues with the Windows executor that we are aware of and will address as soon as we can:
 
-* SSH から Windows ジョブに接続し、`bash` シェルを使用すると、ターミナルのプロンプトが空になってしまう
+* Connecting to a Windows job via SSH and using the `bash` shell results in an empty terminal prompt.
 * It is currently not possible to do nested virtualization (for example, using the `--platform linux` flag).
 
-## サンプルの設定ファイル
+## Example configuration file
 {: #example-configuration-file }
 
-以下の構成スニペットを `.circleci/config.yml` ファイルに貼り付けることで、CircleCI で Windows を使用できるようになります。
+Get started with Windows on CircleCI with the following configuration snippet that you can paste into your `.circleci/config.yml` file:
 
 {:.tab.windowsblocktwo.Cloud}
 ```yaml
-version: 2.1 # バージョン 2.1 を指定して Orb の使用を有効化します
+version: 2.1 # Use version 2.1 to enable orb usage.
 
 orbs:
-  win: circleci/windows@2.2.0 # Windows Orb には Windows Executor の使用に必要なすべてが揃っています
+  win: circleci/windows@2.2.0 # The Windows orb give you everything you need to start using the Windows executor.
 
 jobs:
   build: # name of your job
@@ -175,18 +175,18 @@ jobs:
         - run: Write-Host 'Hello, Windows'
 ```
 
-ここからはバージョン 2.1 の構文を使用して Windows Executor の使用について説明しますが、CircleCI Server を使用している場合は前述の Executor 定義構文を参考にしてください。
+From here we will use the version 2.1 syntax to discuss using the Windows executor, but if you're using Server, you can follow along with the executor definition syntax described above.
 
-## Windows Executor でのシェルの指定
+## Specifying a Shell with the Windows Executor
 {: #specifying-a-shell-with-the-windows-executor }
 
-Windows では 3 種類のシェルを使用してジョブ ステップを実行できます。
+There are three shells that you can use to run job steps on Windows:
 
-* PowerShell (Windows Orb のデフォルト)
+* PowerShell (default in the Windows Orb)
 * Bash
-* コマンド
+* Command
 
-シェルは、ジョブレベルまたはステップレベルで構成できます。 同じジョブ内で複数のシェルを使用可能です。 以下の例では、`job` 宣言と `step` 宣言に `shell:` 引数を追加して、Bash、PowerShell、およびコマンドを使用しています。
+You can configure the shell at the job level or at the step level. It is possible to use multiple shells in the same job. Consider the example below, where we use Bash, Powershell, and Command by adding a `shell:` argument to our `job` and `step` declarations:
 
 
 {:.tab.windowsblockthree.Cloud}
@@ -201,8 +201,8 @@ jobs:
     executor:
       name: win/default
     steps:
-      # デフォルトのシェルは PowerShell
-      - run:            
+      # default shell is Powershell
+      - run:
          command: $(echo hello | Out-Host; $?) -and $(echo world | Out-Host; $?)
          shell: powershell.exe
       - run:
@@ -215,7 +215,7 @@ jobs:
 
 {:.tab.windowsblockthree.Server_3}
 ```YAML
-version: 2.0
+version: 2.1
 
 jobs:
   build: # name of your job
@@ -257,7 +257,7 @@ jobs:
          shell: cmd.exe
 ```
 
-**メモ:** 更新版などの Windows シェル ツールをインストールすることも可能です。 `dotnet` CLI で PowerShell Core の最新版をインストールし、ジョブの一連のステップに使用できます。
+**Note** It is possible to install updated or other Windows shell-tooling as well; for example, you could install the latest version of Powershell Core with the `dotnet` cli and use it in a job's successive steps:
 
 
 {:.tab.windowsblockfour.Cloud}
@@ -308,25 +308,25 @@ jobs:
       - run: pwsh ./<my-script>.ps1
 ```
 
-## サンプル アプリケーション
+## Example application
 {: #example-application }
 
-Windows Executor を使用した例として、少し応用した (まだ初歩ですが) "hello world" アプリケーションを考えます。 この[サンプル アプリケーション](https://github.com/CircleCI-Public/circleci-demo-windows)も「Hello World」をコンソールに出力します。 **Note:** If you are using Windows on CircleCI server, replace usage of orbs with a machine image as described in the previous code samples.
+Let’s consider a more advanced (but still introductory) "hello world" application using the Windows executor. This [example application](https://github.com/CircleCI-Public/circleci-demo-windows) still prints "Hello World" to the console, but does so using .NET core to create an executable, uses dependency caching, and creates an artifact on every build. **Note:** If you are using Windows on CircleCI server, replace usage of orbs with a machine image as described in the previous code samples.
 
-設定ファイルの全体は[こちら](https://github.com/CircleCI-Public/circleci-demo-windows/blob/master/.circleci/config.yml)で確認してください。
+You can view the entire configuration [here](https://github.com/CircleCI-Public/circleci-demo-windows/blob/master/.circleci/config.yml).
 
 ```yaml
 version: 2.1
 ```
 
-上記のように、CircleCI のバージョン `2.1` を使用することを最初に宣言します。 これにより、[Orb](https://circleci.com/ja/orbs/) と[パイプライン]({{site.baseurl}}/ja/2.0/build-processing/)を利用できます。
+Above, we start by declaring that we will use version `2.1` of CircleCI, giving us access to [Orbs](https://circleci.com/orbs/) and [Pipelines]({{site.baseurl}}/2.0/build-processing/).
 
 ```yaml
 orbs:
   win: circleci/windows@2.2.0
 ```
 
-次に、ビルドで使用する Orb を宣言します。 最初は [Windows Orb](https://circleci.com/developer/ja/orbs/orb/circleci/windows) のみを使用します。
+Next, we declare orbs that we will be using in our build. We will only use the [windows orb](https://circleci.com/developer/orbs/orb/circleci/windows) to help us get started.
 
 ```yaml
 jobs:
@@ -336,95 +336,95 @@ jobs:
       shell: powershell.exe
 ```
 
-`jobs` キーの下で、使用している Orb を介して Executor を設定します。 以降のステップに適用されるデフォルトのシェルも宣言できます。 デフォルトのシェルは `powershell.exe` です。
+Under the `jobs` key, we set the executor via the orb we are using. We can also declare the default shell to be applied across future steps in the configuration. The default shell is `Powershell.exe`
 
 ```yaml
     steps:
       - checkout
 ```
 
-最初のステップでは、[`checkout`]({{ site.baseurl}}/2.0/configuration-reference/#checkout) コマンドを実行して、バージョン管理システムからソース コードをプルします。
+In our first step, we run the [`checkout`]({{ site.baseurl}}/2.0/configuration-reference/#checkout) command to pull our source code from our version control system.
 
 ```yaml
       - restore_cache:
           keys:
       - run:
-          name: "プロジェクト依存関係のインストール"
+          name: "Install project dependencies"
           command: dotnet.exe restore
       - save_cache:
           paths:
             - C:\Users\circleci\.nuget\packages
 ```
 
-次に設定ファイルでは、キャッシュを利用して、キャッシュされた依存関係を以前のビルドから復元します。 `dotnet restore` コマンドは、まだインストールされていない、または復元されていないすべての依存関係をキャッシュからフェッチします。 キャッシュの詳細については、[キャッシュ]({{ site.baseurl}}/2.0/caching)に関するドキュメントを参照してください。
+Next in the config, we make use of caching to restore cached dependencies from previous builds. The command `dotnet restore` will fetch any dependencies that are not already installed/restored from the cache. Learn more about caching in our [caching document]({{ site.baseurl}}/2.0/caching).
 
 ```yaml
       - run:
-          name: "ビルド ステップの実行"
+          name: "Run Build step"
           command: dotnet.exe publish -c Release -r win10-x64
       - run:
-          name: "実行可能ファイルのテスト"
+          name: "Test the executable"
           command: .\bin\Release\netcoreapp2.1\win10-x64\publish\circleci-demo-windows.exe
 ```
 
-続いて 2 つのステップを実行します。 1 つは Windows 10 用の実行可能ファイルをビルドし、もう 1 つはその実行可能ファイルをテストします (コンソールに「Hello World」と出力されます)。
+Next, we run two steps: one to build the executable for Windows 10, and another to test the executable (expecting to see “Hello World” printed to the console).
 
 ```yaml
       - store_artifacts:
           path: .\bin\Release\netcoreapp2.1\win10-x64\publish\circleci-demo-windows.exe
 ```
 
-最後のステップでは、ビルド実行可能ファイルをアーティファクトとして保存し、CircleCI Web アプリケーションまたは API からアクセスできるようにします。
+In our last step, we store the build executable as an artifact, making it accessible with the CircleCI web application or API.
 
-## ビルドへの SSH 接続
+## SSH into your build
 {: #ssh-into-your-build }
 
-Windows ビルド コンテナに SSH 接続することができます。 これは、パイプラインに関する問題のトラブルシューティングに便利です。 Windows コンテナに SSH 接続するには、以下の手順を実行します。
+It is possible to SSH into a Windows build container. This is useful for troubleshooting problems in your pipeline. Follow these steps to SSH into a Windows container:
 
-### 手順
+### Steps
 {: #steps }
 
-1. SSH キーを [GitHub](https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/) アカウントまたは [Bitbucket](https://confluence.atlassian.com/bitbucket/set-up-an-ssh-key-728138079.html) アカウントに追加していることを確認します。
+1. Ensure that you have added an SSH key to your [GitHub](https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/) or [Bitbucket](https://confluence.atlassian.com/bitbucket/set-up-an-ssh-key-728138079.html) account.
 
-2. SSH 接続を有効にしてジョブを起動するには、[Rerun Workflow (ワークフローを再実行する)] ドロップダウン メニューから [Rerun job with SSH (SSH でジョブを再実行する)] オプションを選択します。
+2. To start a job with SSH enabled, select the 'Rerun job with SSH' option from the 'Rerun Workflow' dropdown menu.
 
-3. SSH から Windows ジョブに接続し、`bash` シェルを使用すると、ターミナルのプロンプトが空になってしまう![SSH 接続の詳細情報]({{ site.baseurl }}/assets/img/docs/ssh-windows-obf.png)
+3. To see the connection details, expand the 'Enable SSH' section in the job output where you will see the SSH command needed to connect: ![SSH connection details]({{ site.baseurl }}/assets/img/docs/ssh-windows-obf.png)
 
-SSH 接続するときには、実行するシェルの名前を渡してください。 上のビルドで `cmd.exe` を実行するには、`ssh -p <remote_ip> -- cmd.exe` を実行します。
+Ensure that you are passing the name of the shell you want to run when you ssh in. To run  `cmd.exe` in the build above you would run: `ssh -p <remote_ip> -- cmd.exe`
 
-以下のオプションが利用できます。
+The available options are:
 
 - powershell.exe
 - bash.exe
 - cmd.exe
 
-ビルドで SSH を使用する方法については、[こちら]({{site.baseurl}}/ja/2.0/ssh-access-jobs)を参照してください。
+You can read more about using SSH in your builds [here]({{site.baseurl}}/2.0/ssh-access-jobs).
 
-## 次のステップ
+## Next steps
 {: #next-steps }
 
-CircleCI の機能については、以下のドキュメントを確認してください。
+Also, consider reading documentation on some of CircleCI’s features:
 
-* Windows Server 2019 Core Datacenter エディション
-* 並列実行、順次実行、スケジュール実行、手動承認のワークフローによるジョブのオーケストレーションの例については「[ワークフローを使用したジョブのスケジュール]({{site.baseurl}}/ja/2.0/workflows)」を参照してください。
-* すべてのキーとビルド済み Docker イメージに関する詳細なリファレンスについては、それぞれ「[CircleCI を設定する]({{site.baseurl}}/ja/2.0/configuration-reference/)」、「[CircleCI のビルド済み Docker イメージ]({{site.baseurl}}/ja/2.0/circleci-images/)」を参照してください。
+* See the [Concepts]({{site.baseurl}}/2.0/concepts/) document for a summary of 2.0 configuration and the hierarchy of top-level keys in a .circleci/config.yml file.
+* Refer to the [Workflows]({{site.baseurl}}/2.0/workflows) document for examples of orchestrating job runs with concurrent, sequential, scheduled, and manual approval workflows.
+* Find complete reference information for all keys and pre-built Docker images in the [Configuring CircleCI]({{site.baseurl}}/2.0/configuration-reference/) and [CircleCI Images]({{site.baseurl}}/2.0/circleci-images/) documentation, respectively.
 
-## Windows イメージにプリインストールされているソフトウェア
+## Software pre-installed in the Windows image
 {: #software-pre-installed-in-the-windows-image }
 
 **Windows Server 2019 with Visual Studio 2019**
 
-* Visual Studio 2019 Community エディション
-* Visual Studio 2019 Community エディション
-    * CircleCI でこのバージョンの Visual Studio を使用する組織には、追加のライセンス条項が適用されます。 Windows ジョブでこの Visual Studio バージョンを使用する前に、[Visual Studio 2019 Community エディションのライセンス条項](https://visualstudio.microsoft.com/vs/community/#usage)を確認してください。
+* Windows Server 2019 Core Datacenter Edition
+* Visual Studio 2019 Community Edition
+    * Additional licensing terms may apply to your organisation when using this version of Visual Studio on CircleCI. Please review the [Visual Studio 2019 Community Edition licensing terms](https://visualstudio.microsoft.com/license-terms/mlt031819/) before using this Visual Studio version in your Windows jobs.
     * Azure SDK for Visual Studio 2019
     * Visual Studio 2019 Build Tools
 * AWS
     * AWS CLI 1.16.209
     * Python 3.6.0
     * Botocore 1.12.199
-* シェル
-    * PowerShell 5
+* Shells:
+    * Powershell 5
     * GNU bash 4.4.231 (x86_64-pc-msys)
     * cmd
 * .NET Framework 5
@@ -446,7 +446,7 @@ CircleCI の機能については、以下のドキュメントを確認して�
 * Windows 10 SDK
     * 10.0.26624
     * 10.1.18362.1
-* Docker Engine - Enterprise バージョン 18.09.7
+* Docker Engine - Enterprise version 18.09.7
 * NuGet CLI 5.2.0.6090
 * Chocolatey v0.11.2
 * Azure Service Fabric
@@ -463,7 +463,7 @@ CircleCI の機能については、以下のドキュメントを確認して�
 * Java 12.0.2
 * Miniconda 3
 * WinAppDriver 1.1.1809.18001
-* テキスト エディター
+* Text editors
     * nano 2.5
     * vim 8.2
 * jq 1.5

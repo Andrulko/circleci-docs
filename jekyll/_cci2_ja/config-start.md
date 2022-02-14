@@ -1,36 +1,36 @@
 ---
 layout: classic-docs
-title: "設定ファイル入門ガイド"
-description: "CircleCI におけるコア体験は、config.yml ファイルを使用した決定論的なビルドの作成です。 circleci/config.yml 入門動画をご覧ください。"
+title: "Configuration"
+description: "The core of the CircleCI experience is creating a deterministic build with the config.yml file. Watch a video introduction to circleci/config.yml."
 version:
   - Cloud
   - Server v3.x
   - Server v2.x
 ---
 
-CircleCI でのコア体験は、`config.yml` ファイルを使用して*決定論的なビルド*を作成することです。 決定論的なビルドとは、コミット時にも、翌日にも、あるいは翌月であっても実行することができ、かつ、まったく同じ結果を生成して終了するビルドを指します。
+The core of the CircleCI experience is creating a *deterministic build* with the `config.yml` file. A deterministic build is one that can be run live at commit time, tomorrow, or even next month and will end with the exact same results.
 
 <hr />
 
-| 設定ファイルの概要                                                                              | 設定に関するリファレンス                                                                                         |
-| -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| CircleCI の[設定ファイルの概要]({{ site.baseurl }}/ja/2.0/config-intro/)&nbsp;&nbsp;&nbsp;&nbsp; | `config.yml` 構文の[すべての仕様]({{ site.baseurl }}/ja/2.0/configuration-reference/)&nbsp;&nbsp;&nbsp;&nbsp; |
+| Config Introduction                                                                                 | Configuration Reference                                                                                                    |
+| --------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| [Introduction to Config]({{ site.baseurl }}/2.0/config-intro/) in CircleCI.&nbsp;&nbsp;&nbsp;&nbsp; | [Complete specification]({{ site.baseurl }}/2.0/configuration-reference/) for `config.yml` syntax.&nbsp;&nbsp;&nbsp;&nbsp; |
 
 <hr />
 
-| YAML の記述                                                                             | CircleCI CLI                                                               |
-| ------------------------------------------------------------------------------------ | -------------------------------------------------------------------------- |
-| [YAML 基本構文]({{ site.baseurl }}/ja/2.0/writing-yaml/)の入門ガイド  &nbsp;&nbsp;&nbsp;&nbsp; | ジョブをローカルで実行するには、[CircleCI CLI]({{ site.baseurl }}/2.0/local-jobs/) を使用します。 |
+| Writing YAML                                                                                       | CircleCI CLI                                                                    |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| A primer for [YAML syntax basics]({{ site.baseurl }}/2.0/writing-yaml/).  &nbsp;&nbsp;&nbsp;&nbsp; | Use the [CircleCI CLI]({{ site.baseurl }}/2.0/local-jobs/) to run jobs locally. |
 
 <hr />
 
-| ローカルでのデバッグ                                                                                          |
-| --------------------------------------------------------------------------------------------------- |
-| [設定ファイルをローカルでデバッグするには]({{ site.baseurl }}/2.0/examples/)、シェル スクリプトを使用します。  &nbsp;&nbsp;&nbsp;&nbsp; |
+| Debug Config Locally                                                                                           |
+| -------------------------------------------------------------------------------------------------------------- |
+| Use a shell script to [debug your config locally]({{ site.baseurl }}/2.0/examples/).  &nbsp;&nbsp;&nbsp;&nbsp; |
 
 <hr />
 
-## ビデオ: `.circleci/config.yml` 入門
+## Video: Introduction to `.circleci/config.yml`
 {: #video-introduction-to-circleciconfigyml }
 <div class="video-wrapper">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/xOSHKNUIkjY" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>

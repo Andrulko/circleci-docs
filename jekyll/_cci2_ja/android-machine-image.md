@@ -1,89 +1,89 @@
 ---
 layout: classic-docs
-title: "Android イメージを Machine Executor で使用"
-short-title: "Machine Executor 上の Android イメージ"
-description: "Machine Executor で Android イメージを使用"
+title: "Using Android Images with the Machine Executor"
+short-title: "Android Image on the Machine Executor"
+description: "Using the Android Image on the Machine Executor"
 version:
   - Cloud
 ---
 
-## 概要
+## Overview
 {: #overview }
 
-Android マシン イメージには、CircleCI で Linux マシン イメージにアクセスする場合と同様に、[Linux `machine` executor]({{site.baseurl}}/ja/2.0/configuration-reference/#machine-executor-linux) を通じてアクセスできます。 Android マシン イメージは、ネストされた仮想化と x86 Android エミュレーターをサポートしています。 そのため、Android UI テストに利用できます。 また、イメージには Android SDK がプリインストールされています。
+The Android machine image is accessed through the [Linux `machine` executor]({{site.baseurl}}/2.0/configuration-reference/#machine-executor-linux), like other Linux machine images on CircleCI. The Android machine image supports nested virtualization and x86 Android emulators, so it can be used for Android UI testing. It also comes with the Android SDK pre-installed.
 
-## Android マシン イメージの使用
+## Using the Android machine image
 {: #using-the-android-machine-image }
 
-設定ファイルに Android イメージを使用するには、[Orb]({{site.baseurl}}/2.0/orb-intro) を使用して、または、手動で設定することができます。 Android Orb を使用すると設定がシンプルになりますが、複雑なカスタムな設定は手動で行った方が効果的です。 このドキュメントでは、どちらの設定方法についても説明します。 詳細は、後述の「[例](#%E4%BE%8B)」セクションを参照してください。
+It is possible to configure the use of the Android image in your configuration with [orbs]({{site.baseurl}}/2.0/orb-intro) as well as manually. Using the Android orb will simplify your configuration while more complex and custom configurations may benefit from manually configuring your usage. This document will cover both use cases. Please view the [examples](#examples) section below for more details.
 
-## プリインストールされたソフトウェア
-Android マシン イメージには以下がプリインストールされています。
+## Pre-installed Software
+{: #pre-installed-software }
 
-この例では、より細かな Orb コマンドを使用して、[start-emulator-and-run-tests](https://circleci.com/developer/ja/orbs/orb/circleci/android#commands-start-emulator-and-run-tests) コマンドの処理を実現する方法を示しています。
+The Android machine image comes with the following pre-installed:
 
 ### Android SDK
 {: #android-sdk }
 - sdkmanager
-- Android プラットフォーム 23、24、25、26、27、28、29、30、S
-- ビルド ツール 30.0.3
-- エミュレーター、platform-tools、tools
-- NDK (Side by side) 21.4.7075529
+- Android platform 23, 24, 25, 26, 27, 28, 29, 30, S
+- Build tools 30.0.3
+- emulator, platform-tools, tools
+- NDK (Side-by-side) 21.4.7075529
 - cmake 3.6.4111459
-- extras;android;m2repository、extras;google;m2repository、extras;google;google_play_service
+- extras;android;m2repository, extras;google;m2repository, extras;google;google_play_service
 
-### その他
+### Others
 {: #others }
 - gcloud
-- OpenJDK 8、OpenJDK 11 (デフォルト)
-- maven 3.6.3、gradle 6.8.3、ant
-- nodejs 12.21.0、14.16.0 (デフォルト)、15.11.0
-- python 2.7.18、python 3.9.2
-- ruby 2.7.2、ruby 3.0.0
-- docker 20.10.5、docker-compose 1.28.5
+- OpenJDK 8, OpenJDK 11 (default)
+- maven 3.6.3, gradle 6.8.3, ant
+- nodejs 12.21.0, 14.16.0 (default), 15.11.0
+- python 2.7.18, python 3.9.2
+- ruby 2.7.2, ruby 3.0.0
+- docker 20.10.5, docker-compose 1.28.5
 - jq 1.6
 
-## 制限事項
+## Limitations
 {: #limitations }
 
-* ジョブが実行を開始するまでに、最大 2 分のスピンアップ時間がかかることがあります。 この時間は、Android イメージを利用するユーザーが増えるに連れ短縮されます。
+* There may be up to 2 mins of spin-up time before your job starts running. This time will decrease as more customers start using the Android image.
 
-## 料金プラン
+## Pricing
 {: #pricing }
 
-料金情報に関しては、[料金ページ](https://circleci.com/ja/pricing/)の「Linux VM」セクションで Linux Machine Executor を参照してください。
+For pricing information, refer to the Linux machine executors under the “Linux VM" section on the [pricing page](https://circleci.com/pricing/).
 
 
-## 例
+## Examples
 {: #examples }
 
-以下で、Android マシン イメージの使用方法について、Orb あり、Orb なしのいくつかの設定例で説明します。
+Below you will find several examples demonstrating the use of the Android machine image both with and without orbs.
 
-### Orb を使用するシンプルな例
+### Simple orb usage
 {: #simple-orb-usage }
 
-以下の例では、Android Orb を使用して 1 つのジョブを実行します。
+The below sample uses the Android orb to run a single job.
 
 ```yaml
 # .circleci/config.yaml
 version: 2.1
 orbs:
-  android: circleci/android@1.0
+  android: circleci/android@1.0.3
 workflows:
   test:
     jobs:
-      # このジョブではデフォルトで Android マシン イメージを使用します
+      # This job uses the Android machine image by default
       - android/run-ui-tests:
-          # 必要に応じて事前ステップと事後ステップを使用して
-          # ビルトイン ステップの前後でカスタム ステップを実行します
+          # Use pre-steps and post-steps if necessary
+          # to execute custom steps before and afer any of the built-in steps
           system-image: system-images;android-29;default;x86
 ```
 
 
-### Orb を使用する複雑な例
+### More complex orb usage
 {: #more-complex-orb-usage }
 
-この例では、より細かな Orb コマンドを使用して、[start-emulator-and-run-tests](https://circleci.com/developer/ja/orbs/orb/circleci/android#commands-start-emulator-and-run-tests) コマンドの処理を実現する方法を示しています。
+This example shows how you can use more granular orb commands to achieve what the [start-emulator-and-run-tests](https://circleci.com/developer/orbs/orb/circleci/android#commands-start-emulator-and-run-tests) command does.
 
 ```yaml
 # .circleci/config.yml
@@ -97,23 +97,23 @@ jobs:
       resource-class: large
     steps:
       - checkout
-      # "myavd" という名前の AVD を作成します
+      # Create an AVD named "myavd"
       - android/create-avd:
           avd-name: myavd
           system-image: system-images;android-29;default;x86
           install: true
-      # デフォルトで、エミュレーターの起動後、キャッシュが復元されます
-      # "./gradlew assembleDebugAndroidTest" が実行された後、スクリプトが
-      # 実行され、エミュレーターの起動を待ちます
-      # "post-emulator-launch-assemble-command" コマンドを指定して
-      # gradle コマンドの実行をオーバーライドするか、"wait-for-emulator" を false に設定して
-      # エミュレーターの待機を完全に無効にします
-       - android/start-emulator:
+      # By default, after starting up the emulator, a cache will be restored,
+      # "./gradlew assembleDebugAndroidTest" will be run and then a script
+      # will be run to wait for the emulator to start up.
+      # Specify the "post-emulator-launch-assemble-command" command to override
+      # the gradle command run, or set "wait-for-emulator" to false to disable
+      # waiting for the emulator altogether.
+      - android/start-emulator:
           avd-name: myavd
           no-window: true
           restore-gradle-cache-prefix: v1a
-      # デフォルトで "./gradlew connectedDebugAndroidTest" を実行します
-      # "test-command" パラメーターを指定してコマンド実行をカスタマイズします
+      # Runs "./gradlew connectedDebugAndroidTest" by default.
+      # Specify the "test-command" parameter to customize the command run.
       - android/run-tests
       - android/save-gradle-cache:
           cache-prefix: v1a
@@ -124,10 +124,10 @@ workflows:
 ```
 
 
-### Orb を使用しない例
+### No-orb example
 {: #no-orb-example }
 
-以下の例では、__circleci/android [Orb](https://circleci.com/developer/ja/orbs/orb/circleci/android) なしで Android マシン イメージを使用しています。 以下のステップは、Orb の [run-ui-tests](https://circleci.com/developer/ja/orbs/orb/circleci/android#jobs-run-ui-tests) ジョブを使用して実行する処理に類似しています。
+The following is an example of using the Android machine image, _without_ using the circleci/android [orb](https://circleci.com/developer/orbs/orb/circleci/android). These steps are similar to what is run when you use the [run-ui-tests](https://circleci.com/developer/orbs/orb/circleci/android#jobs-run-ui-tests) job of the orb.
 
 
 {% raw %}
@@ -138,45 +138,45 @@ jobs:
   build:
     machine:
       image: android:202102-01
-    # ビルド時間を最適化するために、Android 関連のジョブには "large" 以上をお勧めします
+    # To optimize build times, we recommend "large" and above for Android-related jobs
     resource_class: large
     steps:
       - checkout
       - run:
-          name: AVD の作成
+          name: Create avd
           command: |
             SYSTEM_IMAGES="system-images;android-29;default;x86"
             sdkmanager "$SYSTEM_IMAGES"
             echo "no" | avdmanager --verbose create avd -n test -k "$SYSTEM_IMAGES"
       - run:
-          name: エミュレーター起動
+          name: Launch emulator
           command: |
             emulator -avd test -delay-adb -verbose -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
           background: true
       - run:
-          name: キャッシュ キー生成
+          name: Generate cache key
           command: |
             find . -name 'build.gradle' | sort | xargs cat |
             shasum | awk '{print $1}' > /tmp/gradle_cache_seed
       - restore_cache:
           key: gradle-v1-{{ arch }}-{{ checksum "/tmp/gradle_cache_seed" }}
       - run:
-          # ビルド時間を最適化するために、エミュレーターの起動と並列で実行します
-          name: assembleDebugAndroidTest タスクの実行
+          # run in parallel with the emulator starting up, to optimize build time
+          name: Run assembleDebugAndroidTest task
           command: |
             ./gradlew assembleDebugAndroidTest
       - run:
-          name: エミュレーターの起動の待機
+          name: Wait for emulator to start
           command: |
             circle-android wait-for-boot
       - run:
-          name: エミュレーター アニメーションの無効化
+          name: Disable emulator animations
           command: |
             adb shell settings put global window_animation_scale 0.0
             adb shell settings put global transition_animation_scale 0.0
             adb shell settings put global animator_duration_scale 0.0
       - run:
-          name: UI テストの実行 (リトライあり)
+          name: Run UI tests (with retry)
           command: |
             MAX_TRIES=2
             run_with_retry() {
@@ -193,7 +193,7 @@ jobs:
                  exit 1
                fi
             }
-            run_with_retry 
+            run_with_retry
       - save_cache:
           key: gradle-v1-{{ arch }}-{{ checksum "/tmp/gradle_cache_seed" }}
           paths:

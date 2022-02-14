@@ -1,6 +1,6 @@
 ---
 layout: classic-docs
-title: デプロイの構成例
+title: Deployment Examples
 description: This document presents example configs for a variety of popular deployment targets.
 version:
   - Cloud
@@ -18,9 +18,9 @@ This document presents example config for a variety of popular deployment target
 {:.no_toc}
 
 * In order to use orbs you must use `version 2.1` config.
-* `<docker-image-name-tag>` を使ってどこで[ジョブに Docker イメージ]({{ site.baseurl }}/2.0/optimizations/#docker-image-choice)を指定するかを記載しました。
+* We have indicated where you need to specify a [docker image for your job]({{ site.baseurl }}/2.0/optimizations/#docker-image-choice) with `<docker-image-name-tag>`.
 * If you wish to remain using `version 2.0` config, or are using an installation of CircleCI server v2.x, the examples shown here are still relevant because you can view the expanded orb source within the [Orbs Registry](https://circleci.com/developer/orbs) to see how the jobs are built.
-* このページの Orb を使用したサンプルでは、例えば`aws-s3: circleci/aws-s3@x.y.z`のように Orb はタグによるバージョンがつけられてています。 サンプルをコピー & ペーストする場合は、`x.y.z` を特定のバージョンの値に変更する必要があります。 使用可能なバージョンについては、[CircleCI Orb レジストリ](https://circleci.com/developer/ja/orbs)の各 Orb のページを参照してください。
+* In the examples on this page that use orbs, you will notice that the orbs are versioned with tags, for example, `aws-s3: circleci/aws-s3@x.y.z`. If you copy paste any examples you will need to edit `x.y.z` to specify a version. You can find the available versions listed on the individual orb pages in the [CircleCI Orbs Registry](https://circleci.com/developer/orbs).
 * Any items in these examples that appear within `< >` should be replaced with your own parameters.
 
 ## AWS
@@ -37,7 +37,7 @@ For more detailed information about the AWS S3, ECS, ECR, and CodeDeploy orbs, r
 ### Deploy to S3
 {: #deploy-to-s3 }
 {:.no_toc}
-#### AWS S3 Orb の使用
+#### Using the AWS S3 Orb
 {: #using-the-aws-s3-orb }
 {:.no_toc}
 
@@ -102,11 +102,11 @@ For detailed information about the AWS S3 orb, refer to the [CircleCI AWS S3 Orb
 
 2. Add your [AWS access keys](https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html#access-keys-and-secret-access-keys) to CircleCI – store your Access Key ID in a variable called `AWS_ACCESS_KEY_ID` and your Secret Access Key in a variable called `AWS_SECRET_ACCESS_KEY`. {% include snippets/env-var-or-context.md %}
 
-3. `.circleci/config.yml` ファイルで、新しい `deploy` ジョブを作成します。 `deploy` ジョブで、プライマリ コンテナに `awscli` をインストールするステップを追加します。
+3. In your `.circleci/config.yml` file, create a new `deploy` job. In the `deploy` job, add a step to install `awscli` in your primary container.
 
-4. [AWS CLI に関するドキュメント](https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/cli-chap-install.html)に従って、プライマリ コンテナに `awscli` をインストールします。
+4. Install `awscli` in your primary container by following the [AWS CLI documentation](http://docs.aws.amazon.com/cli/latest/userguide/installing.html).
 
-5. [AWS CLI を使用](https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/cli-chap-using.html)して、アプリケーションを S3 にデプロイするか、他の AWS 操作を実行します。 Note the use of workflows to deploy only if the build job passes and the current branch is `main`.
+5. [Use the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-using.html) to deploy your application to S3 or perform other AWS operations. Note the use of workflows to deploy only if the build job passes and the current branch is `main`.
 
     {% raw %}
     ```yaml
@@ -148,7 +148,7 @@ For detailed information about the AWS S3 orb, refer to the [CircleCI AWS S3 Orb
     ```
     {% endraw %}
 
-AWS CLI のコマンドとオプションの一覧は、「[AWS CLI コマンド リファレンス](https://docs.aws.amazon.com/cli/latest/reference/)」で参照できます。
+For a complete list of AWS CLI commands and options, see the [AWS CLI Command Reference](https://docs.aws.amazon.com/cli/latest/reference/).
 
 ### Deploy Docker image to AWS ECR
 {: #deploy-docker-image-to-aws-ecr }
@@ -248,7 +248,7 @@ This section describes a simple deployment to the Azure container registry (ACR)
 
 For detailed information about the Azure ACR orb, including all options, refer to the [CircleCI ACR Orb Reference](https://circleci.com/developer/orbs/orb/circleci/azure-acr) page.
 
-1. Whether your require a user or service principal login, you will need to provide environment variables for username, password and tennent to CircleCI. For user logins use env var names as follows: `AZURE_USERNAME`, `AZURE_PASSWORD` and `AZURE_TENANT`. For service principal logins use: `AZURE_SP`, `AZURE_SP_PASSWORD` and `AZURE_SP_TENANT`. {% include snippets/env-var-or-context.md %}
+1. Whether your require a user or service principal login, you will need to provide environment variables for username, password and tenant to CircleCI. For user logins use env var names as follows: `AZURE_USERNAME`, `AZURE_PASSWORD` and `AZURE_TENANT`. For service principal logins use: `AZURE_SP`, `AZURE_SP_PASSWORD` and `AZURE_SP_TENANT`. {% include snippets/env-var-or-context.md %}
 
 2. Use the orb's `build-and-push-image` job to build your image and deploy it to ACR. Note the use of workflows to deploy only if the current branch is `main`.
 
@@ -276,7 +276,7 @@ For detailed information about the Azure ACR orb, including all options, refer t
 
     {% endraw %}
 
-If pushing to your repo is required, see the [Adding Read/Write Deployment Keys to GitHub or Bitbucket]({{ site.baseurl }}/2.0/gh-bb-integration/) section of the GitHub and Bitbucket Integration document for instructions. 次に、production ブランチを使用するように Azure Web App を設定します。
+If pushing to your repo is required, see the [Adding Read/Write Deployment Keys to GitHub or Bitbucket]({{ site.baseurl }}/2.0/gh-bb-integration/) section of the GitHub and Bitbucket Integration document for instructions. Then, configure the Azure Web App to use your production branch.
 
 ## Capistrano
 {: #capistrano }
@@ -324,7 +324,7 @@ jobs:
 ## Cloud Foundry
 {: #cloud-foundry }
 
-CircleCI は、設定ワークフローを簡略化するために Cloud Foundry Orb を開発しました。 The Cloud Foundry page in the [Orbs Registry](https://circleci.com/developer/orbs/orb/circleci/cloudfoundry) contains several different examples of how you can perform tasks with CloudFoundry, including the example below that shows how you can build and run blue green deployment in a single job - in this example `domain` will automatically be prefixed with `dark` and `live` for two subdomains to be specified. Validation steps would also need to be provided to allow the live deployment to go ahead.
+CircleCI has developed a CloudFoundry Orb that you can use to simplify your configuration workflows. The Cloud Foundry page in the [Orbs Registry](https://circleci.com/developer/orbs/orb/circleci/cloudfoundry) contains several different examples of how you can perform tasks with CloudFoundry, including the example below that shows how you can build and run blue green deployment in a single job - in this example `domain` will automatically be prefixed with `dark` and `live` for two subdomains to be specified. Validation steps would also need to be provided to allow the live deployment to go ahead.
 
 {% raw %}
 
@@ -362,9 +362,9 @@ If you would like more detailed information about various CloudFoundry orb eleme
 {: #deploy-to-cloud-foundry-with-20-config }
 {:.no_toc}
 
-Cloud Foundry へのデプロイには Cloud Foundry CLI が必要です。 Be sure to match the architecture to your Docker image (the commands below assume you are using a Debian-based image). この例では、Cloud Foundry の map-route/unmap-route コマンドを使用して、"Blue-Green" デプロイを実装しています。これは、基本の `cf push` にはないオプションの機能です。
+Cloud Foundry deployments require the Cloud Foundry CLI. Be sure to match the architecture to your Docker image (the commands below assume you are using a Debian-based image). This example pattern implements "Blue-Green" deployments using Cloud Foundry's map-route/unmap-route commands, which is an optional feature above and beyond a basic `cf push`.
 
-#### CLI のインストール
+#### Install the CLI
 {: #install-the-cli }
 {:.no_toc}
 
@@ -412,7 +412,7 @@ This is the first step in a [Blue-Green](https://docs.cloudfoundry.org/devguide/
 {: #live-deployment }
 {:.no_toc}
 
-ここまで、前にプッシュした "app-name" は変更されていません。  最後に、本番 URL を dark アプリケーションにルーティングし、それまでのバージョンへのトラフィックを停止し、アプリケーションの名前を変更します。
+Until now, the previously pushed "app-name" has not changed.  The final step is to route the production URL to our dark application, stop traffic to the previous version, and rename the applications.
 
 ```yaml
       - run:
@@ -434,7 +434,7 @@ This is the first step in a [Blue-Green](https://docs.cloudfoundry.org/devguide/
 {: #manual-approval }
 {:.no_toc}
 
-さらなるコントロールとバリデーションを行うには、以下のサンプルワークフローに示すように、dark のステップと live のステップの間に手動の "hold" ステップを追加します。
+For additional control or validation, you can add a manual "hold" step between the dark and live steps as shown in the sample workflow below.
 
 {% raw %}
 
@@ -477,7 +477,7 @@ In order to deploy to Firebase you will need to add `firebase-tools` to your pro
 npm install --save-dev firebase-tools
 ```
 
-以下のコマンドを使用して、Firebase CLI トークンを生成します。
+Generate a Firebase CLI token using the following command:
 
 ```
 firebase login:ci
@@ -532,7 +532,7 @@ If using Google Cloud Functions with Firebase, instruct CircleCI to navigate to 
 ## Google Cloud Platform
 {: #google-cloud-platform }
 
-Before deploying to Google Cloud Platform, you will need to authorize the Google Cloud SDK and set default configuration settings. 詳細については、「[Google Cloud SDK の承認]({{ site.baseurl }}/ja/2.0/google-auth/)」を参照してください。
+Before deploying to Google Cloud Platform, you will need to authorize the Google Cloud SDK and set default configuration settings. Refer to the [Authorizing the Google Cloud SDK]({{ site.baseurl }}/2.0/google-auth/) document for full details.
 
 ### Using Google Cloud orbs
 {: #using-google-cloud-orbs }
@@ -613,7 +613,7 @@ For another example, see our [CircleCI Google Cloud deployment example project](
 ## Heroku
 {: #heroku }
 
-[Heroku](https://jp.heroku.com/) は、クラウドでアプリケーションをホスティングするための一般的なプラットフォームです。 To configure CircleCI to deploy your application to Heroku, follow the steps below.
+[Heroku](https://www.heroku.com/) is a popular platform for hosting applications in the cloud. To configure CircleCI to deploy your application to Heroku, follow the steps below.
 
 ### Deploy with the Heroku orb
 {: #deploy-with-the-heroku-orb }
@@ -696,16 +696,16 @@ For more detailed information about these Heroku orbs, refer to the [CircleCI He
 
     {% endraw %}
 
-**メモ:** Heroku では、デプロイまたは自動デプロイで、デプロイの前に渡す CI を待機するオプションが提供されます。 詳細については、[Heroku のドキュメント](https://devcenter.heroku.com/articles/github-integration#automatic-deploys)を参照してください。
+**Note:** Heroku provides the option "Wait for CI to pass before deploy" under deploy / automatic deploys. See the [Heroku documentation](https://devcenter.heroku.com/articles/github-integration#automatic-deploys) for details.
 
 ## NPM
 {: #npm }
 
-パッケージを npm レジストリにパブリッシュするように CircleCI を設定すると、プロジェクトのコラボレーターは、一貫性のある予測可能な方法で新しいパッケージのバージョンを簡単にリリースできるようになります。
+Setting up CircleCI to publish packages to the npm registry makes it easy for project collaborators to release new package versions in a consistent and predictable way.
 
-1.  パッケージのパブリッシュに使用するアカウント用に npm authToken を取得します。
+1.  Obtain the npm authToken for the account that you wish to use to publish the package.
 
-    それには、npm にログインします (`npm login`)。 これで、authToken が `~/.npmrc` ファイルに保存されます。 次の行を探します。
+    You can do that by logging in to npm (`npm login`). This will save the authToken to the `~/.npmrc` file. Look for the following line:
 
     ```sh
     //registry.npmjs.org/:_authToken=00000000-0000-0000-0000-000000000000
@@ -715,7 +715,7 @@ For more detailed information about these Heroku orbs, refer to the [CircleCI He
 
 2.  Go to your [project settings]({{ site.baseurl }}/1.0/environment-variables/#setting-environment-variables-for-all-commands-without-adding-them-to-git), and set the `NPM_TOKEN` variable to the obtained authToken.
 
-3.  authToken を `~/.npmrc` に追加するように CircleCI を構成し、バージョンが指定されたタグにのみ `npm publish` を実行します。
+3.  Configure CircleCI to add the authToken to `~/.npmrc`, run `npm publish` and only for versioned tags:
 
     {% raw %}
 
@@ -749,27 +749,27 @@ For more detailed information about these Heroku orbs, refer to the [CircleCI He
 
     {% endraw %}
 
-4.  新しいバージョンを npm にパブリッシュするには、以下に示すように `npm version` を実行して新しいバージョンを作成します。
+4.  When you want to publish a new version to npm, run `npm version` to create a new version:
 
     ```sh
     npm version 10.0.1
     ```
 
-    これで、`package.json` ファイルがアップデートされ、タグ付きの Git コミットが作成されます。 次に、タグ付きのコミットをプッシュします。
+    This will update the `package.json` file and creates a tagged Git commit. Next, push the commit with tags:
 
     ```sh
     git push --follow-tags
     ```
-5.  テストが完了すると、パッケージが npm に自動的にパブリッシュされます。
+5.  If tests passed, CircleCI will publish the package to npm automatically.
 
 ## SSH
 {: #ssh }
 
-SSH を介してアプリケーションをデプロイするように CircleCI を設定するには、以下の手順を行います。
+To configure CircleCI to deploy your application over SSH, follow the steps below.
 
-1. デプロイ先のサーバー用の SSH 鍵を追加します。 手順については、「[CircleCI に SSH 鍵を登録する]({{ site.baseurl }}/ja/2.0/add-ssh-key/)」を参照してください。
+1. Add the SSH key for the server to which you're deploying. For instructions, see the [Adding an SSH Key to CircleCI]({{ site.baseurl }}/2.0/add-ssh-key/) document.
 
-2. ビルド VM の SSH ユーザー名と SSH ホスト名を環境変数として追加します。 手順については、「[プロジェクト内で環境変数を設定する]({{ site.baseurl }}/ja/2.0/env-vars/#プロジェクト内で環境変数を設定する)」を参照してください。 以下の例では、これらの変数はそれぞれ `SSH_USER` および `SSH_HOST` として定義されています。
+2. Add the SSH username and SSH hostname of your build VM as environment variables. For instructions, see the [Adding Project Environment Variables]({{ site.baseurl }}/2.0/env-vars/#setting-an-environment-variable-in-a-project) document. In this example, these variables are defined as `SSH_USER` and `SSH_HOST`, respectively.
 
 3. In your `.circleci/config.yml`, create a `deploy` job and add a command to deploy the main branch.
 

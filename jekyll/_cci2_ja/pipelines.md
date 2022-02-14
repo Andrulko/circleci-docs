@@ -3,16 +3,16 @@ layout: classic-docs
 title: "Pipelines Introduction"
 description: "This document introduces the concept of pipelines and shows how pipelines can be triggered and what they include."
 categories:
-  - はじめよう
+  - getting-started
 order: 1
 version:
-  - クラウド
+  - Cloud
   - Server v3.x
 ---
 
 This page provides information on CircleCI pipelines, how they are triggered, and what they include. For further information on pipeline processing, and the features available within your pipelines, refer to the [Pipeline Processing]({{site.baseurl}}/2.0/build-processing) doc.
 
-## 概要
+## Overview
 {: #overview }
 
 CircleCI pipelines are the highest-level unit of work, encompassing a project's full `.circleci/config.yml` file. Pipelines include your workflows, which coordinate your jobs. They have a fixed, linear lifecycle, and are associated with a specific actor. Pipelines trigger when a change is pushed to a project that has a CircleCI configuration file included, and can also be scheduled, triggered manually through the CircleCI app, or using the API.
@@ -54,7 +54,7 @@ TBC
 ## Pipeline architecture
 {: #pipeline-architecture }
 
-パイプラインはワークフローで構成され、ワークフローはジョブで構成されます。 パイプライン中のいずれかのジョブに移動すると、ジョブ出力、テスト結果、アーティファクトに各タブからアクセスできます。
+A pipeline is composed of workflows, which are composed of jobs. By navigating from a pipeline to a specific job, you can access your job output, test results and artifacts through several tabs.
 
 ![]({{ site.baseurl }}/assets/img/docs/pipelines-job-step-test-artifact.png)
 

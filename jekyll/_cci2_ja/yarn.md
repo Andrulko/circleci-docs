@@ -1,9 +1,9 @@
 ---
 layout: classic-docs
-title: "CircleCI での Yarn (npm の代替) の使用"
-short-title: "Yarn パッケージ マネージャー"
+title: "Using Yarn (an NPM alternative) on CircleCI"
+short-title: "Yarn Package Manager"
 categories:
-  - 使用方法
+  - how-to
 description: "Yarn is an open-source package manager for JavaScript. Learn how to use Yarn in CircleCI config and with caching to speed up builds."
 version:
   - Cloud
@@ -11,61 +11,62 @@ version:
   - Server v2.x
 ---
 
-[Yarn](https://yarnpkg.com/ja/) は、JavaScript 用のオープンソース パッケージ マネージャーです。 Yarn によってインストールされるパッケージはキャッシュできるため、 This can potentially speed up builds, but, more importantly, can reduce errors related to network connectivity.
+[Yarn](https://yarnpkg.com/) is an open-source package manager for JavaScript. The packages it installs can be cached. This can potentially speed up builds, but, more importantly, can reduce errors related to network connectivity.
 
-## CircleCI での Yarn の使用方法
+## Using Yarn in CircleCI
 {: #using-yarn-in-circleci }
 
-Yarn might already be installed in your execution environment if you are using the [`docker` executor](https://circleci.com/docs/2.0/executor-types/#using-docker). [CircleCI のビルド済み Docker イメージ](https://circleci.com/ja/docs/2.0/circleci-images/)では、Node.js イメージ (`circleci/node`) に Yarn がプリインストールされています。 `circleci/python`、`circleci/ruby` などの他の言語イメージを使用している場合は、Yarn と Node.js を含む 2 つの[イメージ バリアント](https://circleci.com/docs/2.0/circleci-images/#language-image-variants)があります。 `-node` と `-node-browsers` のイメージ バリアントです。 For example, using the Docker image `circleci/python:3-node` will give you a Python execution environment with Yarn and NodeJS installed.
+Yarn might already be installed in your execution environment if you are using the [`docker` executor](https://circleci.com/docs/2.0/executor-types/#using-docker). With [Pre-built CircleCI Docker Images](https://circleci.com/docs/2.0/circleci-images/), the NodeJS image (`circleci/node`) already has Yarn preinstalled. If you are using one of the other language images such as `circleci/python` or `circleci/ruby`, there are two [image variants](https://circleci.com/docs/2.0/circleci-images/#language-image-variants) that will include Yarn as well as NodeJS. These would be the `-node` and `-node-browsers` image variants. For example, using the Docker image `circleci/python:3-node` will give you a Python execution environment with Yarn and NodeJS installed.
 
-独自の Docker イメージ ベース、または `macos`、`windows`、`machine` の Executor を使用している場合は、[Yarn の公式ドキュメント](https://yarnpkg.com/lang/ja/docs/install/)の手順に従って Yarn をインストールできます。 Yarn ドキュメントには、マシン環境別のインストール手順が記載されています。 たとえば Unix 系の環境にインストールする場合は、以下の curl コマンドを使用します。
+If you're using your own Docker image base or the `macos`, `windows` or `machine` executors, you can install Yarn by following the official instructions from [Yarn Docs](https://yarnpkg.com/lang/en/docs/install/). The Yarn Docs provide several installation methods depending on what machine executor you might be using. For example, you can install on any unix-like environment using the following curl command.
 
 ```sh
 curl -o- -L https://yarnpkg.com/install.sh | bash
 ```
 
-## キャッシュ
+## Caching
 {: #caching }
 
-Yarn パッケージをキャッシュして、CI ビルド時間を短縮できます。
+Yarn packages can be cached to improve CI build times.
 
-Yarn 2.xでは、 [Zero Installs](https://yarnpkg.com/features/zero-installs)という機能が追加されました。Zero Installsを使用している場合、特別なキャッシュは必要ありません。
+Yarn 2.x added the ability to do [Zero Installs](https://yarnpkg.com/features/zero-installs); if you're using Zero Installs, you shouldn't need to do any special caching.
 
-Yarn 2.x を Zero Installs なしで使用している場合は、次のように設定します。
+If you're using Yarn 2.x without Zero Installs, you can do something like this:
 
 {% raw %}
 ```yaml
 #...
       - restore_cache:
-          name: Yarn パッケージのキャッシュの復元
+          name: Restore Yarn Package Cache
           keys:
             - yarn-packages-{{ checksum "yarn.lock" }}
       - run:
-          name: 依存関係のインストール
+          name: Install Dependencies
           command: yarn install --immutable
       - save_cache:
-          name: Yarn パッケージのキャッシュの保存
+          name: Save Yarn Package Cache
           key: yarn-packages-{{ checksum "yarn.lock" }}
           paths:
-            - ~/.cache/yarn
+            - .yarn/cache
+            - .yarn/unplugged
 #...
 ```
 {% endraw %}
 
-Yarn 1.x の例:
+An example for Yarn 1.x:
 
 {% raw %}
 ```yaml
 #...
       - restore_cache:
-          name: Yarn パッケージのキャッシュの復元
+          name: Restore Yarn Package Cache
           keys:
             - yarn-packages-{{ checksum "yarn.lock" }}
       - run:
-          name: 依存関係のインストール
+          name: Install Dependencies
           command: yarn install --frozen-lockfile --cache-folder ~/.cache/yarn
       - save_cache:
-          name: Yarn パッケージのキャッシの保存
+          name: Save Yarn Package Cache
           key: yarn-packages-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
@@ -73,7 +74,7 @@ Yarn 1.x の例:
 ```
 {% endraw %}
 
-## 関連項目
+## See also
 {: #see-also }
 
-[依存関係のキャッシュ]({{ site.baseurl }}/2.0/caching/)
+[Caching Dependencies]({{ site.baseurl }}/2.0/caching/)

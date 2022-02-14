@@ -1,8 +1,8 @@
 ---
 layout: classic-docs
-title: "言語ガイド: Ruby"
+title: "Language Guide: Ruby"
 short-title: "Ruby"
-description: "CircleCI での Ruby on Rails を使用したビルドとテスト"
+description: "Building and Testing with Ruby and Rails on CircleCI"
 categories:
   - language-guides
 order: 8
@@ -12,85 +12,85 @@ version:
   - Server v2.x
 ---
 
-このガイドでは、CircleCI で Ruby on Rails アプリケーションをビルドする方法について説明します。
+This guide will help you get started with a Ruby on Rails application on CircleCI.
 
-* 目次
+* TOC
 {:toc}
 
-## 概要
+## Overview
 {: #overview }
 {:.no_toc}
 
-お急ぎの場合は、下記の設定ファイルの例をプロジェクトのルート ディレクトリにある[`.circleci/config.yml`]({{ site.baseurl }}/ja/2.0/configuration-reference/) に貼り付け、ビルドを開始してください。
+If you’re in a rush, just copy the sample configuration below into a [`.circleci/config.yml`]({{ site.baseurl }}/2.0/configuration-reference/) in your project’s root directory and start building.
 
-CircleCI では、[GitHub](https://github.com/CircleCI-Public/circleci-demo-ruby-rails) 上で Ruby on Rails のサンプルプロジェクトを提供しており、[CircleCI ](https://app.circleci.com/pipelines/github/CircleCI-Public/circleci-demo-ruby-rails)上でのビルドを参照することができます。
+CircleCI maintains a sample Ruby on Rails project on [GitHub](https://github.com/CircleCI-Public/circleci-demo-ruby-rails) which you can see building on [CircleCI](https://app.circleci.com/pipelines/github/CircleCI-Public/circleci-demo-ruby-rails)
 
-このアプリケーションでは、最新の安定した Rails バージョン 6.1 (`rspec-rails`)、[RspecJunitFormatter][rspec-junit-formatter] および PostgreSQL をデータベースとして使用しています。
+The application uses Rails version 6.1, `rspec-rails`, and [RspecJunitFormatter][rspec-junit-formatter] with PostgreSQL as the database.
 
 
-## CircleCI のビルド済み Docker イメージ
+## Pre-Built CircleCI Docker Images
 {: #pre-built-circleci-docker-images }
 
-このアプリケーションのビルドには、ビルド済み [CircleCI Docker イメージ]({{site.baseurl}}/2.0/circleci-images/)の 1 つを使用しています。
+This application build also uses one of the pre-built [CircleCI Docker Images]({{site.baseurl}}/2.0/circleci-images/).
 
-CircleCI のビルド済みイメージの使用を検討してください。 このイメージには、CI 環境で役立つツールがプリインストールされています。 Docker Hub (<https://hub.docker.com/r/circleci/ruby/>) から必要な Ruby バージョンを選択できます。
+Consider using a CircleCI pre-built image that comes pre-installed with tools that are useful in a CI environment. You can select the Ruby version you need from [Docker Hub](https://hub.docker.com/r/cimg/ruby).
 
-セカンダリ「サービス」コンテナとして使用するデータベース イメージも Docker ハブ の `circleci` ディレクトリで提供しています。
+Database images for use as a secondary 'service' container are also available on Docker Hub in the `circleci` directory.
 
 ---
 
-## 設定ファイルの例
+## Sample configuration
 {: #sample-configuration }
 
-以下のコードブロックは、コメントをつけてサンプルアプリケーションの設定の各部分を説明しています。
+The following code block is commented to describe each part of the configuration for the sample application.
 
 {% raw %}
 
 ```yaml
-version: 2.1 # 2.1 を使うと Orb や他の機能を使用することができます。 
+version: 2.1 # Use 2.1 to enable using orbs and other features.
 
-# 設定で使用する Orb を宣言します。
-# Orb に関する詳細は、https://circleci.com/docs/ja/2.0/orb-intro/をご覧ください。
+# Declare the orbs that we'll use in our config.
+# read more about orbs: https://circleci.com/docs/2.0/orb-intro/
 orbs:
   ruby: circleci/ruby@1.0
   node: circleci/node@2
 
 jobs:
-  build: #  "build"という名前の最初のジョブです。
+  build: # our first job, named "build"
     docker:
-      - image: cimg/ruby:2.7-node # カスタマイズされた CircleCI Docker イメージを使用します。
+      - image: cimg/ruby:2.7-node # use a tailored CircleCI docker image.
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/ プロジェクト UI の環境変数を参照します。
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
-      - checkout # Git コードをプルダウンします。
-      - ruby/install-deps # Ruby Orb を使って依存関係をインストールします。
-      # Node Orb を使ってパッケージをインストールします。
-      # Yarn の使用および 依存関係のキャッシュに yarn.lock の使用を指定します。
-      # 詳細は、 https://circleci.com/docs/2.0/caching/　を参照してください。
+      - checkout # pull down our git code.
+      - ruby/install-deps # use the ruby orb to install dependencies
+      # use the node orb to install our packages
+      # specifying that we use `yarn` and to cache dependencies with `yarn.lock`
+      # learn more: https://circleci.com/docs/2.0/caching/
       - node/install-packages:
           pkg-manager: yarn
           cache-key: "yarn.lock"
 
-  test:  # "test"という名前の２つ目のジョブです。
-    # テストを高速化するために「並列ジョブコンテナ」を実行します。
-    # これによりテストが複数のコンテナに分割されます。
+  test:  # our next job, called "test"
+    # we run "parallel job containers" to enable speeding up our tests;
+    # this splits our tests across multiple containers.
     parallelism: 3
-    # ここでは、2 つの Docker イメージを設定します。
+    # here we set TWO docker images.
     docker:
-      - image: cimg/ruby:2.7-node # プライマリ Docker イメージです。ここでステップコマンドが実行されます。
+      - image: cimg/ruby:2.7-node # this is our primary docker image, where step commands run.
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/ プロジェクト UI の環境変数を参照します。
-      - image: circleci/postgres:9.5-alpine
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+      - image: cimg/postgres:14.0
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/ プロジェクト UI の環境変数を参照します。
-        environment: # POSTGRES 環境変数を追加します。
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+        environment: # add POSTGRES environment variables.
           POSTGRES_USER: circleci-demo-ruby
           POSTGRES_DB: rails_blog_test
           POSTGRES_PASSWORD: ""
-    # Ruby/Rails 固有の環境変数をプライマリコンテナに適用します。
+    # environment variables specific to Ruby/Rails, applied to the primary container.
     environment:
       BUNDLE_JOBS: "3"
       BUNDLE_RETRY: "3"
@@ -98,60 +98,57 @@ jobs:
       PGUSER: circleci-demo-ruby
       PGPASSWORD: ""
       RAILS_ENV: test
-    # 実行する一連のステップです。「ビルド」のステップと似たステップもあります。
+    # A series of steps to run, some are similar to those in "build".
     steps:
       - checkout
       - ruby/install-deps
       - node/install-packages:
           pkg-manager: yarn
           cache-key: "yarn.lock"
-      # ここでは、データベース上で実行する前に
-      # セカンダリコンテナが起動することを確認します。
-      
-  - run:
-      name: DB の待機
-      command: dockerize -wait tcp://localhost:5432 -timeout 1m
-
-  - run:
-      name: データベースのセットアップ
-      command: bundle exec rails db:schema:load --trace
-      # RSpec を並列実行します。
+      # Here we make sure that the secondary container boots
+      # up before we run operations on the database.
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run:
+          name: Database setup
+          command: bundle exec rails db:schema:load --trace
+      # Run rspec in parallel
       - ruby/rspec-test
 
-# ワークフローを使って上記で宣言したジョブをオーケストレーションします。
-
+# We use workflows to orchestrate the jobs that we declared above.
 workflows:
   version: 2
-  build_and_test:     # ワークフローの名前は "build_and_test" です。
-    jobs:             # このワークフローの一部として実行するジョブのリストです。
-      - build         # まず、ビルドを実行します。
-
-      - test:         # 次に、テストを実行します。
-          requires:   # テストを実行するにはビルドを渡す必要があります。
-            - build   # 最後に、ビルドしたジョブを実行します。
+  build_and_test:     # The name of our workflow is "build_and_test"
+    jobs:             # The list of jobs we run as part of this workflow.
+      - build         # Run build first.
+      - test:         # Then run test,
+          requires:   # Test requires that build passes for it to run.
+            - build   # Finally, run the build job.
 ```
 
 {% endraw %}
 
 
-## Ruby on Rails のデモ プロジェクトのビルド
-他のディレクトリを指定しない限り、以降の `job` ではこのパスがデフォルトの作業ディレクトリとなります。
+## Build the demo Ruby on Rails project yourself
+{: #build-the-demo-ruby-on-rails-project-yourself }
 
-CircleCI を初めて使用する際は、プロジェクトをご自身でビルドしてみることをお勧めします。 以下に、ご自身のアカウントを使用してデモ プロジェクトをビルドする方法を示します。
+A good way to start using CircleCI is to build a project yourself. Here's how to build the demo project with your own account:
 
-1. お使いのアカウントに、GitHub 上の[プロジェクトをフォーク](https://github.com/CircleCI-Public/circleci-demo-ruby-rails/fork)します。
-2. CircleCI アプリケーションの[プロジェクトダッシュボード](https://app.circleci.com/projects/){:rel="nofollow"}に行き、フォークしたプロジェクトの隣にある**[Follow Project (プロジェクトをフォローする)]**ボタンをクリックします。
-3. 変更を加えるには、`.circleci/config.yml` ファイルを編集してコミットします。 コミットを GitHub にプッシュすると、CircleCI がそのプロジェクトをビルドしてテストします。
+1. [Fork the project][fork-demo-project] on GitHub to your own account.
+2. Go to the [**Projects**](https://app.circleci.com/projects/){:rel="nofollow"} dashboard in the CircleCI app and click the **Follow Project** button next to the project you just forked.
+3. To make changes you can edit the `.circleci/config.yml` file and make a commit. When you push a commit to GitHub, CircleCI will build and test the project.
 
-## 関連項目
+## See also
 {: #see-also }
 {:.no_toc}
 
-デプロイターゲットの設定例については、[デプロイ]({{ site.baseurl }}/ja/2.0/deployment-integrations/)を参照してください。
+See the [Deploy]({{ site.baseurl }}/2.0/deployment-integrations/) document for examples of deploy target configurations.
 
-このアプリケーションは Ruby on Rails Web アプリケーションの最もシンプルな設定例です。 実際のプロジェクトはこれよりも複雑なため、ご自身のプロジェクトを設定する際は、以下のサイトのさらに詳細な実際のアプリの例が参考になります。
+This app illustrates the simplest possible setup for a Ruby on Rails web app. Real-world projects tend to be more complex, so you may find these more detailed examples of real-world apps useful as you configure your own projects:
 
-* [Discourse](https://github.com/CircleCI-Public/discourse/blob/master/.circleci/config.yml): オープンソースのディスカッション プラットフォーム
-* [Sinatra](https://github.com/CircleCI-Public/circleci-demo-ruby-sinatra): [Web アプリケーションを迅速に作成できる簡単な DSL](http://www.sinatrarb.com/) のデモ アプリケーション
+* [Discourse](https://github.com/CircleCI-Public/discourse/blob/master/.circleci/config.yml), an open-source discussion platform.
+* [Sinatra](https://github.com/CircleCI-Public/circleci-demo-ruby-sinatra), a demo app for the [simple DSL for quickly creating web applications](http://www.sinatrarb.com/).
 
+[fork-demo-project]: https://github.com/CircleCI-Public/circleci-demo-ruby-rails/tree/2.1-orbs-config
 [rspec-junit-formatter]: https://github.com/sj26/rspec_junit_formatter

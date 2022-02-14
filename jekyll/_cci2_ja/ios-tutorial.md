@@ -1,44 +1,44 @@
 ---
 layout: classic-docs
-title: iOS プロジェクトのチュートリアル
-short-title: iOS プロジェクトのチュートリアル
+title: iOS Project Tutorial
+short-title: iOS Project Tutorial
 categories:
-  - プラットフォーム
+  - platforms
 description: Setting Up iOS applications on CircleCI
 order: 20
 version:
-  - クラウド
+  - Cloud
 ---
 
-以下のセクションに沿って、CircleCI を使用して iOS アプリケーション プロジェクトのビルド、テスト、デプロイを自動化する方法について説明していきます。
+This document describes how to automate builds, testing, and deployment of an iOS application project with CircleCI in the following sections:
 
-* 目次
+* TOC
 {:toc}
 
-**メモ:** 「[macOS 上の iOS アプリケーションのテスト]({{ site.baseurl}}/ja/2.0/testing-ios/)」や「[iOS プロジェクトのチュートリアル]({{ site.baseurl }}/ja/2.0/hello-world-macos/)」も併せてご覧ください。
+**Note:** There is also documentation for [testing iOS]({{site.baseurl}}/2.0/testing-ios/) and [getting started on MacOS]({{site.baseurl}}/2.0/hello-world-macos/).
 
-## 概要
+## Overview
 {: #overview }
 {:.no_toc}
 
-アプリケーションで `xcodebuild` を使用するジョブとステップを記述する方法、CircleCI 環境でコード署名とプロビジョニングプロファイルを設定する方法、および fastlane を使用してデプロイする方法について、順番に説明していきます。
+The following sections walk through how to write Jobs and Steps that use `xcodebuild` for this application, how to set up code signing and a provisioning profile in the CircleCI environment, and how to deploy with Fastlane.
 
-## 前提条件
+## Prerequisites
 {: #prerequisites }
 {:.no_toc}
 
-- CircleCI にプロジェクトを追加します。 詳細については「[Hello World]({{ site.baseurl }}/ja/2.0/hello-world/)」を参照してください。
-- このチュートリアルは、対象のプロジェクト用の Xcode ワークスペースに少なくとも 1 つの共有スキームがあり、選択されたスキームにテスト アクションがあることを前提としています。 まだ共有スキームがない場合は、以下の手順に従って Xcode に共有スキームを追加してください。
+- Add your project to CircleCI, see [Hello World]({{site.baseurl}}/2.0/hello-world/).
+- This tutorial assumes you have an Xcode workspace for your project with at least one shared scheme and that the selected scheme has a test action. If you do not already have a shared scheme, you can add this in Xcode by completing the following steps:
 
-1. プロジェクトの Xcode ワークスペースを開きます。
-2. 下図のように、Scheme Selector を使用してスキームの管理ダイアログ ボックスを開きます。![Xcode Scheme Selector](  {{ site.baseurl }}/assets/img/docs/ios-getting-started-scheme-selector.png)
-3. スキームの管理ダイアログで、ビルドするスキームを選択し、[Shared (共有)] チェックボックスをオンにします。![スキームの管理ダイアログ](  {{ site.baseurl }}/assets/img/docs/ios-getting-started-manage-schemes.png)
-4. スキームをコミットし、プッシュします。
+1. Open your Xcode workspace or project.
+2. Use the scheme selector to open the Manage Schemes dialogue box as shown in the following image. ![Xcode Scheme Selector]({{site.baseurl}}/assets/img/docs/ios-getting-started-scheme-selector.png)
+3. In the manage schemes dialog, select the scheme you wish to build, and ensure that the Shared checkbox is enabled. ![Manage Schemes Dialogue]({{site.baseurl}}/assets/img/docs/ios-getting-started-manage-schemes.png)
+4. Commit and push the schemes.
 
-## テストの実行
+## Running tests
 {: #running-tests }
 
-iOS プロジェクトでは、fastlane Scan を使用して以下のようにテストを実行できます。
+For iOS projects, it is possible to run your tests with Fastlane Scan as follows:
 
 ```
 jobs:
@@ -48,7 +48,7 @@ jobs:
     steps:
       ...
       - run:
-          name: テストの実行
+          name: Run tests
           command: fastlane scan
           environment:
             SCAN_DEVICE: iPhone 6
@@ -56,48 +56,45 @@ jobs:
 
 ```
 
-サポートされるバージョンの一覧は、iOS アプリのテストに関するドキュメントの「[サポートされている Xcode のバージョン]({{ site.baseurl }}/ja/2.0/testing-ios/#supported-xcode-versions)」セクションで確認してください。
+Refer to [the Xcode version section]({{site.baseurl}}/2.0/testing-ios/#supported-xcode-versions) of the iOS testing document for the complete list of supported versions.
 
-## コード署名と証明書
+## Code signing and certificates
 {: #code-signing-and-certificates }
 
-詳細については「[iOS プロジェクトのコード署名の設定]({{ site.baseurl }}/ja/2.0/ios-codesigning/)」を参照してください。
+Refer to [the code signing doc]({{site.baseurl}}/2.0/ios-codesigning/) for details.
 
 To further customize your build process to use custom tools or run your own scripts, use the `config.yml` file, see the [Sample 2.0 config.yml]({{ site.baseurl }}/2.0/sample-config/) document for customizations.
 
-## 依存関係のインストール
+## Installing dependencies
 {: #installing-dependencies }
 
-たとえば Homebrew から依存関係をインストールする場合は、`run` ステップを使用して適切なコマンドを指定します。
+To install dependencies from homebrew, for example, use a `run` step with the appropriate command:
 
 ```
     steps:
-
       - run:
-          name: Homebrew 依存関係のインストール
+          name: Install Homebrew Dependencies
           command: brew install yarn
-
       - run:
-          name: Node 依存関係のインストール
+          name: Install Node Dependencies
           command: yarn install
 ```
 
-## テストの実行
+## Running tests
 {: #running-tests }
 
-以下の短い `run` 構文例のように、`run` ステップを使用してテストを実行することもできます。
+The `run` step is also used to run your tests as in the following example of the short form `run` syntax:
 
 ```
     steps:
-
       - run: fastlane scan
 ```
 
-### デプロイ
+### Deployment
 {: #deployment }
 {:.no_toc}
 
-[fastlane](https://fastlane.tools) の [gym](https://github.com/fastlane/fastlane/tree/master/gym) と [deliver](https://github.com/fastlane/fastlane/tree/master/deliver) を使用して CircleCI でアプリケーションをデプロイするには、識別子、リリースを実行するブランチまたはパターン、および複数のコマンドを指定してリリースを実行します。
+To deploy your application with CircleCI using [Gym](https://github.com/fastlane/fastlane/tree/master/gym) and [Deliver](https://github.com/fastlane/fastlane/tree/master/deliver) from [Fastlane](https://fastlane.tools) specify an identifier, a branch or pattern that the release should run on, and a set of commands to run the release.
 
 ```
 version: 2.1
@@ -113,7 +110,7 @@ jobs:
       xcode: 12.5.1
     steps:
       - checkout
-      - deploy:
+      - run:
           name: Deploy
           command: fastlane release_appstore
 
@@ -129,12 +126,12 @@ workflows:
               only: release
 ```
 
-## 高度な構成
+## Advanced configuration
 {: #advanced-configuration }
 
-iOS プロジェクトの高度な設定の詳細については、[macOS 上の iOS アプリケーションのテストに関するドキュメント](https://circleci.com/docs/ja/2.0/testing-ios/)を参照してください。
+See the [Testing iOS Applications on macOS]({{site.baseurl}}/2.0/testing-ios/) document for more advanced details on configuring iOS projects.
 
-## GitHub 上のサンプル アプリケーション
+## Example application on GitHub
 {: #example-application-on-github }
 
 See the [`circleci-demo-ios` GitHub repository](https://github.com/CircleCI-Public/circleci-demo-ios) for an example of how to build, test and sign an iOS project using Fastlane on CircleCI.
