@@ -1,23 +1,23 @@
 ---
 layout: classic-docs
-title: ステータス バッジの追加
-description: CircleCI のステータス バッジを Web ページや Web ドキュメントに埋め込む方法
+title: Adding Status Badges
+description: How to embed a CircleCI status badge in any web page or document
 version:
   - Cloud
   - Server v3.x
   - Server v2.x
 ---
 
-プロジェクトのビルド ステータス (成功または失敗) を表示するバッジを README または他のドキュメントに作成する方法について説明します。
+This document describes how to create a badge that displays your project's build status (passed or failed) in a README or other document.
 
-## 概要
+## Overview
 {: #overview }
 
-ステータス バッジは、一般にプロジェクトの README に埋め込まれていますが、どの Web ドキュメントにも配置できます。 CircleCI では、ステータス バッジの埋め込みコードを生成するツールが提供されています。 By default, a badge displays the status of a project's default branch, though you can also display the status of specific branches.
+Status badges are commonly embedded in project READMEs, although they can be placed in any web document. CircleCI provides a tool to generate embed code for status badges. By default, a badge displays the status of a project's default branch, though you can also display the status of specific branches.
 
-以下の形式のコードを生成できます。
+You can generate code for the following formats:
 
-- 画像 URL
+- Image URL
 - Markdown
 - Textile
 - Rdoc
@@ -135,16 +135,16 @@ To create a status api token, go to your **Project's Settings** (present on the 
 
 If you find the default status badge too minimal, you can use the [shield style](https://shields.io/). To use the shield style, replace `style=svg` with `style=shield` in the link you generated above.
 
-![svg</code>@@ version" />]({{ site.baseurl }}/assets/img/docs/svg-passed.png)
+![Passed <code>svg</code> version]({{ site.baseurl }}/assets/img/docs/svg-passed.png)
 
-![svg</code>@@ version" />]({{ site.baseurl }}/assets/img/docs/svg-failed.png)
+![Failed <code>svg</code> version]({{ site.baseurl }}/assets/img/docs/svg-failed.png)
 
 ![Passing shield version]({{ site.baseurl }}/assets/img/docs/shield-passing.png)
 
 ![Failing shield version]({{ site.baseurl }}/assets/img/docs/shield-failing.png)
 
 
-## 設定ファイルの詳細
+## See also
 {: #see-also }
 
 [Status]({{ site.baseurl }}/2.0/status/)
