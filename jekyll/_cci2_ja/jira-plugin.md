@@ -1,38 +1,37 @@
 ---
 layout: classic-docs
-title: "Jira と CircleCI の接続"
+title: "Connecting JIRA with CircleCI"
 categories:
   - how-to
-description: "Jira と CircleCI の接続"
+description: "Connecting JIRA with CircleCI"
 ---
 
-ここでは、Jira を CircleCI ビルドに接続する方法について説明します。 CircleCI Jira プラグインを使用すると、ジョブ ページから直接 Jira チケットを作成して、ジョブのステータスを基にタスクや修正を割り当てたり、ビルドのステータスを Jira に表示したりといったことが可能です。
+This document describes how you can connect JIRA to your CircleCI builds. With the CircleCI JIRA plugin, you can display your build statuses in JIRA.
 
-**メモ:** CircleCI Jira プラグインは Jira 管理者のみがインストールできます。
+**Note:** You have to be an JIRA admin to install this plugin.
 
-## インストール手順
+## Installation steps
 {: #installation-steps }
 
 1. Navigate to project settings and select `JIRA integration` ![]({{ site.baseurl }}/assets/img/docs/jira_plugin_1.png)
-2. Atlassian Marketplace にアクセスし、[CircleCI Jira プラグイン](https://marketplace.atlassian.com/apps/1215946/circleci-for-jira?hosting=cloud&tab=overview)を入手します。 ![]({{ site.baseurl }}/assets/img/docs/jira_plugin_2.png)
-3. プラグインをインストールし、プロンプトに従ってセットアップします。![]({{ site.baseurl }}/assets/img/docs/jira_plugin_3.png) ![]({{ site.baseurl }}/assets/img/docs/jira_plugin_4.png)
-4. CircleCI の [Jira Integration (Jira インテグレーション)] 設定ページに戻り、生成されたトークンを追加します。
+2. Go to the Atlassian Marketplace to get the [CircleCI JIRA Plugin](https://marketplace.atlassian.com/apps/1215946/circleci-for-jira?hosting=cloud&tab=overview) ![]({{ site.baseurl }}/assets/img/docs/jira_plugin_2.png)
+3. Install the plugin and follow the prompts to set it up. ![]({{ site.baseurl }}/assets/img/docs/jira_plugin_3.png) ![]({{ site.baseurl }}/assets/img/docs/jira_plugin_4.png)
+4. Return to the CircleCI JIRA Integration settings page and add the generated token.
 
 ---
 
-## Jiraでビルドとデプロイのステータスを表示
+## Viewing build and deploy statuses in Jira
 {: #viewing-build-and-deploy-statuses-in-jira }
 
-CircleCI Orb を使用すると、Jira でビルドとデプロイのステータスを確認できるようになります。 そのプロセスは以下のとおりです。
+With CircleCI orbs it is possible to display your build and deploy status in Jira Cloud. To do this, you will need to:
 
-1. 前述の手順に従って Jira と CircleCI を接続します。
-1. `.circleci/config.yml` ファイルの上部で、バージョン `2.1` が使用されていることを確認します。
-1. パイプラインを有効化していない場合は、**[Project Settings (プロジェクト設定)] -> [Build Settings (ビルド設定)] -> [Advanced Settings (詳細設定)]** の順に選択して有効化します。
-1. ビルド情報を取得する API トークンを入手するために、**[Project Settings (プロジェクト設定)] -> [Permissions (権限)] -> [API Permissions (API 権限)]** の順に移動します。 そのトークンをコピーします。 (*Note*: older versions of the JIRA orb may require you to retrieve a _Project API Token_, which is accessible from **Project Settings > API Permissions**)
-1. インテグレーションを許可してキーを使用するには、**[Project Settings (プロジェクト設定)] -> [Build Settings (ビルド設定)] -> [Environment Variables (環境変数)]** の順に選択して、*CIRCLE_TOKEN* という変数と作成したトークンの値を追加します。
-1. Orb スタンザを追加し、Jira Orb を呼び出します。
+1. Make sure you followed the steps above to connect Jira Cloud with CircleCI.
+1. Make sure that you are using version `2.1` at the top of your `.circleci/config.yml` file.
+1. To get an API token for build information retrieval, go to [User Settings > Tokens](https://app.circleci.com/settings/user/tokens) and create a token. Copy the token. (*Note*: older versions of the JIRA orb may require you to retrieve a _Project API Token_, which is accessible from **Project Settings > API Permissions**)
+1. To give the integration access to the key, go to **Project Settings -> Environment Variables** and add a variable named _CIRCLE_TOKEN_ with the value being the token you just made.
+1. Add the Jira orb to your configuration and invoke it (see example below).
 
-Jira Orb を使用したシンプルな `config.yml` の例を以下に示します。
+The example config below provides a bare `config.yml` illustrating the use of the Jira Orb.
 
 
 ```yaml
