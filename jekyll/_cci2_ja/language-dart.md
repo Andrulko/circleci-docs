@@ -7,7 +7,7 @@ categories:
   - language-guides
 order: 2
 version:
-  - クラウド
+  - Cloud
   - Server v3.x
   - Server v2.x
 ---
@@ -49,7 +49,7 @@ If you fork this project and want to push to DockerHub, this project assumes [a 
 
 See the config and modify as needed for your use case.
 
-## 設定ファイルの詳細
+## Config walkthrough
 {: #config-walkthrough }
 
 The first section of the file defines common items. The order in which things are defined in a CircleCI configuration doesn't matter - we have laid it out this way for readability.
@@ -434,10 +434,10 @@ jobs:
 ## Additional resources
 {: #additional-resources }
 
-- [はじめよう](https://circleci.com/docs/2.0/getting-started/#section=getting-started)
+- [Getting Started](https://circleci.com/docs/2.0/getting-started/#section=getting-started)
 - [Migrating to CircleCI](https://circleci.com/docs/2.0/migration-intro/#section=getting-started)
-- [依存関係のキャッシュ]({{ site.baseurl }}/2.0/caching/)
-- [データベースの構成]({{ site.baseurl }}/2.0/databases/)
+- [Caching Dependencies]({{ site.baseurl }}/2.0/caching/)
+- [Configuring Databases]({{ site.baseurl }}/2.0/databases/)
 - [Deploying on CircleCI](https://circleci.com/docs/2.0/deployment-integrations/#section=deployment)
-- [コンテキストの使用](https://circleci.com/docs/2.0/contexts/)
-- [設定に関するリファレンス](https://circleci.com/docs/2.0/configuration-reference/#section=configuration)
+- [Using Contexts](https://circleci.com/docs/2.0/contexts/)
+- [Configuration Reference](https://circleci.com/docs/2.0/configuration-reference/#section=configuration)
