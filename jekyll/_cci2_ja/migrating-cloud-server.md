@@ -1,25 +1,25 @@
 ---
 layout: classic-docs
-title: "Cloud から Server への移行"
-short-title: "Cloud から Server への移行"
-description: "Cloud からの 2.0 Server へのプロジェクト移行"
+title: "Migrating from Cloud to Server"
+short-title: "Migrating from Cloud to Server"
+description: "Migrating 2.0 Cloud projects to a 2.0 server installation"
 categories:
-  - はじめよう
+  - getting-started
 order: 1
 ---
 
-CircleCI Cloud (SaaS) から CircleCI Server セットアップに移行するための正式なプロセスやツールセットはありません。 The process is to perform a fresh install of CircleCI server, using AWS and Terraform—see [Installation]({{ site.baseurl }}/2.0/aws) for instructions.
+There is no formal process or toolset to migrate between CircleCI Cloud (SaaS) to an installed CircleCI Server setup. The process is to perform a fresh install of CircleCI server, using AWS and Terraform—see [Installation]({{ site.baseurl }}/2.0/aws) for instructions.
 
-インストールが完了したら、コンテキスト、環境変数、API トークンなどのすべてのプロジェクト設定を手動でコピーする必要があります。
+Next, you will need to manually copy over all of your project settings including Contexts, environment variables, and API tokens.
 
-**メモ:** プロジェクトのビルド履歴を SaaS から取り出すことはできません。 Server にすべてのプロジェクトを再度追加する必要があります。
+**Note:** It is not possible to bring your projects' build histories from SaaS; you will have to re-add all of your projects to your Server installation.
 
-SaaS で動作している 2.0 `config.yml` ファイルであれば、Server でもそのまま問題なく動作します。 There are small differences between the 1.0 execution environments that may result in some 1.0 configs not translating 100% from SaaS to Server.
+Your 2.0 `config.yml` files should work as-is on Server, assuming they are working on SaaS. There are small differences between the 1.0 execution environments that may result in some 1.0 configs not translating 100% from SaaS to Server.
 
-カスタムの `machine` Executor AMI および構成可能なインスタンスの種類は、特定の方法で定義されます。 そのため、Server ビルド クラスタを定義するときには、チームが[構成可能なリソース](https://circleci.com/ja/docs/2.0/configuration-reference/#resource_class) (`resource_class`) を SaaS でどのように使用しているかを考慮してください。
+Custom `machine` executor AMIs and configurable instance types are defined in a specific way, so consider how your teams may be using [configurable resources](https://circleci.com/docs/2.0/configuration-reference/#resource_class) (`resource_class`) on SaaS when defining your Server build cluster.
 
-## 制限事項
+## Limitations
 {: #limitations }
 
-- 現在、`macos` Executor は Server でサポートされていません。
-- Bitbucket は Server でサポートされていません。 Server でサポートされている VCS は、GitHub および GitHub Enterprise のみです。
+- Currently the `macos` executor is not supported on Server.
+- Bitbucket is not supported on Server; GitHub/GitHub Enterprise is the only supported VCS.
