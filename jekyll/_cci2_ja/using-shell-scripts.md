@@ -1,13 +1,13 @@
 ---
 layout: classic-docs
-title: "シェル スクリプトの使用"
-short-title: "シェル スクリプトの使用"
-description: "CircleCI 設定ファイルでのシェル スクリプト使用に関するベスト プラクティス"
+title: "Using Shell Scripts"
+short-title: "Using Shell Scripts"
+description: "Best practices for using shell scripts for use in CircleCI configuration"
 categories:
-  - はじめよう
+  - getting-started
 order: 10
 version:
-  - クラウド
+  - Cloud
   - Server v3.x
   - Server v2.x
 ---
@@ -17,7 +17,7 @@ This document describes best practices for using shell scripts in your [CircleCI
 * TOC
 {:toc}
 
-## 概要
+## Overview
 {: #overview }
 {:.no_toc}
 
@@ -26,7 +26,7 @@ Configuring CircleCI often requires writing shell scripts. While shell scripting
 ## Shell script best practices
 {: #shell-script-best-practices }
 
-### ShellCheck の使用
+### Use ShellCheck
 {: #use-shellcheck }
 
 [ShellCheck](https://github.com/koalaman/shellcheck) is a shell script static analysis tool that gives warnings and suggestions for bash/sh shell scripts.
@@ -100,7 +100,8 @@ set -o errexit
 set -o xtrace
 
 if [ -z "${SECRET_ENV_VAR:-}" ]; then
-  echo "You must set SECRET_ENV_VAR!" fi
+  echo "You must set SECRET_ENV_VAR!"
+fi
 > sh tmp.sh
 + '[' -z '' ']'
 + echo 'You must set SECRET_ENV_VAR!'
@@ -110,7 +111,7 @@ You must set SECRET_ENV_VAR!
 ```
 
 
-### エラー フラグの設定
+### Set Error Flags
 {: #set-error-flags }
 
 There are several error flags you can set to automatically exit scripts when unfavorable conditions occur. As a best practice, add the following flags at the beginning of each script to protect yourself from tricky errors.
@@ -128,7 +129,7 @@ set -o errexit
 set -o pipefail
 ```
 
-## 関連項目
+## See also
 {: #see-also }
 {:.no_toc}
 
