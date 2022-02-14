@@ -1,17 +1,17 @@
 ---
 layout: classic-docs
-title: "Orb に関するよくあるご質問"
-short-title: "Orb に関するよくあるご質問"
-description: "Orb に関するよくあるご質問"
+title: "Orbs FAQ"
+short-title: "Orbs FAQ"
+description: "FAQs for Orbs"
 order: 20
 version:
-  - クラウド
+  - Cloud
   - Server v3.x
 ---
 
-よく寄せられるご質問や技術的な問題など、Orb の使用時に役立つ情報をまとめました。
+This document describes various questions and technical issues that you may find helpful when working with orbs.
 
-## プライベート Orb
+## Private orbs
 {: #private-orbs }
 
 * **Question:** Can orbs be made private?
@@ -78,7 +78,7 @@ You attempted to run a local build with version 2.1 of configuration.
 
 * **Answer:** To resolve this error, run `circleci config process` on your configuration and then save that configuration to disk. You then should run `circleci local execute` against the processed configuration.
 
-## 関連項目
+## See also
 {: #see-also }
 - Refer to [Orbs Concepts]({{site.baseurl}}/2.0/orb-concepts/) for high-level information about CircleCI orbs.
 - Refer to [Orb Publishing Process]({{site.baseurl}}/2.0/creating-orbs/) for information about orbs that you may use in your workflows and jobs.
