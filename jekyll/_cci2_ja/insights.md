@@ -1,8 +1,8 @@
 ---
 layout: classic-docs
-title: "インサイトの使用"
-short-title: "インサイトの使用"
-description: "リポジトリのステータスおよびテスト パフォーマンスを表示する方法"
+title: "Using Insights"
+short-title: "Using Insights"
+description: "Viewing the status of repos and test performance"
 order: 41
 version:
   - Cloud
@@ -10,20 +10,20 @@ version:
   - Server v2.x
 ---
 
-## 概要
+## Overview
 {: #overview }
 
 
-CircleCI Insights ダッシュボードでは、リポジトリのビルド プロセスの状態と使用状況の概要を確認することができ、開発方針の検討に役立てられます。 _Insights ダッシュボード_には、クレジット使用量、成功率、パイプラインの実行時間、その他の関連情報に関する時系列データの概要が示されます。
+The CircleCI Insights dashboard provides an overview of the health and usage of your repository build processes, allowing users to make better engineering decisions. _Insights_ provides time-series data overviews of credit usage, success rates, pipeline duration, and other pertinent information.
 
-ここでは、クラウド版 CircleCI と CircleCI Server それぞれの Insights ダッシュボードへのアクセス方法と使用方法について説明します。
+This document describes how to access and use the Insights dashboard on CircleCI Cloud and Server.
 
-## 使用方法
+## Usage
 {: #usage }
 
-CircleCI Web アプリケーションのサイドバーから、組織全体のインサイトにアクセスできます。
+Insights across your organization can be accessed from the sidebar of the CircleCI web application.
 
-特定のプロジェクトのインサイトにアクセスするには、パイプラインのワークフローを表示して **[Insights (インサイト)]** ボタンをクリックします。 または、_パイプライン ダッシュボード_で、**[actions (アクション)]** セクションの [Insights (インサイト)] ボタンをクリックします。
+To access a specific project's insights, view a pipeline's workflow and click the **Insights** button. Alternatively, you may access the Insights page by clicking on the **actions** button while viewing the _pipelines dashboard_.
 
 {:.tab.insight-access.Access_by_sidebar}
 ![]({{ site.baseurl }}/assets/img/docs/screen_insights_access-3.png)
@@ -35,75 +35,77 @@ CircleCI Web アプリケーションのサイドバーから、組織全体の�
 ![]({{ site.baseurl }}/assets/img/docs/screen_insights_access-2.png)
 
 
-### ワークフローの概要
+### Workflow overview
 {: #workflow-overview }
 
-Insights ダッシュボードには、一定期間のワークフローの詳細が表示されます。 **このデータはリアルタイムのものではなく、最新の情報が反映されるまでには最大で 24 時間かかることがあります**。 ページ上部で、ワークフローごとにフィルタリングすることも可能です。 ワークフローの概要に表示されるデータは以下のとおりです。
+The Insights dashboard provides workflow details plotted over time. **Please note that the data is not real time and there may be up to a 24 hour delay**. You may also filter by different workflows at the top of the page. The following data is charted under the workflow overview:
 
-- ワークフローの合計実行回数
-- ワークフローの成功率
-- ワークフローの実行時間
-- ワークフローのクレジット使用量*
+- All workflow runs
+- Workflow success rate
+- Workflow duration
+- Workflow credit usage*
 
-### ジョブの概要
+### Job overview
 {: #job-overview }
 
-**[JOBS (ジョブ)]** タブに切り替えると、ジョブごとに集計された以下の時系列データを確認できます。
+Switch to the **Job** tab to view cumulative time-series data on a per-job basis:
 
-- 合計クレジット使用量*
-- 実行時間 (95 パーセンタイル)
-- 合計実行回数
-- 成功率
+- Total credits used*
+- Duration (the 95th percentile)
+- Total runs
+- Success rate
 
 
 <small>
-<i> * インサイト ダッシュボードはリアルタイム形式の財務報告ツールではありません。 本ダッシュボードをクレジット使用量のレポートには使用しないでください。 最新のクレジット使用量の情報については、組織の [Plan Overview (プラン概要)] をご覧ください。</i>
+<i> * The Insights dashboard is not a real time financial reporting tool and should
+not be used for credit reporting. The most up to date credit information can be
+found in your organization's Plan Overview.</i>
 </small>
 
 ---
 
-## CircleCI Server v2.19.x のインサイト
+## CircleCI Server v2.19.x Insights
 {: #circleci-server-v219x-insights }
 
 <div class="alert alert-warning" role="alert">
-  <p><span style="font-size: 115%; font-weight: bold;">⚠️ 注意</span></p>
-  <span> 以下のセクションは、CircleCI Server v2.19.x のインストール時の [Insights (インサイト)] ページの使用法に関するものです。 </span>
+  <p><span style="font-size: 115%; font-weight: bold;">⚠️ Heads up!</span></p>
+  <span> The following section refers to using the Insights page on installations of CircleCI Server v2.19.x. </span>
 </div>
 
-### 概要
+### Overview
 {: #overview }
 
-CircleCI アプリケーションで [Insights (インサイト)] メニュー項目をクリックすると、フォローしているすべてのリポジトリのヘルス状態を示すダッシュボードが表示されます。 ここでは、デフォルト ブランチのビルド時間の中央値、キュー時間の中央値、最終ビルド時刻、成功率、並列処理数を確認できます。 **注:** ワークフローを構成している場合、デフォルト ブランチに対して実行されるすべてのジョブがグラフに表示されます。
+Click the Insights menu item in the CircleCI app to view a dashboard showing the health of all repositories you are following. Median build time, median queue time, last build time, success rate, and parallelism appear for your default branch. **Note:** If you have configured Workflows, graphs display all of the jobs that are being executed for your default branch.
 
-![ヘッダー]({{ site.baseurl }}/assets/img/docs/insights-1.0.gif)
+![header]({{ site.baseurl }}/assets/img/docs/insights-1.0.gif)
 
-この画面では、ビルドに関する以下のデータを確認できます。
+The image illustrates the following data about your builds:
 
-- CircleCI でビルドされているすべてのリポジトリのリアルタイム ステータス
-- キュー時間の中央値
-- ビルド時間の中央値
-- ブランチ数
-- 最終ビルド時刻
+- Status of all your repos building on CircleCI in real time
+- Median queue time
+- Median build time
+- Number of branches
+- Last build
 
-### プロジェクトのインサイト
+### Project insights
 {: #project-insights }
 
-メイン ナビゲーション上の [Insights (インサイト)] アイコンをクリックしてから、リポジトリ名をクリックすると、プロジェクト別のインサイトのページにアクセスできます。
+Click the Insights icon on the main navigation, then click your repo name to access per-project insights.
 
-プロジェクト別のインサイトのページでは、選択したブランチにおけるビルド ステータスおよびビルド パフォーマンスのグラフを確認できます。
+The per-project insights page gives you access to the build status and build performance graphs for a selected branch.
 
-![ヘッダー]({{ site.baseurl }}/assets/img/docs/insights-current-build.png)
+![header]({{ site.baseurl }}/assets/img/docs/insights-current-build.png)
 
-- **[Build Status (ビルド ステータス)]:** デフォルト ブランチの直近 50 件のビルドが表示されます。 右上隅でブランチを選択すると、そのブランチに関する 100 件を超えるビルド・ジョブのステータスを確認できます。
+- **Build Status:** The Insights dashboard shows the last 50 builds for your default branch. Click a branch in the top right corner to access over 100 build/job statuses for the selected branch.
 
-- **[Build Performance (ビルド パフォーマンス)]:** このグラフには、最大 90 日前までのビルド・ジョブのデータが日別に集約され、各日の平均値がプロットされます。 任意のブランチをクリックして、リポジトリのパフォーマンスをモニタリングできます。
+- **Build Performance:** The Build Performance graph aggregates your build/job data for a particular day and plots the median for that day going back as far as 90 days. Monitor the performance of your repo by clicking a particular branch.
 
 
-## 関連項目
+## See also
 {: #see-also }
 
-失敗が多いテストのインサイトを得る方法については、「[テスト メタデータの収集]({{ site.baseurl }}/ja/2.0/collect-test-data/)」を参照してください。
+Refer to the [Collecting Test Metadata]({{ site.baseurl }}/2.0/collect-test-data/) document for instructions to configure insights into your most failed tests.
 
-## さらに詳しく
+## Learn More
 {: #learn-more }
-Circle CI Academy の[インサイトコース](https://academy.circleci.com/insights-course?access_code=public-2021) を受講すると、さらに詳しく学ぶことができます。
+Take the [insights course](https://academy.circleci.com/insights-course?access_code=public-2021) with CircleCI Academy to learn more.
