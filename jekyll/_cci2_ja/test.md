@@ -1,6 +1,6 @@
 ---
 layout: classic-docs
-title: "テスト"
+title: "Test"
 description: "CircleCI test automation setup"
 version:
   - Cloud
@@ -8,7 +8,7 @@ version:
   - Server v2.x
 ---
 
-テストのセットアップ方法については、以下のビデオとドキュメントを参照してください。
+Refer to the following video and documents for help with setting up your tests.
 
 ## How to build, test, and deploy video tutorial
 {: #how-to-build-test-and-deploy-video-tutorial }
@@ -21,7 +21,7 @@ Watch the following video for a detailed tutorial of Docker, iOS, and Android bu
 ## Running, splitting, and debugging tests
 {: #running-splitting-and-debugging-tests }
 
-| ドキュメント                                                                       | 説明                                                                                            |
+| Document                                                                     | Description                                                                                   |
 | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
 | <a href="{{ site.baseurl }}/2.0/configuration-reference/#run">Configuring CircleCI: `run` Step section</a>                                                    | Write a job to run your tests.                                                                |
 | [Browser Testing]({{ site.baseurl }}/2.0/browser-testing/)                   | Common methods for running and debugging browser tests in CircleCI.                           |
@@ -34,16 +34,16 @@ Watch the following video for a detailed tutorial of Docker, iOS, and Android bu
 | <a href="{{ site.baseurl }}/2.0/ios-codesigning/">Setting Up Code Signing for iOS Projects</a>                                                    | Describes the guidelines for setting up code signing for your iOS or Mac project on CircleCI. |
 {: class="table table-striped"}
 
-## デプロイ
+## Deploy
 {: #deploy }
 
-デプロイのターゲットおよびツールの詳細と例については、以下のドキュメントを参照してください。
+Refer to the following document for information and examples of deployment targets and tools.
 
-| ドキュメント                    | 説明                                                                  |
-| ------------------------- | ------------------------------------------------------------------- |
-| <a href="{{ site.baseurl }}/2.0/deployment-integrations/">デプロイ</a> | AWS、Azure、Firebase、Google Cloud、Heroku、npm など、ほぼすべてのサービスへの自動デプロイの構成 |
-| <a href="{{ site.baseurl }}/2.0/artifactory/">Artifactory</a> | Jfrog CLI を使用した Artifactory への自動アップロードの構成                           |
-| <a href="{{ site.baseurl }}/2.0/packagecloud/">packagecloud</a> | Publish packages to packagecloud.                                   |
+| Document                  | Description                                                                                                        |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| <a href="{{ site.baseurl }}/2.0/deployment-integrations/">Deployment</a> | Configure automated deployment to AWS, Azure, Firebase, Google Cloud, Heroku, NPM, or virtually any other service. |
+| <a href="{{ site.baseurl }}/2.0/artifactory/">Artifactory</a> | Configure automated uploads to Artifactory with the Jfrog CLI.                                                     |
+| <a href="{{ site.baseurl }}/2.0/packagecloud/">packagecloud</a> | Publish packages to packagecloud.                                                                                  |
 {: class="table table-striped"}
 
 We’re thrilled to have you here. Happy building!
