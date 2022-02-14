@@ -53,7 +53,7 @@ optimizeYT:
     title: Optimizing CircleCI workflows
 ---
 
-CircleCI について理解を深めていただけるよう、チュートリアルやサンプル、ハウツーといった参考情報をまとめました。
+Use the tutorials, samples, how-to, and reference documentation to learn CircleCI.
 
 * TOC
 {:toc}
