@@ -1,24 +1,24 @@
 ---
 layout: classic-docs
-title: "トリガー"
-short-title: "トリガー"
-description: "トリガーの説明"
+title: "Triggers"
+short-title: "Triggers"
+description: "Description of triggers"
 categories:
   - builds
 order: 2
 version:
-  - クラウド
+  - Cloud
   - Server v3.x
   - Server v2.x
 ---
 
 
-ビルドのトリガーとスケジュールについて、役立つヒントをご紹介します。以下のスニペットを参照してください。
+There are a few great tricks for triggering and scheduling builds in the following snippets!
 
 ## Skip builds
 {: #skip-builds }
 
-CircleCI のデフォルトでは、ユーザーが変更をバージョン管理システム (VCS) にプッシュするたびに、自動的にプロジェクトがビルドされます。 この動作は、[ci skip] または [skip ci] タグをコミットのタイトルまたは説明の任意の場所に追加することで、オーバーライドできます。
+By default, CircleCI automatically builds a project whenever you push changes to a version control system (VCS). You can override this behavior by adding a [ci skip] or [skip ci] tag anywhere in a commit’s title or description.
 
 
 ## Trigger a job using curl and your API token
@@ -41,9 +41,9 @@ workflows:
       - test
       - deploy
   nightly:
-    triggers: # triggers キーを使用して、スケジュールされたビルドであることを示します
+    triggers: #use the triggers key to indicate a scheduled build
       - schedule:
-          cron: "0 0 * * *" # cron 構文を使用してスケジュールを設定します
+          cron: "0 0 * * *" # use cron syntax to set the schedule
           filters:
             branches:
               only:
@@ -69,7 +69,7 @@ workflows:
           requires:
             - test1
       - hold:
-          type: approval # 続行するには、適切なプロジェクト メンバーがアプリ内のボタンをクリックする必要があります
+          type: approval # requires that an in-app button be clicked by an appropriate member of the project to continue.
           requires:
            - test2
       - deploy:
@@ -85,7 +85,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:14.17-browsers # < 選択された任意の Docker イメージ
+      - image: cimg/node:16.13.1-browsers # < an arbitrarily chosen docker image.
         auth:
           username: mydockerhub-user
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
@@ -97,7 +97,7 @@ jobs:
           command: curl --data build=true -X POST https://registry.hub.docker.com/u/svendowideit/testhook/trigger/be579c82-7c0e-11e4-81c4-0242ac110020/
 ```
 
-## 関連項目
+## See also
 {: #see-also }
 
-[ワークフロー]({{ site.baseurl }}/ja/2.0/workflows/)
+[Workflows]({{ site.baseurl }}/2.0/workflows/)
