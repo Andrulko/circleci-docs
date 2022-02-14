@@ -1,10 +1,10 @@
 ---
 layout: classic-docs
-title: コードカバレッジ メトリクスの生成
-short-title: コードカバレッジ メトリクスの生成
+title: Generating Code Coverage Metrics
+short-title: Generating Code Coverage Metrics
 categories:
   - configuration-tasks
-description: コードカバレッジ メトリクスの生成
+description: Generating code coverage metrics
 order: 50
 sitemap: false
 version:
@@ -13,51 +13,50 @@ version:
   - Server v2.x
 ---
 
-コードカバレッジは、アプリケーションがどの程度テストされたかを示します。
+Code Coverage tells you how much of your application is tested.
 
-CircleCI は、組み込まれている CircleCI 機能をオープンソース ライブラリと組み合わせて、またはパートナーのサービスを使用して、コードカバレッジ レポートのさまざまなオプションを提供しています。
+CircleCI provides a number of different options for code coverage reporting, using built-in CircleCI features combined with open source libraries, or using partners.
 
-* 目次
+* TOC
 {:toc}
 
 
-## CircleCI でのカバレッジの表示
+## Viewing Coverage on CircleCI
 {: #viewing-coverage-on-circleci }
 
-コードカバレッジ レポートを直接 CircleCI にアップロードできます。 最初に、プロジェクトにカバレッジ ライブラリを追加し、CircleCI の[アーティファクト ディレクトリ]({{ site.baseurl }}/2.0/artifacts/)にカバレッジ レポートを書き込むようにビルドを設定します。 コードカバレッジ レポートはビルドアーティファクトとして、参照またはダウンロード可能な場所に保存されます。 カバレッジ レポートへのアクセス方法の詳細については、[ビルドアーティファクトに関するドキュメント]({{ site.baseurl }}/ja/2.0/artifacts/)を参照してください。
+You can upload your code coverage reports directly to CircleCI. First, add a coverage library to your project and configure your build to write the coverage report to CircleCI's [artifacts directory]({{ site.baseurl }}/2.0/artifacts/). Code coverage reports will then be stored as build artifacts, from where they can be viewed or downloaded. See our [build artifacts]({{ site.baseurl }}/2.0/artifacts/) guide for more on accessing coverage reports.
 
-![[Artifacts (アーティファクト)] タブのスクリーンショット]( {{ site.baseurl }}/assets/img/docs/artifacts.png
-)
+![artifacts tab screeshot]( {{ site.baseurl }}/assets/img/docs/artifacts.png)
 
-言語別にカバレッジ ライブラリを構成する例をいくつか示します。
+Here are a few examples to demonstrate configuring coverage libraries for different languages.
 
 ## Ruby
 {: #ruby }
 
-[SimpleCov](https://github.com/colszowka/simplecov) は、よく使用される Ruby コードカバレッジ ライブラリです。 まず、`simplecov` gem を `Gemfile` に追加します。
+[Simplecov](https://github.com/colszowka/simplecov) is a popular Ruby code coverage library. To get started, add the `simplecov` gem to your `Gemfile`
 
 ```
 gem 'simplecov', require: false, group: :test
 ```
 
-テスト スイートの開始時に `simplecov` を実行します。 SimpleCov を Rails と共に使用する場合の設定例を以下に示します。
+Start `simplecov` when your test suite starts. The example below demonstrates configuring simplecov for usage with Rails.
 
 ```ruby
-require 'simplecov'        # << SimpleCov が必要です。
-SimpleCov.start 'rails'    # << "Rails" プリセットを使用して SimpleCov を起動します。
+require 'simplecov'        # << Require simplecov
+SimpleCov.start 'rails'    # << Start simplecov, using the "Rails" preset.
 
 ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
 require 'rails/test_help'
 
 class ActiveSupport::TestCase
-  # すべてのテストの test/fixtures/*.yml にあるすべてのフィクスチャをアルファベット順にセットアップします。
+  # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   fixtures :all
-  # すべてのテストで使用されるヘルパー メソッドをここに追加します...
+  # Add more helper methods to be used by all tests here...
 end
 ```
 
-次に、カバレッジ レポートをアップロードするために `.circleci/config.yaml` を設定します。
+Now configure your `.circleci/config.yml` for uploading your coverage report.
 
 {:.tab.ruby_example.Cloud}
 ```yaml
@@ -70,13 +69,13 @@ jobs:
       - image: cimg/ruby:3.0-browsers
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数を参照します。
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
         environment:
           RAILS_ENV: test
       - image: cimg/postgres:14.0
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数を参照します。
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
         environment:
           POSTGRES_USER: circleci-demo-ruby
           POSTGRES_DB: rails_blog
@@ -111,13 +110,13 @@ jobs:
       - image: cimg/ruby:3.0-browsers
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数を参照します。
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
         environment:
           RAILS_ENV: test
       - image: cimg/postgres:14.0
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数を参照します。
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
         environment:
           POSTGRES_USER: circleci-demo-ruby
           POSTGRES_DB: rails_blog
@@ -154,13 +153,13 @@ jobs:
       - image: circleci/ruby:2.5.3-node-browsers
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数を参照します。
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
         environment:
           RAILS_ENV: test
       - image: cimg/postgres:9.6
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数を参照します。
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
         environment:
           POSTGRES_USER: circleci-demo-ruby
           POSTGRES_DB: rails_blog
@@ -183,35 +182,34 @@ jobs:
           path: coverage
 ```
 
-[simplecov README](https://github.com/colszowka/simplecov/#getting-started) に、さらに詳細な説明があります。
+The [simplecov README](https://github.com/colszowka/simplecov/#getting-started) has more details.
 
 ## Python
 {: #python }
 
-[Coverage.py](https://coverage.readthedocs.io/en/v4.5.x/) は、Python でコードカバレッジレポートを生成する際によく使用されるライブラリです。 最初に、以下のように Coverage.py をインストールします。
+[Coverage.py](https://coverage.readthedocs.io/en/v4.5.x/) is a popular library for generating Code Coverage Reports in python. To get started, install Coverage.py:
 
 ```sh
 pip install coverage
 ```
 
 ```sh
-# これまでは、たとえば以下のように Python プロジェクトを実行していました。
+# previously you might have run your python project like:
 python my_program.py arg1 arg2
 
-# ここでは、コマンドにプレフィックス "coverage" を付けます。
+# now prefix "coverage" to your command.
 coverage run my_program.py arg1 arg2
-
 ```
 
-この[例](https://github.com/pallets/flask/tree/1.0.2/examples/tutorial)では、以下のコマンドを使用してカバレッジレポートを生成できます。
+In this [example](https://github.com/pallets/flask/tree/1.0.2/examples/tutorial), you can generate a coverage report with the following commands:
 
 ```sh
 coverage run -m pytest
 coverage report
-coverage html  # ブラウザーで htmlcov/index.html を開きます。
+coverage html  # open htmlcov/index.html in a browser
 ```
 
-生成されたファイルは `htmlcov/` 下にあり、コンフィグの `store_artifacts` ステップでアップロードできます。
+The generated files will be found under `htmlcov/`, which can be uploaded in a `store_artifacts` step in your config:
 
 {:.tab.python_example.Cloud}
 ```yaml
@@ -224,7 +222,7 @@ jobs:
     - image: cimg/python:3.10-browsers
       auth:
         username: mydockerhub-user
-        password: $DOCKERHUB_PASSWORD  ## コンテキスト/プロジェクト UI 環境変数を参照します。
+        password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
     - checkout
     - browser-tools/install-browser-tools
@@ -238,7 +236,7 @@ jobs:
         command: |
           $HOME/.local/bin/coverage run -m pytest
           $HOME/.local/bin/coverage report
-          $HOME/.local/bin/coverage html  # ブラウザで htmlcov/index.html を開きます。
+          $HOME/.local/bin/coverage html  # open htmlcov/index.html in a browser
     - store_artifacts:
         path: htmlcov
 workflows:
@@ -258,7 +256,7 @@ jobs:
     - image: cimg/python:3.10-browsers
       auth:
         username: mydockerhub-user
-        password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数を参照します。
+        password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
     - checkout
     - browser-tools/install-browser-tools
@@ -272,7 +270,7 @@ jobs:
         command: |
           $HOME/.local/bin/coverage run -m pytest
           $HOME/.local/bin/coverage report
-          $HOME/.local/bin/coverage html  # ブラウザで htmlcov/index.html を開きます。
+          $HOME/.local/bin/coverage html  # open htmlcov/index.html in a browser
     - store_artifacts:
         path: htmlcov
 workflows:
@@ -294,11 +292,11 @@ jobs:
     - image: circleci/python:3.7-node-browsers-legacy
       auth:
         username: mydockerhub-user
-        password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数を参照します。
+        password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
     - checkout
     - run:
-        name: テスト環境のセットアップ
+        name: Setup testing environment
         command: |
           pip install '.[test]' --user
           echo $HOME
@@ -307,7 +305,7 @@ jobs:
         command: |
           $HOME/.local/bin/coverage run -m pytest
           $HOME/.local/bin/coverage report
-          $HOME/.local/bin/coverage html  # ブラウザで htmlcov/index.html を開きます。
+          $HOME/.local/bin/coverage html  # open htmlcov/index.html in a browser
     - store_artifacts:
         path: htmlcov
 workflows:
@@ -320,7 +318,7 @@ workflows:
 ## Java
 {: #java }
 
-[JaCoCo](https://github.com/jacoco/jacoco) は、Java コードカバレッジによく使用されるライブラリです。 ビルドシステムの一部に JUnit と JaCoCo を含む pom.xml の例を以下に示します。
+[JaCoCo](https://github.com/jacoco/jacoco) is a popular library for Java code coverage. Below is an example pom.xml that includes JUnit and JaCoCo as part of the build system:
 
 ```xml
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -397,9 +395,9 @@ workflows:
 
 ```
 
-`mvn test` を実行するとコードカバレッジレポート (`exec`) ファイルが生成され、他の多くのカバレッジツールと同様に、このファイルが `html` ページにも変換されます。 上記の Pom ファイルは `target` ディレクトリに書き込みを行い、これを CircleCI `config.yml` ファイルでアーティファクトとして保存できます。
+Running `mvn test` will include a code coverage report (an `exec`) file that is also converted to an `html` page, like many other coverage tools. The Pom file above writes to the `target` directory, which you can then store as an artifact in your CircleCI `config.yml` file.
 
-上記の例に対応する最小の CI 設定は以下のとおりです。
+Here is a minimal CI configuration to correspond with the above example:
 
 {:.tab.java_example.Cloud}
 ```yaml
@@ -412,7 +410,7 @@ jobs:
       - image: cimg/openjdk:17.0-browsers
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数を参照します。
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
       - checkout
       - browser-tools/install-browser-tools
@@ -432,7 +430,7 @@ jobs:
       - image: cimg/openjdk:17.0-browsers
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数を参照します。
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
       - checkout
       - browser-tools/install-browser-tools
@@ -454,7 +452,7 @@ jobs:
       - image: circleci/openjdk:11.0-stretch-node-browsers-legacy
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数を参照します。
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
       - checkout
       - run : mvn test
@@ -465,7 +463,7 @@ jobs:
 ## JavaScript
 {: #javascript }
 
-[Istanbul](https://github.com/gotwarlost/istanbul) は、JavaScript プロジェクトでコードカバレッジレポートの生成によく使用されるライブラリです。 人気のテスト ツールである Jest でも、Istanbul を使用してレポートを生成します。 以下のコード例を参照してください。
+[Istanbul](https://github.com/gotwarlost/istanbul) is a popular library for generating code coverage reports for JavaScript projects. Another popular testing tool, Jest, uses Istanbul to generate reports. Consider this example:
 
 {:.tab.js_example.Cloud}
 ```yaml
@@ -478,7 +476,7 @@ jobs:
       - image: cimg/node:17.2-browsers
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数を参照します。
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
       - checkout
       - browser-tools/install-browser-tools
@@ -501,7 +499,7 @@ jobs:
       - image: cimg/node:17.2-browsers
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数を参照します。
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
       - checkout
       - browser-tools/install-browser-tools
@@ -524,15 +522,15 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:10.0-browsers
+      - image: circleci/node:14.17-browsers
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数を参照します。
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
       - checkout
       - run: npm install
       - run:
-          name: "Jest の実行とカバレッジ レポートの収集"
+          name: "Run Jest and Collect Coverage Reports"
           command: jest --collectCoverage=true
       - store_artifacts:
           path: coverage
@@ -541,9 +539,9 @@ jobs:
 ## PHP
 {: #php }
 
-PHPUnit は、よく使用される PHP のテストフレームワークです。 PHP 5.6 より前のバージョンを使用している場合は、コードカバレッジ レポートを生成するには [PHP Xdebug](https://xdebug.org/) をインストールする必要があります。 PHP 5.6以降のバージョンでは、phpdbgというツールにアクセスできます。 `phpdbg -qrr vendor/bin/phpunit --coverage-html build/coverage-report` コマンドでレポートを生成できます。
+PHPUnit is a popular testing framework for PHP. To generate code-coverage reports you may need to install [PHP Xdebug](https://xdebug.org/) if you are using an earlier version than PHP 5.6. Versions of PHP after 5.6 have access to a tool called phpdbg; you can generate a report using the command `phpdbg -qrr vendor/bin/phpunit --coverage-html build/coverage-report`
 
-以下に示した基本の `.circleci/config.yml` では、コンフィグの最後にある `store_artifacts` ステップでカバレッジレポートをアップロードしています。
+In the following basic `.circleci/config.yml` we upload the coverage reports in the `store_artifacts` step at the end of the config.
 
 {:.tab.php_example.Cloud}
 ```yaml
@@ -556,7 +554,7 @@ jobs:
       - image: cimg/php:8.1-browsers
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数を参照します。 e
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
       - checkout
       - browser-tools/install-browser-tools
@@ -578,7 +576,7 @@ jobs:
       - image: cimg/php:8.1-browsers
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数を参照します。
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
       - checkout
       - browser-tools/install-browser-tools
@@ -602,11 +600,11 @@ jobs:
       - image: circleci/php:7-fpm-browsers-legacy
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数を参照します。
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
       - checkout
       - run:
-          name: "テストの実行"
+          name: "Run tests"
           command: phpdbg -qrr vendor/bin/phpunit --coverage-html build/coverage-report
       - store_artifacts:
           path:  build/coverage-report
@@ -615,14 +613,14 @@ jobs:
 ## Golang
 {: #golang }
 
-Go には、コードカバレッジレポートを生成する機能が組み込まれています。 レポートを生成するには、`-coverprofile=c.out` フラグを追加します。 これでカバレッジレポートが生成され、`go tool` を使用して html に変換できます。
+Go has built-in functionality for generating code coverage reports. To generate reports, add the flag `-coverprofile=c.out`. This will generate a coverage report which can be converted to html via `go tool`.
 
 ```sh
 go test -cover -coverprofile=c.out
 go tool cover -html=c.out -o coverage.html
 ```
 
-`.circleci/config.yml` の例は以下のとおりです。
+An example `.circleci/config.yml`:
 ```yaml
 version: 2.1
 
@@ -632,7 +630,7 @@ jobs:
       - image: cimg/go:1.16
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数を参照します。
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
       - checkout
       - run: go build
@@ -650,13 +648,13 @@ jobs:
 ```
 
 
-## コードカバレッジ サービスの使用
+## Using a code coverage service
 {: #using-a-code-coverage-service }
 
 ### Codecov
 {: #codecov }
 
-Codecov には、カバレッジレポートのアップロードを簡単に行うための [Orb](https://circleci.com/orbs) があります。
+Codecov has an [orb](https://circleci.com/orbs) to help make uploading your coverage report easy.
 
 ```yaml
 version: 2.1
@@ -669,12 +667,12 @@ jobs:
           file: {{ coverage_report_filepath }}
 ```
 
-Codecov の Orb の詳細については、[CircleCI ブログへの寄稿記事](https://circleci.com/blog/making-code-coverage-easy-to-see-with-the-codecov-orb/)を参照してください。
+Read more about Codecov's orb in their [guest blog post](https://circleci.com/blog/making-code-coverage-easy-to-see-with-the-codecov-orb/).
 
 ### Coveralls
 {: #coveralls }
 
-Coveralls のユーザーは、[カバレッジ統計の設定ガイド](https://docs.coveralls.io/)を参照してください。CircleCI の[環境変数]({{ site.baseurl }}/ja/2.0/env-vars/)に `COVERALLS_REPO_TOKEN` を追加する必要があります。
+If you're a Coveralls customer, follow [their guide to set up your coverage stats.](https://docs.coveralls.io/) You'll need to add `COVERALLS_REPO_TOKEN` to your CircleCI [environment variables]({{ site.baseurl }}/2.0/env-vars/).
 
-Coveralls は、同時処理ジョブのカバレッジ統計を自動的にマージします。
+Coveralls will automatically handle the merging of coverage stats in concurrent jobs.
 
