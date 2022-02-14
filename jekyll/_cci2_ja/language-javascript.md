@@ -1,6 +1,6 @@
 ---
-layout: classic-docs
-title: "Node.js - JavaScript チュートリアル"
+layout: classic-docs-experimental
+title: "Configuring a Node.js Application on CircleCI"
 short-title: "JavaScript"
 description: "Building and Testing with JavaScript and Node.js on CircleCI"
 categories:
@@ -12,43 +12,43 @@ version:
   - Server v2.x
 ---
 
-ここでは、Node.js サンプル アプリケーションの [`.circleci/config.yml`]({{ site.baseurl }}/ja/2.0/configuration-reference/) ファイルを作成する方法の詳細を説明します。
+This document provides a walkthrough of the [`.circleci/config.yml`]({{ site.baseurl }}/2.0/configuration-reference/) file for a Node.js sample application.
 
-* 目次
+* TOC
 {:toc}
 
-## クイックスタート: リファレンス用の JavaScript Node.js デモプロジェクト
-{: #quickstart-demo-javascript-nodejs-reference-project }{: #quickstart-demo-javascript-nodejs-reference-project }
+## Quickstart: demo JavaScript Node.js reference project
+{: #quickstart-demo-javascript-nodejs-reference-project }
 
-CircleCI 2.1 で React.js アプリケーションをビルドする方法の説明のために、リファレンス用のJavaScript プロジェクトを用意しています。
+We maintain a reference JavaScript project to show how to build a React.js app on CircleCI with `version: 2.1` configuration:
 
-- [GitHub 上の JavaScript Node デモ プロジェクト](https://github.com/CircleCI-Public/circleci-demo-javascript-react-app)
-- [CircleCI でビルドされた JavaScript Node デモ プロジェクト](https://circleci.com/gh/CircleCI-Public/circleci-demo-javascript-express){:rel="nofollow"}
+- [Demo JavaScript Node Project on GitHub](https://github.com/CircleCI-Public/circleci-demo-javascript-react-app)
+- [Demo JavaScript Node Project building on CircleCI](https://app.circleci.com/pipelines/github/CircleCI-Public/circleci-demo-javascript-react-app){:rel="nofollow"}
 
-このプロジェクトには、CircleCI 設定ファイル <a href="https://github.com/CircleCI-Public/circleci-demo-javascript-express/blob/master/.circleci/config.yml" target="_blank"><code>.circleci/config.yml</code></a> が含まれます。 このファイルでは、Node プロジェクトで CircleCI 2.1 を使用するためのベスト プラクティスを紹介しています。
+In the project you will find a CircleCI configuration file [`.circleci/config.yml`](https://github.com/CircleCI-Public/circleci-demo-javascript-react-app/blob/master/.circleci/config.yml). This file shows best practice for using version 2.1 config with Node projects.
 
-## JavaScript Node のデモ プロジェクトのビルド
+## Build the demo JavaScript Node project yourself
 {: #build-the-demo-javascript-node-project-yourself }
 
-CircleCI を初めて使用する際は、プロジェクトをご自身でビルドしてみることをお勧めします。 以下に、ご自身のアカウントでデモ プロジェクトをビルドする方法を示します。
+A good way to start using CircleCI is to build a project yourself. Here's how to build the demo project with your own account:
 
-1. GitHub 上のプロジェクトをお使いのアカウントにフォークします。
-2. CircleCI で [Add Projects (プロジェクトの追加)] ページにアクセスし、フォークしたプロジェクトの横にある [Set up Project (プロジェクトの設定)] ボタンをクリックします。
-3. 変更を加えるには、`.circleci/config.yml` ファイルを編集してコミットします。 コミットを GitHub にプッシュすると、CircleCI がそのプロジェクトをビルドしてテストします。
+1. Fork the project on GitHub to your own account.
+2. Go to the Add Projects page in the CircleCI application and click the Set Up Project button next to the project you just forked.
+3. To make changes you can edit the `.circleci/config.yml` file and make a commit. When you push a commit to GitHub, CircleCI will build and test the project.
 
 
-## 設定ファイルの例
+## Sample configuration
 {: #sample-configuration }
 
-以下に、デモ プロジェクトの `.circleci/config.yml` ファイルを示します。
+Below is the `.circleci/config.yml` file in the demo project.
 
 {% raw %}
 
 ```yaml
-orbs: # 使用する Orb を宣言します。
+orbs: # declare what orbs we are going to use
   node: circleci/node@2.0.2 # the node orb provides common node-related configuration
 
-version: 2.1 # 2.1を使用すると、Orb や他の機能にアクセスすることができます。 
+version: 2.1 # using 2.1 provides access to orbs and other features
 
 workflows:
   matrix-tests:
@@ -63,21 +63,21 @@ workflows:
 {% endraw %}
 
 
-## 設定の詳細
+## Config walkthrough
 {: #config-walkthrough }
 
-[2.1 Node Orb ](https://circleci.com/developer/orbs/orb/circleci/node#jobs-test)を使用すると、CI 用にビルドされ、高度にキャッシュされた CircleCI イメージから Executor を設定し、使用する NodeJS のバージョンを設定することができます。 [Docker イメージのリスト](https://hub.docker.com/r/cimg/node/tags)にある利用可能なタグはすべて使用できます。
+Using the [2.1 Node orb](https://circleci.com/developer/orbs/orb/circleci/node#jobs-test) sets an executor from CircleCI's highly cached convenience images built for CI and allows you to set the version of NodeJS to use. Any available tag in the [docker image list](https://hub.docker.com/r/cimg/node/tags) can be used.
 
-Node Orb の `test` コマンドにより、オプションのパラメータを使って 1 行のコマンドでコードをテストすることができます。
+The Node Orb `test` command will test your code with a one-line command, with optional parameters.
 
-マトリックスジョブは、様々な Node 環境で Node アプリケーションをテストする簡単な方法です。 Node Orb によりマトリックスジョブを利用する方法の詳細な例は、 [マトリックスジョブ](https://circleci.com/blog/circleci-matrix-jobs/)に関する投稿を参照してください。 パイプラインパラメーターで Node のバージョンを設定する方法については、 [パイプラインパラメーターに関するドキュメント](https://circleci.com/docs/2.0/pipeline-variables/#pipeline-parameters-in-configuration) を参照してください。
+Matrix jobs are a simple way to test your Node app on various node environments. For a more in depth example of how the Node orb utilizes matrix jobs, see our blog on [matrix jobs](https://circleci.com/blog/circleci-matrix-jobs/). See [documentation on pipeline parameters](https://circleci.com/docs/2.0/pipeline-variables/#pipeline-parameters-in-configuration) to learn how to set a node version via Pipeline parameters.
 
-成功です！ CircleCI 2.1 上に Node.js アプリケーションをビルドするための設定が完了しました。 CircleCI でビルドを行うとどのように表示されるかについては、プロジェクトの[パイプラインのページ](https://app.circleci.com/pipelines/github/CircleCI-Public/circleci-demo-javascript-react-app)を参照してください。
+Success! You just set up a Node.js app to build on CircleCI with version: 2.1 configuration. Check out [our project’s pipeline page](https://app.circleci.com/pipelines/github/CircleCI-Public/circleci-demo-javascript-react-app) to see how this looks when building on CircleCI.
 
-## 関連項目
+## See also
 {: #see-also }
 {:.no_toc}
 
-- デプロイ ターゲットの設定例については、[デプロイ]({{ site.baseurl }}/ja/2.0/deployment-integrations/)ドキュメントを参照してください。
-- その他のパブリック JavaScript プロジェクトの設定例については、[設定例]({{ site.baseurl }}/2.0/examples/)のページを参照してください。
+- See the [Deploy]({{ site.baseurl }}/2.0/deployment-integrations/) document for example deploy target configurations.
+- Refer to the [Examples]({{ site.baseurl }}/2.0/examples/) page for more configuration examples of public JavaScript projects.
 - If you're new to CircleCI, we recommend reading our [Project Walkthrough]({{ site.baseurl }}/2.0/project-walkthrough/) for a detailed explanation of our configuration using Python and Flask as an example.
