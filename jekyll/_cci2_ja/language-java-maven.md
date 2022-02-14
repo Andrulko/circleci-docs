@@ -1,28 +1,28 @@
 ---
 layout: classic-docs
-title: "言語ガイド: Java (Maven を使用)"
-short-title: "Maven を使用した Java プロジェクト"
+title: "Language Guide: Java (with Maven)"
+short-title: "Java with Maven"
 description: "Building and Testing with Java and Maven on CircleCI"
 categories:
   - language-guides
 order: 4
 version:
-  - クラウド
+  - Cloud
   - Server v3.x
   - Server v2.x
 ---
 
-このガイドでは、CircleCI で Maven を使用して Java アプリケーションをビルドする方法について説明します。
+This guide will help you get started with a Java application building with Maven on CircleCI.
 
-* 目次
+* TOC
 {:toc}
 
-## 概要
+## Overview
 {: #overview }
 
-This is an example application showcasing how to run a Java app on CircleCI 2.1. Spring Framework を使用している  (このプロジェクトは [Spring Initializr](https://start.spring.io/) を使用して生成されています) This document includes pared down sample configurations demonstrating different CircleCI features including workspaces, dependency caching, and parallelism.
+This is an example application showcasing how to run a Java app on CircleCI 2.1. This application uses the [Spring PetClinic sample project](https://projects.spring.io/spring-petclinic/). This document includes pared down sample configurations demonstrating different CircleCI features including workspaces, dependency caching, and parallelism.
 
-## 設定ファイルの例: バージョン2.1
+## Sample configuration: version 2.1:
 {: #sample-configuration-version-21 }
 
 ### A basic build with an orb:
@@ -103,7 +103,7 @@ workflows:
             - build
 ```
 
-### 依存関係のキャッシュ
+### Caching dependencies
 {: #caching-dependencies }
 
 The following code sample details the use of **caching**.
@@ -351,10 +351,10 @@ workflows:
 ```
 {% endraw %}
 
-このデモ アプリケーションには、リポジトリの `maven` ブランチである [https://github.com/CircleCI-Public/circleci-demo-java-spring/tree/maven](https://github.com/CircleCI-Public/circleci-demo-java-spring/tree/maven) からアクセスできます。 ご自身でコード全体を確認する場合は、GitHub でプロジェクトをフォークし、ローカル マシンにダウンロードします。 CircleCI の [[Add Projects (プロジェクトの追加)](https://circleci.com/add-projects){:rel="nofollow"}] ページにアクセスし、プロジェクトの横にある [Build Project (プロジェクトのビルド)] ボタンをクリックします。 最後に `.circleci/config.yml` の内容をすべて削除します。 完了です。 これで、Maven と Spring を使用する Java アプリケーション用に CircleCI を構成できました。
+The configuration above is from a demo Java app, which you can access [here](https://github.com/CircleCI-Public/circleci-demo-java-spring). If you want to step through it yourself, you can fork the project on GitHub and download it to your machine. Go to the **Projects** page in CircleCI and click the **Follow Project** button next to your forked project. Finally, delete everything in .circleci/config.yml. Nice! You just set up CircleCI for a Java app using Gradle and Spring.
 
-## 設定ファイルの詳細
+## See also
 {: #see-also }
 
-- [Maven](https://maven.apache.org/) を使用している  ([Gradle](https://gradle.org/) 版のガイドは[こちら](https://circleci.com/ja/docs/2.0/language-java/))
-- Java 8 を使用している
+- See the [Deploy]({{ site.baseurl }}/2.0/deployment-integrations/) document for example deploy target configurations.
+- See the [Debugging Java OOM errors]({{ site.baseurl }}/2.0/java-oom/) document for details on handling Java memory issues.
