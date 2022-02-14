@@ -1,20 +1,20 @@
 ---
 layout: classic-docs
-title: "テスト インサイト"
-short-title: "テスト インサイトの使用"
-description: "テスト インサイトの使用"
+title: "Test Insights"
+short-title: "Using Test Insights"
+description: "Using Test Insights"
 version:
   - Cloud
 ---
 
-## 概要
+## Overview
 {: #overview }
 
 Using CircleCI test insights, you are able to analyze your test performance within the most recent executions and identify opportunities for test optimization. To access test insights, select the **Tests** tab on the **Workflow Insights** page.
 
 The next sections go over what test insights are available.
 
-### パフォーマンスの概要
+### Performance Summary
 {: #performance-summary }
 
 The summary section displays test suite performance across your most recent 100 runs. You can view the following:
