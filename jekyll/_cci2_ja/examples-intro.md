@@ -1,21 +1,21 @@
 ---
 layout: classic-docs
-title: "サンプル"
-short-title: "サンプル"
+title: "Examples"
+short-title: "Examples"
 description: "CircleCI Examples Introduction"
 categories:
-  - 移行
+  - migration
 order: 1
 version:
-  - クラウド
+  - Cloud
   - Server v3.x
   - Server v2.x
 ---
 
 
-CircleCI を使用して、Linux、Android、iOS 上で動作するアプリケーションをビルド、テスト、およびデプロイすることができます。 以下のスニペットでは、各プラットフォーム用にジョブの構成をカスタマイズする方法に重点を置いて解説しています。 1 つの [`.circleci/config.yml`]({{ site.baseurl }}/ja/2.0/configuration-reference/) ファイルで、複数のプラットフォーム上で動作するジョブを構成することも可能です。
+It is possible to build, test, and deploy applications that run on Linux, Android, iOS and Windows with CircleCI. See the following snippets for a peek into how you can customize the configuration of a job for any platform. You may also configure jobs to run on multiple platforms in a single [`.circleci/config.yml`]({{ site.baseurl }}/2.0/configuration-reference/) file.
 
-## Linux と Docker
+## Linux with Docker
 {: #linux-with-docker }
 
 {% raw %}
@@ -25,7 +25,7 @@ version: 2
 jobs:
   build:
     working_directory: ~/mern-starter
-    # プライマリ コンテナは、最初にリストしたイメージのインスタンスです。 ジョブのコマンドはこのコンテナ内で実行されます。
+    # The primary container is an instance of the first image listed. The job's commands run in this container.
     docker:
       - image: cimg/node:17.3.0
         auth:
@@ -54,12 +54,12 @@ jobs:
 
 {% endraw %}
 
-## Linux と Machine
+## Linux with machine
 {: #linux-with-machine }
 
-**メモ:** 今後の料金改定により、Machine の使用に追加料金が必要になる可能性があります。
+**Note**: Use of machine may require additional fees in a future pricing update.
 
-デフォルトのマシン イメージを使用して Machine Executor を使用するには、`.circleci/config.yml` で machine キーを true に設定します。
+To use the machine executor with the default machine image, set the machine key to true in `.circleci/config.yml`:
 
 ```yaml
 version: 2
@@ -90,10 +90,10 @@ jobs:
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
 #      - run:
-#         name: Chmod パーミッション # Gradlew Dependencies のパーミッションが失敗する場合は、これを使用します
+#         name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
 #         command: sudo chmod +x ./gradlew
       - run:
-          name: 依存関係のダウンロード
+          name: Download Dependencies
           command: ./gradlew androidDependencies
 ```
 
@@ -101,8 +101,6 @@ jobs:
 
 ## macOS
 {: #macos }
-_macOS Executor は、オンプレミス版の CircleCI Server では現在サポートされていません。_
-
 ```
 jobs:
   build-and-test:
@@ -111,7 +109,7 @@ jobs:
     steps:
       ...
       - run:
-          name: テストの実行
+          name: Run tests
           command: fastlane scan
           environment:
             SCAN_DEVICE: iPhone 6
@@ -124,10 +122,10 @@ jobs:
 
 {:.tab.windowsblock.Cloud}
 ```yaml
-version: 2.1 # バージョン 2.1 を指定して Orb の使用を有効化します
+version: 2.1 # Use version 2.1 to enable orb usage.
 
 orbs:
-  win: circleci/windows@2.2.0 # Windows Orb には Windows Executor の使用に必要なすべてが揃っています
+  win: circleci/windows@2.2.0 # The Windows orb give you everything you need to start using the Windows executor.
 
 jobs:
   build: # name of your job
@@ -148,7 +146,7 @@ version: 2.1
 jobs:
   build: # name of your job
     machine:
-      image: windows-default # Windows machine image
+      image: windows-default
     resource_class: windows.medium
     steps:
       # Commands are run in a Windows virtual machine environment
@@ -163,7 +161,7 @@ version: 2
 jobs:
   build: # name of your job
     machine:
-      image: windows-default # Windows machine image
+      image: windows-default
     resource_class: windows.medium
     steps:
       # Commands are run in a Windows virtual machine environment
@@ -171,7 +169,7 @@ jobs:
         - run: Write-Host 'Hello, Windows'
 ```
 
-## 関連項目
+## See also
 {: #see-also }
 
-上記のサンプルで使用されている Executor タイプの詳細については、[こちら]({{ site.baseurl }}/ja/2.0/executor-types/)を参照してください。
+Learn more about the [executor types]({{ site.baseurl }}/2.0/executor-types/) used in the examples above.
