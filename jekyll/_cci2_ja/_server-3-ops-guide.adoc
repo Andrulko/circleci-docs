@@ -1,11 +1,10 @@
-= 運用ガイド: AWS または GCP の CircleCI Server v{serverversion} 管理ガイド
-docs@circleci.com
+= OPERATIONS GUIDE: A guide for administrators of CircleCI Server v{serverversion} on AWS or GCP
 :media: screen
 :title-page-background-image: image:pdf-header.png[]
 :imagesdir: ../assets/img/docs/
 :doctype: book
 :toc:
-:toc-title: 目次
+:toc-title: Contents
 :icons: font
 :page-liquid:
 :source-highlighter: rouge
@@ -14,7 +13,6 @@ docs@circleci.com
 :idseparator: -
 :sectanchors:
 :autofit-option:
-
 :leveloffset: +1
 
 include::server-3-operator-overview.adoc[]
@@ -50,5 +48,4 @@ include::server-3-operator-application-lifecycle.adoc[]
 include::server-3-operator-troubleshooting-and-support.adoc[]
 
 include::server-3-operator-backup-and-restore.adoc[]
-
 :leveloffset: -1
