@@ -1,8 +1,8 @@
 ---
 layout: classic-docs
-title: 2.0 ヘルプ情報
-description: 利用可能なサポート オプションの一覧.
-redirect: /ja/docs/2.0/help-and-support/
+title: Getting Help with 2.0
+description: A list of possible support options.
+redirect: /docs/2.0/help-and-support/
 ---
 
-このページは移動しました。 移動しない場合は、[ここをクリック]({{ site.baseurl }}/ja/2.0/help-and-support/)してください。
+This page has moved. You should be automatically redirected, but if you haven’t, you can [click here]({{ site.baseurl }}/2.0/help-and-support/).
