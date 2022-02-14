@@ -1,16 +1,16 @@
 ---
 layout: classic-docs
-title: packagecloud へのパッケージのパブリッシュ
+title: Publishing Packages to packagecloud
 categories:
   - how-to
-description: CircleCI を使用して packagecloud にパッケージをパブリッシュする方法
+description: How to publish packages to packagecloud using CircleCI
 version:
   - Cloud
   - Server v3.x
   - Server v2.x
 ---
 
-[packagecloud](https://packagecloud.io) は、ホスティングされているパッケージ リポジトリ サービスです。 packagecloud を使用すると、事前構成なしで npm、Maven (Java)、Python、apt、yum、RubyGem の各リポジトリをホスティングすることができます。
+[Packagecloud](https://packagecloud.io) is a hosted package repository service. It allows users to host npm, Java/Maven, python, apt, yum and rubygem repositories without any pre-configuration.
 
 * TOC
 {:toc}
@@ -18,7 +18,7 @@ version:
 ## Configure environment variables
 {: #configure-environment-variables }
 
-### `$PACKAGECLOUD_TOKEN` の設定
+### Set the `$PACKAGECLOUD_TOKEN`
 {: #set-the-dollarpackagecloudtoken }
 
 Under project settings in CircleCI, create an environment variable with the name `PACKAGECLOUD_TOKEN`, containing the value of a packagecloud API token. This environment variable will be used to authenticate with the packagecloud API directly, or using the packagecloud CLI.
@@ -29,21 +29,21 @@ Alternatively, if you prefer to keep your sensitive environment variables checke
 
 {:.no_toc}
 
-### packagecloud:enterprise 用の `$PACKAGECLOUD_URL` の設定
+### Set the `$PACKAGECLOUD_URL` for packagecloud:enterprise
 {: #set-the-dollarpackagecloudurl-for-packagecloudenterprise }
 
 _**Only set the `$PACKAGECLOUD_URL` if you're a packagecloud:enterprise customer**_
 
 This setting is only for packagecloud:enterprise customers. Under project settings in CircleCI, set the `$PACKAGECLOUD_URL` environment variable to the URL of the packagecloud:enterprise installation.
 
-## packagecloud CLI のインストール
+## Install the packagecloud CLI
 {: #install-the-packagecloud-cli }
 
 To use the packagecloud CLI from CircleCI, install it using RubyGems by adding the following `run` step to your `.circleci/config.yml` under the job that is configured to deploy the package:
 
 ```
 - run:
-   name: packagecloud CLI のインストール
+   name: Install packagecloud CLI
    command: gem install package_cloud
 ```
 
@@ -66,7 +66,7 @@ version: 2
 defaults: &defaults
   working_directory: ~/repo
   docker:
-    - image: circleci/ruby:2.7
+    - image: cimg/ruby:3.0.2
       auth:
         username: mydockerhub-user
         password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
@@ -87,10 +87,10 @@ jobs:
       - attach_workspace:
           at: ~/repo
       - run:
-          name: packagecloud CLI のインストール
+          name: Install packagecloud CLI
           command: gem install package_cloud
       - run:
-          name: deb パッケージのプッシュ
+          name: Push deb package
           command: package_cloud push example-user/example-repo/debian/jessie debs/packagecloud-test_1.1-2_amd64.deb
 workflows:
   version: 2
@@ -122,12 +122,12 @@ jobs:
       - restore_cache:
           keys:
           - v1-dependencies-.
-          # 正確な一致が見つからない場合は、最新のキャッシュの使用にフォールバックします
+          # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
       - run: npm install
       - run:
-          name: テストの実行
+          name: Run tests
           command: npm test
 
       - save_cache:
@@ -154,13 +154,13 @@ jobs:
       - attach_workspace:
           at: ~/repo
       - run:
-          name: レジストリ URL の設定
+          name: Set registry URL
           command: npm set registry https://packagecloud.io/example-user/example-repo/npm/
       - run:
-          name: レジストリでの認証
+          name: Authenticate with registry
           command: echo "//packagecloud.io/example-user/example-repo/npm/:_authToken=$PACKAGECLOUD_TOKEN" > ~/repo/.npmrc
       - run:
-          name: パッケージのパブリッシュ
+          name: Publish package
           command: npm publish
 ```
 
@@ -181,7 +181,7 @@ version: 2
 defaults: &defaults
   working_directory: ~/repo
   docker:
-    - image: circleci/node:8.9.1
+    - image: cimg/node:16.13.1
       auth:
         username: mydockerhub-user
         password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
@@ -194,12 +194,12 @@ jobs:
       - restore_cache:
           keys:
           - v1-dependencies-.
-          # 正確な一致が見つからない場合は、最新のキャッシュの使用にフォールバックします
+          # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
       - run: npm install
       - run:
-          name: テストの実行
+          name: Run tests
           command: npm test
 
       - save_cache:
@@ -216,13 +216,13 @@ jobs:
       - attach_workspace:
           at: ~/repo
       - run:
-          name: レジストリ URL の設定
+          name: Set registry URL
           command: npm set registry https://packagecloud.io/example-user/example-repo/npm/
       - run:
-          name: レジストリでの認証
+          name: Authenticate with registry
           command: echo "//packagecloud.io/example-user/example-repo/npm/:_authToken=$PACKAGECLOUD_TOKEN" > ~/repo/.npmrc
       - run:
-          name: パッケージのパブリッシュ
+          name: Publish package
           command: npm publish
 workflows:
   version: 2
@@ -238,14 +238,14 @@ The workflows section will tie together both the `test` and `deploy` jobs into s
 
 You can read more about publishing npm packages to packagecloud on the CircleCI blog post: [Publishing npm Packages Using CircleCI](https://circleci.com/blog/publishing-npm-packages-using-circleci-2-0/)
 
-## packagecloud API の使用方法
+## Using the packagecloud API
 {: #using-the-packagecloud-api }
 
 Packagecloud also provides a robust API to manage package repositories. You can read more about the [packagecloud API](https://packagecloud.io/docs/api) and how to upload, delete, and promote packages across repositories.
 
 {:.no_toc}
 
-## 関連項目
+## See also
 {: #see-also }
 
-[アーティファクトの保存とアクセス]({{ site.baseurl }}/2.0/artifacts/)
+[Storing and Accessing Artifacts]({{ site.baseurl }}/2.0/artifacts/)
