@@ -1,8 +1,8 @@
 ---
 layout: classic-docs
-title: "ビルド アーティファクトの保存"
-short-title: "ビルド アーティファクトの保存"
-description: "ビルド中に作成されるアーティファクトのアップロード例"
+title: "Storing Build Artifacts"
+short-title: "Storing Build Artifacts"
+description: "Example of uploading artifacts created during a build"
 order: 70
 version:
   - Cloud
@@ -10,36 +10,36 @@ version:
   - Server v2.x
 ---
 
-以下のセクションに沿って、アーティファクトの操作方法を説明します。
+This document describes how to work with Artifacts on CircleCI.
 
-* 目次
+* TOC
 {:toc}
 
-## アーティファクトの概要
+## Artifacts overview
 {: #artifacts-overview }
 
-アーティファクトには、ジョブが完了した後もデータが維持され、ビルド プロセス出力を格納するストレージとして使用できます。
+Artifacts persist data after a job is completed and may be used for storage of the outputs of your build process.
 
-たとえば、Java のビルドおよびテストのプロセスが 1 つ終了すると、プロセスの出力が `.jar` ファイルとして保存されます。 CircleCI では、このファイルをアーティファクトとして保存し、プロセスの終了後も使用可能な状態に維持できます。
+For example, when a Java build/test process finishes, the output of the process is saved as a `.jar` file. CircleCI can store this file as an artifact, keeping it available after the process has finished.
 
-![アーティファクトのデータ フロー]( {{ site.baseurl }}/assets/img/docs/Diagram-v3-Artifact.png)
+![artifacts data flow]({{site.baseurl}}/assets/img/docs/Diagram-v3-Artifact.png)
 
-Android アプリとしてパッケージ化されるプロジェクトの場合は、`.apk` ファイルが Google Play にアップロードされます。
+Another example of an artifact is a project that is packaged as an Android app where the `.apk` file is uploaded to Google Play.
 
-ジョブによってスクリーンショット、カバレッジ レポート、コア ファイル、デプロイ ターボールなどの永続的アーティファクトが生成される場合、CircleCI はそれらを自動的に保存およびリンクします。
+If a job produces persistent artifacts such as screenshots, coverage reports, core files, or deployment tarballs, CircleCI can automatically save and link them for you.
 
-![[Artifacts (アーティファクト)] タブのスクリーンショット]( {{ site.baseurl }}/assets/img/docs/artifacts.png)
+Navigate to a pipeline's **Job** page on the [CircleCI web app](https://app.circleci.com/) to find the **Artifacts** tab. Artifacts are stored on Amazon S3 and are protected with your CircleCI account for private projects. There is a 3GB `curl` file size limit.
 
-アーティファクトへのリンクは、**[Job (ジョブ)] ページ**の [Artifacts (アーティファクト)] タブに表示されます。 アーティファクトは Amazon S3 に保存され、プライベート プロジェクト用の CircleCI アカウントを使用して保護されます。 `curl` ファイルのサイズは 3 GB に制限されています。
+![artifacts tab screenshot]({{site.baseurl}}/assets/img/docs/artifacts.png)
 
-**アーティファクトへは作成から30日間アクセスできます。 **  ドキュメントや永続的なコンテンツのソースとして依存している場合、S3や静的Webサイト用のGitHub Pages、Netlifyのような専用領域にデプロイすることを推奨します。
+**Artifacts will be accessible for thirty days after creation**. If you are relying on them as a source of documentation or persistent content, we recommend deploying the output to a dedicated output target such as S3, or GitHub Pages or Netlify for static websites.
 
-**メモ:** アップロードされたアーティファクトのファイル名は、[Java URLEncoder](https://docs.oracle.com/javase/7/docs/api/java/net/URLEncoder.html) を使用してエンコードされます。 アプリケーション内の特定のパスにあるアーティファクトを探すときには、この点にご注意ください。
+**Note:** Uploaded artifact filenames are encoded using the [Java URLEncoder](https://docs.oracle.com/javase/7/docs/api/java/net/URLEncoder.html). Keep this in mind if you are expecting to find artifacts at a given path within the application.
 
-## アーティファクトのアップロード
+## Uploading artifacts
 {: #uploading-artifacts }
 
-ビルド時に作成したアーティファクトをアップロードするには、以下の例を参考にしてください。
+To upload artifacts created during builds, use the following example:
 
 ```yaml
 version: 2
@@ -53,9 +53,8 @@ jobs:
 
     working_directory: /tmp
     steps:
-
       - run:
-          name: ダミー アーティファクトの作成
+          name: Creating Dummy Artifacts
           command: |
             echo "my artifact file" > /tmp/artifact-1;
             mkdir /tmp/artifacts;
@@ -69,40 +68,38 @@ jobs:
           path: /tmp/artifacts
 ```
 
-この `store_artifacts` ステップによって、ファイル (`/tmp/artifact-1`) とディレクトリ (`/tmp/artifacts`) の 2 つのビルド アーティファクトがアップロードされます。 アップロードが正常に完了すると、ブラウザー内の**[Job (ジョブ)] ページ**の **[Artifacts (アーティファクト)]** タブにアーティファクトが表示されます。 大量のアーティファクトをまとめてアップロードする場合は、[単一の圧縮ファイルとしてアップロード](https://support.circleci.com/hc/en-us/articles/360024275534?input_string=store_artifacts+step)することで高速化できます。        
-単一のジョブで実行可能な `store_artifacts` ステップの数に制限はありません。
+The `store_artifacts` step uploads two build artifacts: a file (`/tmp/artifact-1`) and a directory (`/tmp/artifacts`). After the artifacts successfully upload, view them in the **Artifacts** tab of the **Job** page in your browser. If you are uploading hundreds of artifacts, then consider [compressing and uploading as a single compressed file](https://support.circleci.com/hc/en-us/articles/360024275534?input_string=store_artifacts+step) to accelerate this step. There is no limit on the number of `store_artifacts` steps a job can run.
 
+Currently, `store_artifacts` has two keys: `path` and `destination`.
 
-現在、`store_artifacts` には `path` と `destination` の 2 つのキーがあります。
+  - `path` is a path to the file or directory to be uploaded as artifacts.
+  - `destination` **(optional)** is a prefix added to the artifact paths in the artifacts API. The directory of the file specified in `path` is used as the default.
 
-  - `path` は、アーティファクトとしてアップロードされるファイルまたはディレクトリのパスです。
-  - `destination` **(オプション)** は、アーティファクト API でアーティファクト パスに追加されるプレフィックスです。 `path` で指定されたファイルのディレクトリがデフォルトとして使用されます。
-
-## コア ファイルのアップロード
+## Uploading core files
 {: #uploading-core-files }
 
-このセクションでは、[コア ダンプ](http://man7.org/linux/man-pages/man5/core.5.html)を取得し、検査やデバッグで使用するためにアーティファクトとしてプッシュする方法について説明します。 以下の例では、[`abort(3)`](http://man7.org/linux/man-pages/man3/abort.3.html) を実行してプログラムをクラッシュさせる短い C プログラムを作成します。
+This section describes how to get [core dumps](http://man7.org/linux/man-pages/man5/core.5.html) and push them as artifacts for inspection and debugging. The following example creates a short C program that runs [`abort(3)`](http://man7.org/linux/man-pages/man3/abort.3.html) to crash the program.
 
-1. 以下の行を含む `Makefile` を作成します。
+1. Create a `Makefile` with the following lines:
 
      ```
      all:
        gcc -o dump main.c
      ```
 
-2. 以下の行を含む `main.c` ファイルを作成します。
+2. Create a `main.c` file with the following lines.
 
      ```C
-     # <stdlib.h> を含めます
+     #include <stdlib.h>
 
      int main(int argc, char **argv) {
          abort();
      }
      ```
 
-3. 生成されたプログラムで `make` と `./dump` を実行し、`Aborted (core dumped)` を印刷します。
+3. Run `make` and `./dump` on the generated program to print `Aborted (core dumped)`!
 
-このサンプル C abort プログラムをコンパイルし、コア ダンプをアーティファクトとして収集する `config.yml` の全体は、以下のようになります。
+Following is a full `config.yml` that compiles the example C abort program, and collects the core dumps as artifacts.
 
 ```yaml
 version: 2
@@ -118,7 +115,7 @@ jobs:
       - checkout
       - run: make
       - run: |
-          # コア ダンプ ファイルのファイル サイズ制限をなくすようにオペレーティング システムに指示します
+          # tell the operating system to remove the file size limit on core dump files
           ulimit -c unlimited
           ./dump
       - run:
@@ -130,24 +127,24 @@ jobs:
           path: /tmp/core_dumps
 ```
 
-`ulimit -c unlimited` は、コア ダンプ ファイルのファイル サイズ制限をなくします。 この制限をなくすと、プログラムがクラッシュするたびに、作業中のカレント ディレクトリにコア ダンプ ファイルが作成されます。 コア ダンプ ファイルには、`core.%p.%E` という名前が付きます。 `%p` はプロセス ID、`%E` は実行可能ファイルのパス名です。 詳細については、`/proc/sys/kernel/core_pattern` で仕様を確認してください。
+The `ulimit -c unlimited` removes the file size limit on core dump files. With the limit removed, every program crash creates a core dump file in the current working directory. The core dump file is named `core.%p.%E` where `%p` is the process id and `%E` is the pathname of the executable. See the specification in `/proc/sys/kernel/core_pattern` for details.
 
-最後に、`store_artifacts` によってアーティファクト サービスの `/tmp/core_dumps` ディレクトリにコア ダンプ ファイルが格納されます。
+Finally, the core dump files are stored to the artifacts service with `store_artifacts` in the `/tmp/core_dumps` directory.
 
-![アーティファクト ページに表示されたコア ダンプ ファイル]( {{ site.baseurl }}/assets/img/docs/core_dumps.png)
+![Core Dump File in Artifacts Page]( {{ site.baseurl }}/assets/img/docs/core_dumps.png)
 
-CircleCI がジョブを実行すると、**[Job (ジョブ)] ページ**の [Artifacts (アーティファクト)] タブにコア ダンプ ファイルへのリンクが表示されます。
+When CircleCI runs a job, a link to the core dump file appears in the **Artifacts** tab of the **Job** page.
 
-## CircleCI で行うビルドのすべてのアーティファクトのダウンロード
+## Downloading all artifacts for a build on CircleCI
 {: #downloading-all-artifacts-for-a-build-on-circleci }
 
-`curl` を使ってアーティファクトをダウンロードするには、以下の手順で行います。
+To download your artifacts with `curl`, follow the steps below.
 
-1. [パーソナル API トークンを作成]({{ site.baseurl }}/ja/2.0/managing-api-tokens/#パーソナル-api-トークンの作成)し、クリップボードにコピーします。
+1. [Create a personal API token]({{ site.baseurl }}/2.0/managing-api-tokens/#creating-a-personal-api-token) and copy it to a clipboard.
 
-2. ターミナル ウィンドウで、アーティファクトを保存するディレクトリに `cd` します。
+2. In a Terminal window, `cd` to a directory where you want to store the artifacts.
 
-3. 以下のコマンドを実行します。 `:` で始まる変数は、コマンドの下に掲載した表を参照して、実際の値に置き換えてください。
+3. Run the commands below. Use the table beneath the commands to substitute actual values for all variables that start with `:`.
 
 ```bash
 # Set an environment variable for your API token.
@@ -157,30 +154,48 @@ export CIRCLE_TOKEN=':your_token'
 # then, the result is piped into `grep` to extract the URLs.
 # finally, `wget` is used to download the the artifacts to the current directory in your terminal.
 
-curl -H "Circle-Token: $CIRCLE_TOKEN" https://circleci.com/api/v1.1/project/:vcs-type/:username/:project/$build_number/artifacts \
+curl -H "Circle-Token: $CIRCLE_TOKEN" https://circleci.com/api/v1.1/project/:vcs-type/:username/:project/:build_num/artifacts \
    | grep -o 'https://[^"]*' \
    | wget --verbose --header "Circle-Token: $CIRCLE_TOKEN" --input-file -
 ```
 
-同様に、ビルドの_最新_のアーティファクトをダウンロードする場合は、curl の呼び出しを以下のように URL で置き換えます。
+Similarly, if you want to download the _latest_ artifacts of a build, replace the curl call with a URL that follows this scheme:
 
 ```bash
-curl https://circleci.com/api/v1.1/project/:vcs-type/:username/:project/latest/artifacts?circle-token=:your_token
+curl -H "Circle-Token: <circle-token>" https://circleci.com/api/v1.1/project/:vcs-type/:username/:project/latest/artifacts
 ```
 
-CircleCI の API を使用してアーティファクトを操作する詳しい方法については、[API リファレンス ガイド](https://circleci.com/docs/api/v1/#artifacts) を参照してください。
+You can read more about using CircleCI's API to interact with artifacts in our [API reference guide](https://circleci.com/docs/api/v1/#artifacts).
 
-| プレースホルダー      | 意味                                                                           |
-| ------------- | ---------------------------------------------------------------------------- |
-| `:your_token` | 上記で作成した個人用の API トークン。                                                        |
-| `:vcs-type`   | 使用しているバージョン管理システム (VCS)。 `github` または `bitbucket` のいずれかとなります。                |
-| `:username`   | ターゲット プロジェクトの VCS プロジェクト アカウントのユーザー名または組織名。 CircleCI アプリケーションの画面左上に表示されています。 |
-| `:project`    | ターゲット VCS リポジトリの名前。                                                          |
-| `:build_num`  | アーティファクトをダウンロードする対象のビルドの番号。                                                  |
+| Placeholder   | Meaning                                                                                                                                          |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `:your_token` | The personal API token you created above.                                                                                                        |
+| `:vcs-type`   | The version control system (VCS) you are using. Either `github` or `bitbucket`.                                                                  |
+| `:username`   | The VCS project account username or organization name for the target project. Located at the top left of the screen in the CircleCI application. |
+| `:project`    | The name of the target VCS repository.                                                                                                           |
+| `:build_num`  | The number of the job (aka. build) for which you want to download artifacts.                                                                     |
 {: class="table table-striped"}
 
-## 関連項目
+## Artifacts optimization
+{: #artifacts-optimization }
+
+Optimization options will be different for each project depending on what you are trying to accomplish. You can try the following actions to reduce network and storage usage:
+
+- Check if `store_artifacts` is uploading unnecessary files
+- Check for identical artifacts if you are using parallelism
+- Compress text artifacts at minimal cost
+- Filter out and upload only failing UI tests with images/videos
+- Filter out and upload only failures or successes
+- Upload artifacts to a single branch
+- Upload large artifacts to your own bucket at no cost
+
+Visit the [Persisting Data]({{site.baseurl}}/2.0/persist-data/#how-to-optimize-your-storage-and-network-transfer-use) page for more information.
+
+You can find out how much network and storage usage is available on your plan by visiting the features section of the [Pricing](https://circleci.com/pricing/) page. If you would like more details about credit usage, and how to calculate your potential network and storage costs, visit the billing section on the [FAQ]({{site.baseurl}}/2.0/faq/#how-do-I-calculate-my-monthly-storage-and-network-costs) page.
+
+## See also
 {: #see-also }
 {:.no_toc}
 
-[依存関係のキャッシュ]({{ site.baseurl }}/ja/2.0/caching/)
+- [Caching Dependencies]({{site.baseurl}}/2.0/caching/)
+- [Persisting Data]({{site.baseurl}}/2.0/persist-data/#using-artifacts)
