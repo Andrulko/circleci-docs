@@ -1,10 +1,10 @@
 ---
 layout: classic-docs
 title: CircleCI CLI
-description: CLI を使用したローカル ジョブの実行方法.
-redirect: /docs/ja/2.0/local-cli/
+description: How to run local jobs with the CLI.
+redirect: /docs/2.0/local-cli/
 ---
 
-<h2>このページは移動しました。 移動しない場合は、<a href="/docs/ja/2.0/local-cli/">ここをクリック</a>してください。</h2>
+<h2>This page has moved. You should be automatically redirected, but if that didn't work you can <a href="/docs/2.0/local-cli/">click here</a>.</h2>
 
 
