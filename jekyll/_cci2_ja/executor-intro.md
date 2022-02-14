@@ -1,104 +1,104 @@
 ---
 layout: classic-docs
-title: "Executor とイメージ"
-short-title: "Executor とイメージ"
+title: "Executors and Images"
+short-title: "Executors and Images"
 description: "CircleCI executors and images"
 categories:
-  - 設定
+  - configuration
 order: 1
 version:
-  - クラウド
+  - Cloud
   - Server v2.x
   - Server v3.x
 ---
 
-CircleCI offers several execution environments. CircleCI ではこれらを **Executor** と呼んでいます。 **Executor** では、ジョブを実行する基盤テクノロジーまたは環境を定義します。 `docker`、`machine`、`macos`、または `windows` の Executor で実行するジョブをセットアップし、必要なツールとパッケージを含むイメージを指定します。
+CircleCI offers several execution environments. We call these **executors**. An **executor** defines the underlying technology or environment in which to run a job. Set up your jobs to run in the `docker`, `machine`, `macos` or  `windows` executor and specify an image with the tools and packages you need.
 
-![Executor の概要]({{ site.baseurl }}/assets/img/docs/executor_types.png)
+![Executor Overview]({{ site.baseurl }}/assets/img/docs/executor_types.png)
 
 ## Docker
 {: #docker }
 
 <div class="alert alert-warning" role="alert">
-  <strong>プレフィックスが「 circleci / 」のレガシーイメージは、 2021 年 12 月 31 日に<a href="https://discuss.circleci.com/t/legacy-convenience-image-deprecation/41034">廃止</a></strong>されます。 ビルドを高速化するには、<a href="https://circleci.com/blog/announcing-our-next-generation-convenience-images-smaller-faster-more-deterministic/"> 次世代の CircleCI イメージ </a>を使ってプロジェクトをアップグレードしてください。
+  <strong>Legacy images with the prefix "circleci/" will be <a href="https://discuss.circleci.com/t/legacy-convenience-image-deprecation/41034">deprecated</a></strong> on December 31, 2021. For faster builds, upgrade your projects with <a href="https://circleci.com/blog/announcing-our-next-generation-convenience-images-smaller-faster-more-deterministic/">next-generation convenience images</a>.
 </div>
 
 ```
 jobs:
-  build: # ジョブの名前
-    docker: # Executor タイプ
-      - image: buildpack-deps:trusty # プライマリ コンテナで Ubuntu Trusty を実行します
+  build: # name of your job
+    docker: # executor type
+      - image: buildpack-deps:trusty # primary container will run Ubuntu Trusty
 
       steps:
-        # プライマリ コンテナで実行するコマンド
+        # Commands run in the primary container
 ```
 
-`docker` Executor の使用については、[こちら]({{ site.baseurl }}/ja/2.0/executor-types/#using-docker)をご覧ください。
+Find out more about using the `docker` executor [here]({{ site.baseurl }}/2.0/executor-types/#using-docker).
 
 ## Machine
 {: #machine }
 
 {:.tab.machine.Cloud}
 ```
-steps:
-        # Linux 仮想マシン環境で実行するコマンド
-```
-
-{:.tab.machine.Server}
-```
-jobs:
-  build:
-    machine:
-      image: ubuntu-1604:202007-01 # VM will run Ubuntu 16.04 for this release date
-    steps:
-      # Commands run in a Linux virtual machine environment
-```
-
-`machine` Executor の使用については、[こちら]({{ site.baseurl }}/ja/2.0/executor-types/#machine-の使用)をご覧ください。
-```
 jobs:
   build: # name of your job
     machine: # executor type
-      image: ubuntu-1604:202007-01 # VM will run Ubuntu 16.04 for this release date
+      image: ubuntu-2004:202010-01 # # recommended linux image - includes Ubuntu 20.04, docker 19.03.13, docker-compose 1.27.4
+
+      steps:
+        # Commands run in a Linux virtual machine environment
+```
+
+{:.tab.machine.Server_3}
+```
+jobs:
+  build: # name of your job
+    machine: true # executor type
+    steps:
+      # Commands run in a Linux virtual machine environment
+```
+
+{:.tab.machine.Server_2}
+```
+jobs:
+  build: # name of your job
+    machine: true # executor type
 
     steps:
       # Commands run in a Linux virtual machine environment
 ```
 
-`macos` Executor の使用については、[こちら]({{ site.baseurl }}/ja/2.0/executor-types/#using-macos)をご覧ください。
+Find out more about using the `machine` executor [here]({{ site.baseurl }}/2.0/executor-types/#using-machine).
 
 ## macOS
 {: #macos }
-
-_The macOS executor is not currently available on self-hosted installations of CircleCI server_
-
 ```
 jobs:
-  build: # ジョブの名前
-    macos: # Executor タイプ
+  build: # name of your job
+    macos: # executor type
       xcode: 12.5.1
 
     steps:
-      # Xcode 11.3 がインストールされた
-      # macOS 仮想マシン環境で実行するコマンド
+      # Commands run in a macOS virtual machine environment
+      # with Xcode 12.5.1 installed
 ```
 
-`macos` Executor の使用については、[こちら]({{ site.baseurl }}/ja/2.0/executor-types/#using-macos)をご覧ください。
+Find out more about using the `macos` executor [here]({{ site.baseurl }}/2.0/executor-types/#using-macos).
 
 ## Windows
 {: #windows }
 
-Windows Executor を使用するための設定ファイルの構文は、以下のどちらを使用するのかによって異なります。
+The syntax for using the Windows executor in your config differs depending on whether you are using:
 
-* クラウド版の CircleCI でバージョン 2.1 の設定ファイルと Windows Orb を使用する場合。
+* The cloud version of CircleCI, using config version 2.1 and the Windows orb.
 * Self-hosted installation of CircleCI server with config version 2.0 – this option is an instance of using the `machine` executor with a Windows image – _Introduced in CircleCI server v2.18.3_.
 
 {:.tab.windowsblock.Cloud}
 ```
-version: 2.1 # バージョン 2.1 を指定して Orb の使用を有効化します
+version: 2.1 # Use version 2.1 to enable orb usage.
 
 orbs:
-  win: circleci/windows@2.2.0 # Windows Orb には Windows Executor の使用に必要なすべてが揃っています
+  win: circleci/windows@2.2.0 # The Windows orb give you everything you need to start using the Windows executor.
 
 jobs:
   build: # name of your job
@@ -117,8 +117,8 @@ version: 2.1
 
 jobs:
   build: # name of your job
-    machine:
-      image: windows-default # Windows machine image
+    machine: # executor type
+      image: windows-default
     resource_class: windows.medium
     steps:
       # Commands are run in a Windows virtual machine environment
@@ -132,8 +132,8 @@ version: 2
 
 jobs:
   build: # name of your job
-    machine:
-      image: windows-default # Windows machine image
+    machine: # executor type
+      image: windows-default
     resource_class: windows.medium
     steps:
       # Commands are run in a Windows virtual machine environment
@@ -141,16 +141,16 @@ jobs:
       - run: Write-Host 'Hello, Windows'
 ```
 
-`windows` Executor の使用については、[こちら]({{ site.baseurl }}/ja/2.0/executor-types/#using-the-windows-executor)をご覧ください。 Windows Orb で使用できるオプションの一覧は [Windows Orb の詳細ページ](https://circleci.com/developer/ja/orbs/orb/circleci/windows)でご確認ください。
+Find out more about using the `windows` executor [here]({{ site.baseurl }}/2.0/executor-types/#using-the-windows-executor). See [the Windows orb details](https://circleci.com/developer/orbs/orb/circleci/windows) for the list of options available in the Windows orb.
 
-## 関連項目
+## See also
 {: #see-also }
 
-* [Executor タイプの選択]({{ site.baseurl }}/ja/2.0/executor-types/)
-* [ビルド済み CircleCI イメージ]({{ site.baseurl }}/ja/2.0/circleci-images/)
-* [macOS でのビルド]({{site.baseurl}}/ja/2.0/hello-world-macos)
-* [Windows でビルド]({{site.baseurl}}/ja/2.0/hello-world-windows)
+* [Choosing an executor type]({{ site.baseurl }}/2.0/executor-types/)
+* [Pre-built CircleCI convenience images]({{ site.baseurl }}/2.0/circleci-images/)
+* [Building on MacOS]({{site.baseurl}}/2.0/hello-world-macos)
+* [Building on Windows]({{site.baseurl}}/2.0/hello-world-windows)
 
-## さらに詳しく
+## Learn More
 {: #learn-more }
-CircleCI Academy の [ビルド環境コース](https://academy.circleci.com/build-environments-1?access_code=public-2021) を受講すると、Executor の選択と使用についてさらに詳しく学ぶことができます。
+Take the [build environments course](https://academy.circleci.com/build-environments-1?access_code=public-2021) with CircleCI Academy to learn more about choosing and using an executor.
