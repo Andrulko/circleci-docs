@@ -1,7 +1,7 @@
 ---
 layout: classic-docs
-title: "データベースの設定例"
-short-title: "データベースの設定例"
+title: "Database Configuration Examples"
+short-title: "Database Configuration Examples"
 description: "See example database config.yml files using PostgreSQL/Rails and MySQL/Ruby for rails app with structure.sql, go app with postgresql, and mysql project."
 order: 35
 version:
@@ -10,15 +10,15 @@ version:
   - Server v2.x
 ---
 
-PostgreSQL/Rails および MySQL/Ruby を使用したデータベース [config.yml]({{ site.baseurl }}/2.0/databases/) ファイルの例について、以下のセクションに沿って説明します。
+This document provides example database [config.yml]({{ site.baseurl }}/2.0/databases/) files using PostgreSQL/Rails and MySQL/Ruby in the following sections:
 
-* 目次
+* TOC
 {:toc}
 
-## structure.sql を使用した Rails アプリケーション用の CircleCI 設定例
+## Example CircleCI configuration for a rails app with structure.sql
 {: #example-circleci-configuration-for-a-rails-app-with-structuresql }
 
-`structure.sql` ファイルを使用して構成した Rails アプリケーションを移行する場合は、`psql` が PATH の場所にインストールされ、適切な権限が設定されていることを確認してください。これは、cimg/ruby:3.0-node イメージには psql がデフォルトでインストールされておらず、`pg` gem を使用してデータベースにアクセスするためです。
+If you are migrating a Rails app configured with a `structure.sql` file make sure that `psql` is installed in your PATH and has the proper permissions, as follows, because the cimg/ruby:3.0-node image does not have psql installed by default and uses `pg` gem for database access.
 
 ```yaml
 version: 2
@@ -26,24 +26,24 @@ jobs:
   build:
     working_directory: ~/circleci-demo-ruby-rails
 
-    # すべてのコマンドを実行するプライマリコンテナのイメージです。
+    # Primary container image where all commands run
 
     docker:
       - image: cimg/ruby:3.0-node
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数を参照します。
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
         environment:
           RAILS_ENV: test
           PGHOST: 127.0.0.1
           PGUSER: root
 
-    # `host: localhost` にあるサービスコンテナイメージです。
+    # Service container image available at `host: localhost`
 
       - image: cimg/postgres:14.0
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数を参照します。
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
         environment:
           POSTGRES_USER: root
           POSTGRES_DB: circle-test_test
@@ -51,52 +51,52 @@ jobs:
     steps:
       - checkout
 
-      # バンドルキャッシュを復元します。
+      # Restore bundle cache
       - restore_cache:
           keys:
             - rails-demo-{% raw %}{{ checksum "Gemfile.lock" }}{% endraw %}
             - rails-demo-
 
-      # 依存関係をバンドルインストールします。
+      # Bundle install dependencies
       - run:
           name: Install dependencies
           command: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs 4 --retry 3
 
       - run: sudo apt install -y postgresql-client || true
 
-      # バンドルキャッシュを保存します。
+      # Store bundle cache
       - save_cache:
           key: rails-demo-{% raw %}{{ checksum "Gemfile.lock" }}{% endraw %}
           paths:
             - vendor/bundle
 
       - run:
-          name: データベースのセットアップ
+          name: Database Setup
           command: |
             bundle exec rake db:create
             bundle exec rake db:structure:load
 
       - run:
-          name: 並列 RSpec
+          name: Parallel RSpec
           command: bin/rails test
 
-      # アーティファクトを保存します。
+      # Save artifacts
       - store_test_results:
           path: /tmp/test-results
 ```
 
-**注意:** 現在のイメージを拡張して独自のイメージをビルドする方法もあります。その場合には必要なパッケージをインストールし、コミットしてから、Docker ハブなどのレジストリにプッシュしてください。
+**Note:** An alternative is to build your own image by extending the current image, installing the needed packages, committing, and pushing it to Docker Hub or the registry of your choosing.
 
-### 環境のセットアップ例
+### Example environment setup
 {: #example-environment-setup }
 {:.no_toc}
 
-複数のビルド済みイメージやカスタム イメージが使用されることがあるため、データベースの設定は明示的に宣言する必要があります。 たとえば、Rails は以下の順序でデータベース URL の使用を試みます。
+You must declare your database configuration explicitly because multiple pre-built or custom images may be in use. For example, Rails will try to use a database URL in the following order:
 
-1.  DATABASE_URL 環境変数 (設定されている場合)
-2.  `config.yml` ファイル内の該当する環境の test セクションの設定 (通常、テスト スイートでは `test`)。
+1.  DATABASE_URL environment variable, if set
+2.  The test section configuration for the appropriate environment in your `config.yml` file (usually `test` for your test suite).
 
-この順序の具体例を以下に示します。ここでは、イメージの `environment` 設定を組み合わせると共に、シェル コマンドに `environment` 設定を追加してデータベース接続を有効にしています。
+The following example demonstrates this order by combining the `environment` setting with the image and by also including the `environment` configuration in the shell command to enable the database connection:
 
 ```yaml
 version: 2
@@ -107,29 +107,28 @@ jobs:
       - image: ruby:2.3.1-jessie
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数を参照します。
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
         environment:
           PG_HOST: localhost
           PG_USER: ubuntu
           RAILS_ENV: test
           RACK_ENV: test
-      # 以下の例では公式のPostgres 9.6 イメージを使用していますが、 いくつかの機能強化とカスタマイズが加えられた
-      # cimg/postgres:9.6 も使用可能です。 どちらのイメージも使用できます。
-      
+      # The following example uses the official postgres 9.6 image, you may also use cimg/postgres:9.6
+      # which includes a few enhancements and modifications. It is possible to use either image.
       - image: postgres:9.6-jessie
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数を参照します。
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
         environment:
           POSTGRES_USER: ubuntu
           POSTGRES_DB: db_name
     steps:
       - checkout
       - run:
-          name: Ruby の依存関係をインストール
+          name: Install Ruby Dependencies
           command: bundle install
       - run:
-          name: データベースのセットアップ
+          name: Set up DB
           command: |
             bundle exec rake db:create db:schema:load --trace
             bundle exec rake db:migrate
@@ -137,12 +136,12 @@ jobs:
           DATABASE_URL: "postgres://ubuntu@localhost:5432/db_name"
 ```
 
-この例では、PostgreSQL 9.6のデフォルトユーザーとポートとして、 `$DATABASE_URL` を指定しています。 バージョン 9.5では、デフォルトのポートが 5432 ではなく 5433 になっています。 他のポートを指定するには、`$DATABASE_URL` と `psql` の呼び出し箇所をすべて変更します。
+This example specifies the `$DATABASE_URL` as the default user and port for PostgreSQL 9.6. For version 9.5, the default port is 5433 instead of 5432. To specify a different port, change the `$DATABASE_URL` and all invocations of `psql`.
 
-## Go アプリケーションと PostgreSQL の設定例
+## Example go app with postgresql
 {: #example-go-app-with-postgresql }
 
-以下の構成例に関する詳しい説明や、アプリケーションのパブリック コード リポジトリについては、[Go 言語ガイド]({{ site.baseurl }}/2.0/language-go/)を参照してください。
+Refer to the [Go Language Guide]({{ site.baseurl }}/2.0/language-go/) for a walkthrough of this example configuration and a link to the public code repository for the app.
 
 ```yaml
 version: 2
@@ -175,25 +174,25 @@ jobs:
             - go-mod-v1-{% raw %}{{ checksum "go.sum" }}{% endraw %}
 
       - run:
-          name: 依存関係の取得
+          name: Get dependencies
           command: |
             go get -v
 
       - run:
-          name: Get go-junit-report を取得してCircleCI でテストのタイミングを設定する
+          name: Get go-junit-report for setting up test timings on CircleCI
           command: |
             go get github.com/jstemmer/go-junit-report
-            # go.mod からgo-junit-report を削除します。
+            # Remove go-junit-report from go.mod
             go mod tidy
 
-      #  Postgres が準備ができるまで待機し、その後処理します。
+      #  Wait for Postgres to be ready before proceeding
       - run:
           name: Waiting for Postgres to be ready
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
 
       - run:
-          name: ユニットテストの実行
-          environment: # データベース URL 用の環境変数と移行ファイルへのパスを指定します。
+          name: Run unit tests
+          environment: # environment variables for the database url and path to migration files
             CONTACTS_DB_URL: "postgres://circleci-demo-go@localhost:5432/circle_test?sslmode=disable"
             CONTACTS_DB_MIGRATIONS: /home/circleci/project/db/migrations
           command: |
@@ -207,7 +206,7 @@ jobs:
             - "/go/pkg/mod"
 
       - run:
-          name: サービスの開始
+          name: Start service
           environment:
             CONTACTS_DB_URL: "postgres://circleci-demo-go@localhost:5432/circle_test?sslmode=disable"
             CONTACTS_DB_MIGRATIONS: /home/circleci/project/db/migrations
@@ -215,7 +214,7 @@ jobs:
           background: true
 
       - run:
-          name: サービスが稼働しているかどうかの確認
+          name: Validate service is working
           command: |
             sleep 5
             curl --retry 10 --retry-delay 1 -X POST --header "Content-Type: application/json" -d '{"email":"test@example.com","name":"Test User"}' http://localhost:8080/contacts
@@ -227,10 +226,10 @@ jobs:
           path: /tmp/test-results
 ```
 
-## MYSQL プロジェクトの例
+## Example mysql project.
 {: #example-mysql-project }
 
-以下の例では、PHP コンテナと共に、MYSQL をセカンダリ コンテナとしてセットアップしています。
+The following example sets up MYSQL as a secondary container alongside a PHP container.
 
 {:.tab.mysql_example.Cloud}
 ```yaml
@@ -240,14 +239,14 @@ orbs:
 jobs:
   build:
     docker:
-      - image: cimg/php:8.1-browsers # ステップが実行されるプライマリコンテナ
+      - image: cimg/php:8.1-browsers # The primary container where steps are run
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数を参照します。
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
       - image: cimg/mysql:8.0
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数を参照します。
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
         environment:
           MYSQL_ROOT_PASSWORD: rootpw
           MYSQL_DATABASE: test_db
@@ -257,8 +256,8 @@ jobs:
     steps:
       - checkout
       - run:
-      # プライマリコンテナは MySQL ではないので、準備ができるまでスリープコマンドを実行します。
-          name: MySQL が準備できるまで待機
+      # Our primary container isn't MYSQL so run a sleep command until it's ready.
+          name: Waiting for MySQL to be ready
           command: |
             for i in `seq 1 10`;
             do
@@ -268,7 +267,7 @@ jobs:
             done
             echo Failed waiting for MySQL && exit 1
       - run:
-          name: MySQL CLI のインストール; ダミー データのインポート; サンプル クエリの実行
+          name: Install MySQL CLI; Import dummy data; run an example query
           command: |
             sudo apt-get install default-mysql-client
             mysql -h 127.0.0.1 -u user -ppassw0rd test_db < sql-data/dummy.sql
@@ -288,14 +287,14 @@ orbs:
 jobs:
   build:
     docker:
-      - image: cimg/php:8.1-browsers # ステップが実行されるプライマリコンテナ
+      - image: cimg/php:8.1-browsers # The primary container where steps are run
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数を参照します。
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
       - image: cimg/mysql:8.0
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数を参照します。
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
         environment:
           MYSQL_ROOT_PASSWORD: rootpw
           MYSQL_DATABASE: test_db
@@ -305,8 +304,8 @@ jobs:
     steps:
       - checkout
       - run:
-      # プライマリコンテナは MySQL ではないので、準備ができるまでスリープコマンドを実行します。
-          name: MySQL が準備できるまで待機
+      # Our primary container isn't MYSQL so run a sleep command until it's ready.
+          name: Waiting for MySQL to be ready
           command: |
             for i in `seq 1 10`;
             do
@@ -316,7 +315,7 @@ jobs:
             done
             echo Failed waiting for MySQL && exit 1
       - run:
-          name: MySQL CLI のインストール; ダミー データのインポート; サンプル クエリの実行
+          name: Install MySQL CLI; Import dummy data; run an example query
           command: |
             sudo apt-get install default-mysql-client
             mysql -h 127.0.0.1 -u user -ppassw0rd test_db < sql-data/dummy.sql
@@ -338,14 +337,14 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/php:7.1-apache-node-browsers # ステップを実行するプライマリコンテナです。
+      - image: circleci/php:7.1-apache-node-browsers # The primary container where steps are run
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数を参照します。
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
       - image: cimg/mysql:8.0
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数を参照します。
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
         environment:
           MYSQL_ROOT_PASSWORD: rootpw
           MYSQL_DATABASE: test_db
@@ -355,8 +354,8 @@ jobs:
     steps:
       - checkout
       - run:
-      # プライマリコンテナは MYSQL ではないので、準備ができるまでスリープコマンドを実行します。
-          name: MySQL が準備できるまで待機
+      # Our primary container isn't MYSQL so run a sleep command until it's ready.
+          name: Waiting for MySQL to be ready
           command: |
             for i in `seq 1 10`;
             do
@@ -366,7 +365,7 @@ jobs:
             done
             echo Failed waiting for MySQL && exit 1
       - run:
-          name: MySQL CLI のインストール; ダミー データのインポート; サンプル クエリの実行
+          name: Install MySQL CLI; Import dummy data; run an example query
           command: |
             sudo apt-get install default-mysql-client
             mysql -h 127.0.0.1 -u user -ppassw0rd test_db < sql-data/dummy.sql
@@ -378,9 +377,9 @@ workflows:
       - build
 ```
 
-MySQL をプライマリかつ唯一のコンテナにすることもできますが、この例ではそのようにしていません。 より実践的なユース ケースとして、この例では PHP Docker イメージをプライマリ コンテナとして使用し、MySQL が起動してから、データベースに関連する `run` コマンドを実行しています。
+While it is possible to make MySQL as your primary and only container, this example does not. As a more practical use case, the example uses a PHP docker image as its primary container, and will wait until MySQL is up and running before performing any `run` commands involving the DB.
 
-データベースが起動したら、`mysql` クライアントをプライマリ コンテナにインストールします。これで、プロジェクトのルートにあるとしたダミー データ `sql-data/dummy.sql` に接続してインポートするコマンドを実行できます。 このダミー データには、例として一連の SQL コマンドが格納されています。
+Once the DB is up, we install the `mysql` client into the primary container so that we can run a command to connect and import the dummy data, presumably found at, `sql-data/dummy.sql` at the root of your project. In this case, that dummy data contains an example set of SQL commands:
 
 ```sql
 DROP TABLE IF EXISTS `Persons`;
@@ -404,7 +403,7 @@ VALUES (
 ```
 
 
-## 関連項目
+## See also
 {: #see-also }
 
 
