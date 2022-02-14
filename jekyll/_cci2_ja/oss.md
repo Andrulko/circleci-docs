@@ -1,30 +1,30 @@
 ---
 layout: classic-docs
-title: "オープンソース プロジェクトの構築"
-short-title: "オープンソースプロジェクトの構築"
-description: "オープンソース プロジェクトの構築に関するベスト プラクティス"
+title: "Building Open Source Projects"
+short-title: "Building Open Source Projects"
+description: "Best practices for building open source projects"
 categories:
-  - はじめよう
+  - getting-started
 order: 1
 ---
 
-以下のセクションに沿って、CircleCI 上でのオープンソース プロジェクトのビルドに関するヒントとベスト プラクティスについて説明します。
+This document provides tips and best practices for building your open source project on CircleCI in the following sections:
 
 * TOC
 {:toc}
 
-## 概要
+## Overview
 {: #overview }
 {:.no_toc}
 
-オープンソース コミュニティをサポートする目的で、GitHub または Bitbucket 上の組織には、オープンソース プロジェクト用にクレジットが毎週無料で提供されます。 これらのクレジットは、Linux のリソースで使用可能です。
+To support the open source community, organizations on Github or Bitbucket will be given free credits every week that can be spent on open source projects. These credits can be spent on Linux resources.
 
-**備考:**
+**Notes:**
 * If you are building an open source project on macOS, contact billing@circleci.com to enable these additional containers.
 * Open-source credit availability and limits will not be visible in the UI.
 
 
-## セキュリティ
+## Security
 {: #security }
 
 While open source can be a liberating practice, take care not to liberate sensitive information.
@@ -87,7 +87,7 @@ By default, CircleCI does not pass secrets to builds from forked PRs for open so
 
 If you are comfortable sharing secrets with anyone who forks your project and opens a PR, you can enable the **Pass secrets to builds from forked pull requests** option. In the **Project Settings>Advanced** of your project, set the **Pass secrets to builds from forked pull requests** option to _On_.
 
-### キャッシュ
+### Caching
 {: #caching }
 
 Caches are isolated based on GitHub Repo for PRs. CircleCI uses the GitHub repository-id of the originator of the fork PR to identify the cache.
@@ -116,7 +116,7 @@ Following are a few examples of projects (big and small) that build on CircleCI:
 - **[Fastlane](https://github.com/fastlane/fastlane)** - A build automatically tool for Android and iOS.
 - **[Yarn](https://github.com/yarnpkg/yarn)** - The [npm replacement](https://circleci.com/blog/why-are-developers-moving-to-yarn/).
 
-## 設定ファイルの詳細
+## See also
 {: #see-also }
 {:.no_toc}
 
