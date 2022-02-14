@@ -1,113 +1,113 @@
 ---
 layout: classic-docs
-title: "カスタム ビルドの Docker イメージの使用"
-short-title: "カスタム ビルドの Docker イメージの使用"
-description: "カスタム Docker イメージを作成する理由とその方法"
+title: "Using Custom-Built Docker Images"
+short-title: "Using Custom-Built Docker Images"
+description: "Why and how to create custom Docker images"
 categories:
-  - コンテナ化
+  - containerization
 order: 30
 version:
-  - クラウド
+  - Cloud
   - Server v3.x
   - Server v2.x
 ---
 
-ここでは、以下のセクションに沿って、CircleCI でカスタム Docker イメージを作成および使用する方法について説明します。
+This document describes how to create and use custom Docker images with CircleCI in the following sections:
 
-* 目次
+* TOC
 {:toc}
 
-## 概要
+## Overview
 {: #overview }
 
-CircleCI では Docker がサポートされています。 Docker を使用すると、プロジェクトの依存関係を簡単に指定できます。 [CircleCI イメージ]({{ site.baseurl }}/ja/2.0/circleci-images/)がニーズを満たさない場合は、ジョブのカスタム Docker イメージを作成することを検討してください。 カスタム Docker イメージには、主に以下の 2 つのメリットがあります。
+CircleCI supports Docker, providing you with a powerful way to specify dependencies for your projects. If the [CircleCI convenience images]({{ site.baseurl }}/2.0/circleci-images/) do not suit your needs, consider creating a custom Docker image for your jobs. There are two major benefits of doing this:
 
-- **ジョブを迅速に実行可能 --** 必要なツールが 1 つのカスタム イメージにパッケージ化されるため、ジョブごとにツールをインストールする必要がなくなります。
+- **Faster job execution --** Packaging your required tools into a custom image removes the need to install them for every job.
 
-- **すっきりとした設定 --** 長いインストール スクリプトはカスタム イメージに追加されるため、[`config.yml`]({{ site.baseurl }}/ja/2.0/configuration-reference/) ファイルのコード行数を減らすことができます。
+- **Cleaner configuration --** Adding lengthy installation scripts to a custom image reduces the number of lines in your [`config.yml`]({{ site.baseurl }}/2.0/configuration-reference/) file.
 
-**注:** デフォルトでは、Docker イメージのビルド時にエントリポイントは維持されません。 詳細については、「[エントリポイントの追加](#エントリポイントの追加)」を参照してください。
+**Note:** When building Docker images, CircleCI does not preserve entrypoints by default. See [Adding an Entrypoint](#adding-an-entrypoint) for more details.
 
-## CircleCI Dockerfile Wizard
+## CircleCI Dockerfile wizard
 {: #circleci-dockerfile-wizard }
 
-Dockerをインストールせずにカスタムイメージを生成するための Dockerfile を作成するウィザードをクローンして使用する手順については、CircleCI Publicの [`dockerfile-wizard` GitHubリポジトリ](https://github.com/circleci-public/dockerfile-wizard) を参照してください。
+Refer to the [`dockerfile-wizard` GitHub repository of CircleCI Public](https://github.com/circleci-public/dockerfile-wizard) for instructions to clone and use the wizard to create a Dockerfile to generate your custom image without installing Docker.
 
-## カスタム イメージの手動作成
+## Creating a custom image manually
 {: #creating-a-custom-image-manually }
 
-以下のセクションでは、カスタム イメージを手動で作成する方法について、手順を追って説明します。 [プライマリ コンテナ]({{ site.baseurl }}/2.0/glossary/#primary-container)のカスタム イメージが作成されることが多いため、ここではその方法に焦点を当てます。 以下の内容を応用して、コンテナをサポートするためのイメージも作成できます。
+The following sections provide a walkthrough of how to create a custom image manually. In most cases you'll want to have a custom image for your [primary container]({{ site.baseurl }}/2.0/glossary/#primary-container) so that is the focus of this document. But, you can easily apply this knowledge to create images for supporting containers as well.
 
-### 前提条件
+### Prerequisite
 {: #prerequisite }
 {:.no_toc}
 
-- [Docker のインストール](https://docs.docker.com/install/)が完了し、動作していること。 詳細については、Docker の[入門ドキュメント](https://docs.docker.com/get-started/)を参照してください。
+- A working [Docker installation](https://docs.docker.com/install/). For more details, see Docker's [Getting Started documentation](https://docs.docker.com/get-started/)
 
-### `Dockerfile` の作成
+### Creating a `Dockerfile`
 {: #creating-a-dockerfile }
 {:.no_toc}
 
-カスタム イメージを作成するには、[`Dockerfile` を作成](https://docs.docker.com/get-started/part2/#define-a-container-with-dockerfile)する必要があります。 これは、Docker がイメージの収集に使用するコマンドが格納されたテキスト ドキュメントです。 [この Docker デモ プロジェクト](https://github.com/CircleCI-Public/circleci-demo-docker/tree/master/.circleci/images/primary)に示されているように、`Dockerfile` はできるだけ `.circleci/images` フォルダーに保存してください。
+To create a custom image, you must [create a `Dockerfile`](https://docs.docker.com/get-started/part2/#define-a-container-with-dockerfile). This is a text document containing commands that Docker uses to assemble an image. Consider keeping your `Dockerfile` in your `.circleci/images` folder, as shown in [this Docker demo project](https://github.com/CircleCI-Public/circleci-demo-docker/tree/master/.circleci/images/primary).
 
-### 基本イメージの選択と設定
+### Choosing and setting a base image
 {: #choosing-and-setting-a-base-image }
 {:.no_toc}
 
-カスタム イメージを作成する前に、カスタム イメージの拡張元となる別のイメージを選択する必要があります。 [Docker ハブ](https://hub.docker.com/explore/) には、ほぼすべての一般的な言語とフレームワーク用に、正式なビルド済みイメージが用意されています。 特定の言語やフレームワークごとに、多くのイメージ バリアントから選択できます。 これらのバリアントは、[Docker タグ](https://docs.docker.com/engine/reference/commandline/tag/)で指定されます。
+Before you create a custom image, you must choose another image from which to extend the custom image. [Docker Hub](https://hub.docker.com/explore/) has official, pre-built images for most popular languages and frameworks. Given a particular language or framework, there are many image variants from which to choose. These variants are specified by [Docker tags](https://docs.docker.com/engine/reference/commandline/tag/).
 
-例えば、[公式 Alpine イメージ](https://hub.docker.com/_/alpine/)のバージョン3.5を使用したい場合、フルイメージ名は`alpine:3.5`となります。
+For example, if you want to use version 3.5 of the [official Alpine image](https://hub.docker.com/_/alpine/), the full image name is `alpine:3.5`.
 
-あなたのDockerfileで、[`FROM` コマンド](https://docs.docker.com/engine/reference/builder/#from)を使ってベースイメージを拡張します。
+In your `Dockerfile`, extend the base image by using the [`FROM` instruction](https://docs.docker.com/engine/reference/builder/#from).
 
 ```Dockerfile
 FROM golang:1.8.0
 ```
 
-### 追加ツールのインストール
+### Installing additional tools
 {: #installing-additional-tools }
 {:.no_toc}
 
-追加ツールをインストールする、または他のコマンドを実行するには、[`RUN` コマンド](https://docs.docker.com/engine/reference/builder/#run)を使用します。
+To install any additional tools or execute other commands, use the [`RUN` instruction](https://docs.docker.com/engine/reference/builder/#run).
 
 ```Dockerfile
 RUN apt-get update && apt-get install -y netcat
 RUN go get github.com/jstemmer/go-junit-report
 ```
 
-#### プライマリ コンテナに必要なツール
+#### Required tools for primary containers
 {: #required-tools-for-primary-containers }
 {:.no_toc}
 
-CircleCI でカスタム Docker イメージをプライマリ コンテナとして使用するには、以下のツールをインストールする必要があります。
+In order to be used as a primary container on CircleCI, a custom Docker image must have the following tools installed:
 
-- Bash（ほとんどの場合、すでにインストールされているか、パッケージマネージャ経由で入手可能です。 )
-- [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-- [SSH](https://help.ubuntu.com/lts/serverguide/openssh-server.html.en#openssh-installation)
-- [Tar](https://www.howtoforge.com/tutorial/linux-tar-command/#installing-tar)
+- bash (most likely already installed or available via your package manager)
+- [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+- [ssh](https://help.ubuntu.com/lts/serverguide/openssh-server.html.en#openssh-installation)
+- [tar](https://www.howtoforge.com/tutorial/linux-tar-command/#installing-tar)
 - [gzip](http://www.gzip.org/)
-- [CA-certificates](https://packages.debian.org/sid/ca-certificates)
+- [ca-certificates](https://packages.debian.org/sid/ca-certificates)
 
-これらのツールがインストールされていないと、一部の CircleCI サービスが動作しません。
+Without these tools, some CircleCI services may not work.
 
-**注:** パッケージ マネージャーと共にこれらのツールをインストールしない場合は、`RUN` 命令の代わりに `ADD` 命令を使用する必要があります (以下を参照)。
+**Note:** If you do not install these tools with a package manager, you must use the `ADD` instruction instead of `RUN` (see below).
 
-### 他のファイルとディレクトリの追加
+### Adding other files and directories
 {: #adding-other-files-and-directories }
 {:.no_toc}
 
-パッケージ マネージャーに存在しないファイルとディレクトリを追加するには、[`ADD` コマンド](https://docs.docker.com/engine/reference/builder/#add)を使用します。
+To add files and directories that are not present in package managers, use the [`ADD` instruction](https://docs.docker.com/engine/reference/builder/#add).
 
 ``` Dockerfile
 ADD ./workdir/contacts /usr/bin/contacts
 ADD ./db/migrations /migrations
 ```
 
-### エントリポイントの追加
+### Adding an entrypoint
 {: #adding-an-entrypoint }
 {:.no_toc}
 
-コンテナを実行可能ファイルとして実行するには、[`ENTRYPOINT` コマンド](https://docs.docker.com/engine/reference/builder/#entrypoint)を使用します。 CircleCI のデフォルトでは、ジョブのプライマリ コンテナのエントリポイントは無視されます。 イメージがプライマリコンテナに使用されている場合でもエントリポイントを保持するには、以下のように [`LABEL` コマンド](https://docs.docker.com/engine/reference/builder/#label)を使用します。
+To run the container as an executable, use the [`ENTRYPOINT` instruction](https://docs.docker.com/engine/reference/builder/#entrypoint). By default, CircleCI will ignore the entrypoint for a job's primary container. To preserve the entrypoint even when the image is used for a primary container, use the [`LABEL` instruction](https://docs.docker.com/engine/reference/builder/#label) as shown below.
 
 ```Dockerfile
 LABEL com.circleci.preserve-entrypoint=true
@@ -115,75 +115,75 @@ LABEL com.circleci.preserve-entrypoint=true
 ENTRYPOINT contacts
 ```
 
-**注:** エントリポイント コマンドは、失敗せずに最後まで実行される必要があります。 失敗した場合、またはビルドの途中で停止した場合は、ビルドも停止します。 ログまたはビルド ステータスにアクセスする必要がある場合は、エントリポイントの代わりにバックグラウンド ステップを使用します。
+**Note:** Entrypoints should be commands that run forever without failing. If the entrypoint fails or terminates in the middle of a build, the build will also terminate. If you need to access logs or build status, consider using a background step instead of an entrypoint.
 
-### イメージのビルド
+### Building the image
 {: #building-the-image }
 {:.no_toc}
 
-`Dockerfile` で必要なツールをすべて指定したら、イメージをビルドできます。
+After all of the required tools are specified in the `Dockerfile` it is possible to build the image.
 
 ```bash
 $ docker build <path-to-dockerfile>
 ```
 
-`Dockerfile` で指定したすべてのコマンドがどのように実行されるか表示されます。 エラーが発生した場合は、画面に表示されます。 これらは作業を続行する前に修正する必要があります。 ビルドが正常に終了したら、最後に以下のようなメッセージが表示されます。
+You'll see how all commands specified in `Dockerfile` are executed. If there are any errors they'll be displayed and you'll need to fix them before continuing. If the build is successful you'll have something like this at the very end:
 
 ```
 ...
 Successfully built e32703162dd4
 ```
 
-`docker build` コマンドの詳細については、[こちら](https://docs.docker.com/engine/reference/commandline/build/)を参照してください。
+Read more about [`docker build` command](https://docs.docker.com/engine/reference/commandline/build/).
 
-これで、最初のイメージがビルドされました！ 次に、CircleCI で使用できるように、このイメージを保存する必要があります。
+Congratulations, you've just built your first image! Now we need to store it somewhere to make it available for CircleCI.
 
-### Docker レジストリへのイメージの保存
+### Storing images in a Docker registry
 {: #storing-images-in-a-docker-registry }
 {:.no_toc}
 
-CircleCI でカスタム イメージを使用できるようにするには、イメージをパブリックの [Docker レジストリ](https://docs.docker.com/registry/introduction/) に保存する必要があります。 Docker ハブ では無料でパブリック イメージを無制限に保存できるため、[Docker ハブ](https://hub.docker.com/) にアカウントを作成する方法が最も簡単です。 既に Docker ハブ を使用している場合は、既存のアカウントを使用できます。
+In order to allow CircleCI to use your custom image, store it in a public [Docker Registry](https://docs.docker.com/registry/introduction/). The easiest mechanism is to create an account on [Docker Hub](https://hub.docker.com/) because Docker Hub allows you to store unlimited public images for free. If your organization is already using Docker Hub you can use your existing account.
 
-**注:** イメージを CircleCI [Docker Executor]({{ site.baseurl }}/ja/2.0/executor-types) で使用する場合は、パブリック リポジトリが必要です。 イメージをプライベートのままにする場合は、[認証済みの Docker プルを使用する]({{ site.baseurl }}/ja/2.0/private-images/)で手順を参照してください。
+**Note:** To use an image with the CircleCI [Docker Executor]({{ site.baseurl }}/2.0/executor-types) you must have a public repository. If you want to keep your image private refer to the [Using Docker Authenticated Pulls]({{ site.baseurl }}/2.0/private-images/) document for instructions.
 
-この例では Docker ハブ を使用していますが、必要に応じて別のレジストリを使用することも可能です。 使用するレジストリに合わせて変更してください。
+The example uses Docker Hub, but it is possible to use different registries if you prefer. Adapt the example based on the registry you are using.
 
-### レジストリとイメージの準備
+### Preparing the image for the registry
 {: #preparing-the-image-for-the-registry }
 {:.no_toc}
 
-ご自身のアカウントで Docker ハブにログインし、[リポジトリ追加](https://hub.docker.com/add/repository/)ページで新しいリポジトリを作成します。 リポジトリ名には、 `<project-name>-<container-name>` のようなパターンを使用することをお勧めします（例： `cci-demo-docker-primary`）。
+Log in to Docker Hub with your account and create a new repository on the [add repository](https://hub.docker.com/add/repository/) page. It is best practice to use a pattern similar to `<project-name>-<container-name>` for a repository name (for example, `cci-demo-docker-primary`).
 
-次に、アカウントとリポジトリ名を使用してイメージをリビルドします。
+Next, rebuild your image using your account and repository name:
 
 ``` Shell
 $ docker build -t circleci/cci-demo-docker-primary:0.0.1 <path-to-dockerfile>
 ```
 
-この`t`キーは、新しいイメージの名前とタグを指定するキーです。
+The `-t` key specifies the name and tag of the new image:
 
-- `circleci` - Docker ハブでのアカウント
-- `cci-demo-docker-primary` - リポジトリ名
-- `0.0.1` - イメージのタグ (バージョン)。 `Dockerfile` の内容を変更した場合は、必ずタグを更新してください。 更新しないと予想外の結果を招く可能性があります。
+- `circleci` - our account in Docker Hub
+- `cci-demo-docker-primary` - repository name
+- `0.0.1` - tag (version) of the image. Always update the tag if you change something in a `Dockerfile` otherwise you might have unpredictable results.
 
-### レジストリへのイメージのプッシュ
+### Pushing the image to the registry
 {: #pushing-the-image-to-the-registry }
 {:.no_toc}
 
-イメージを Docker ハブにプッシュします。
+Push the image to Docker Hub:
 
 ``` Shell
 $ docker login
 $ docker push circleci/cci-demo-docker-primary:0.0.1
 ```
 
-**注:** まず CircleCIでは、`docker login` を使用して Docker ハブ での認証を実行しています。 Docker ハブ以外のレジストリを使用する場合は、関連ドキュメントを参照して、イメージをそのレジストリにプッシュする方法を確認してください。
+**Note:** First, we use `docker login` to authenticate in Docker Hub. If you use a registry other than Docker Hub, refer to the related documentation about how to push images to that registry.
 
-### CircleCI でのイメージの使用
+### Using your image on CircleCI
 {: #using-your-image-on-circleci }
 {:.no_toc}
 
-イメージが正常にプッシュされたら、以下のように指定することで、イメージを `.circleci/config.yml` で使用できます。
+After the image is successfully pushed it is available for use it in your `.circleci/config.yml`:
 
 ``` YAML
 version: 2.0
@@ -193,22 +193,22 @@ jobs:
       - image: circleci/cci-demo-docker-primary:0.0.1
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数を参照
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
 ```
 
-ご不明な点がありましたら、[コミュニティ フォーラム](https://discuss.circleci.com/)にアクセスしてください。CircleCI または他のユーザーからのサポートを受けることができます。
+If you have any questions, head over to our [community forum](https://discuss.circleci.com/) for support from us and other users.
 
-## Ruby 用のカスタム Dockerfile の例
+## Detailed custom Dockerfile example for Ruby
 {: #detailed-custom-dockerfile-example-for-ruby }
 
-This section demonstrates how to build a Ruby container to use on CircleCI. **注:** このセクションでは、Docker ログインをローカルで使用していることを前提としています。
+This section demonstrates how to build a Ruby container to use on CircleCI. **Note:** This section assumes you have already used docker login locally.
 
-以下の例では、最初に [Ruby 2.1](https://hub.docker.com/_/ruby/) イメージを使用しています。 ただし、ここでは FROM ruby:2.1 を基本イメージとして使用する方法ではなく、コンテナのビルド方法について説明します。 Ruby Docker ハブのページから、[2.1/Dockerfile](https://raw.githubusercontent.com/docker-library/ruby/e32433a12099d96dc5a1b28a011b73af4f17cfff/2.1/Dockerfile10) に移動してください。 また、正しいバージョンをプルするために使用されている環境変数に注目してください。
+The example starts with the [Ruby 2.1](https://hub.docker.com/_/ruby/) image. However, instead of using FROM ruby:2.1 as the base image it describes how the container is built. From the Ruby Docker Hub page, go to the [2.1/Dockerfile](https://raw.githubusercontent.com/docker-library/ruby/e32433a12099d96dc5a1b28a011b73af4f17cfff/2.1/Dockerfile10). Notice the environment variables that are used to pull in the proper versions.
 
 ```
 FROM buildpack-deps:jessie
 
-# gem ドキュメントのインストールをスキップします。
+# Skip installing gem documentation
 RUN mkdir -p /usr/local/etc \
     && { \
         echo 'install: --no-document'; \
@@ -220,8 +220,8 @@ ENV RUBY_VERSION 2.1.10
 ENV RUBY_DOWNLOAD_SHA256 5be9f8d5d29d252cd7f969ab7550e31bbb001feb4a83532301c0dd3b5006e148
 ENV RUBYGEMS_VERSION 2.6.10
 
-# Ruby のビルド スクリプトは一部が Ruby で記述されています。
-#   最終イメージではビルドしたものだけが使用されるように、後からシステムの Ruby を削除します。
+# some of ruby's build scripts are written in ruby
+#   we purge system ruby later to make sure our final image uses what we just built
 RUN set -ex \
     \
     && buildDeps=' \
@@ -242,7 +242,7 @@ RUN set -ex \
     \
     && cd /usr/src/ruby \
     \
-# 以下を非表示にするために "ENABLE_PATH_CHECK" を無効にします。
+# hack in "ENABLE_PATH_CHECK" disabling to suppress:
 #   warning: Insecure world writable dir
     && { \
         echo '#define ENABLE_PATH_CHECK 0'; \
@@ -266,8 +266,8 @@ ENV BUNDLER_VERSION 1.14.3
 
 RUN gem install bundler --version "$BUNDLER_VERSION"
 
-# グローバルにインストールします。
-# すべてのアプリケーションで ".bundle" を作成しません。
+# install things globally, for great justice
+# and don't create ".bundle" in all our apps
 ENV GEM_HOME /usr/local/bundle
 ENV BUNDLE_PATH="$GEM_HOME" \
     BUNDLE_BIN="$GEM_HOME/bin" \
@@ -280,7 +280,7 @@ RUN mkdir -p "$GEM_HOME" "$BUNDLE_BIN" \
 CMD [ "irb" ]
 ```
 
-これで Ruby 2.1 イメージが作成されます。 次に、node:7.4 Dockerfile を使用してノード モジュール、`awscli`、および PostgreSQL 9.5 をインストールします。
+This will create a Ruby 2.1 image. Next, install node modules, `awscli`, and PostgreSQL 9.5 using the node:7.4 Dockerfile:
 
 ```
 FROM buildpack-deps:jessie
@@ -288,7 +288,7 @@ FROM buildpack-deps:jessie
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
-# https://github.com/nodejs/node にリストされている gpg キー
+# gpg keys listed at https://github.com/nodejs/node
 RUN set -ex \
   && for key in \
     9554F04D7259F04124DE6B476D5A82AC7E37093B \
@@ -317,11 +317,11 @@ RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-
 CMD [ "node" ]
 ```
 
-両方の Dockerfile で同じ基本イメージ `buildpack-deps:jessie` が使用されます。 両方のイメージを結合し、Python をインストールして `awscli` を入手できるという大きなメリットがあります。
+Both Dockerfiles use the same base image `buildpack-deps:jessie`. This is excellent because it is possible to combine them and install Python to get `awscli`.
 
-関連ファイルを削除してから、Docker イメージをコミットし、`apt` を使用してインストールします。 インストールしたファイルはすべて後から削除できますが、`apt-get update` は 2 回以上実行しないでください。 カスタム リポジトリがある場合は、事前に追加されます。
+Remove the associated files before committing the Docker image to install by using `apt`. It is possible to install everything and remove those files afterward, but do not run `apt-get update` more than once. Any custom repos are added beforehand.
 
-Ruby イメージには Git がプリインストールされているので、再インストールする必要はありません。 最後に、sudo、python2.7、postgresql-9.5 をインストール リストに追加します。 次に、yarn と npm をインストールします。
+The Ruby image comes with git pre-installed so there's no reason to reinstall it. Finally, add sudo, python2.7, and postgresql-9.5 to the list installation list. Then, install yarn with npm.
 
 ```
 FROM buildpack-deps:jessie
@@ -329,7 +329,7 @@ FROM buildpack-deps:jessie
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
-# https://github.com/nodejs/node にリストされている gpg キー
+# gpg keys listed at https://github.com/nodejs/node
 RUN set -ex \
   && for key in \
     9554F04D7259F04124DE6B476D5A82AC7E37093B \
@@ -359,9 +359,9 @@ RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-
 # Postgres 9.5
 RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main" >> /etc/apt/sources.list \
       && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
-      && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 58118E89F3A912897C070ADBF76221572C52609D 514A2AD631A57A16DD0047EC749D6EEC0353B12C 
+      && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 58118E89F3A912897C070ADBF76221572C52609D 514A2AD631A57A16DD0047EC749D6EEC0353B12C
 
-# gem ドキュメントのインストールをスキップします。
+# skip installing gem documentation
 RUN mkdir -p /usr/local/etc \
     && { \
         echo 'install: --no-document'; \
@@ -373,8 +373,8 @@ ENV RUBY_VERSION 2.1.10
 ENV RUBY_DOWNLOAD_SHA256 5be9f8d5d29d252cd7f969ab7550e31bbb001feb4a83532301c0dd3b5006e148
 ENV RUBYGEMS_VERSION 2.6.10
 
-# Ruby のビルド スクリプトは一部が Ruby で記述されています。
-#   最終イメージではビルドしたものだけが使用されるように、後からシステムの Ruby を削除します。
+# some of ruby's build scripts are written in ruby
+#   we purge system ruby later to make sure our final image uses what we just built
 RUN set -ex \
     \
     && buildDeps=' \
@@ -395,7 +395,7 @@ RUN set -ex \
     \
     && cd /usr/src/ruby \
     \
-# 以下を非表示にするために "ENABLE_PATH_CHECK" を無効にします。
+# hack in "ENABLE_PATH_CHECK" disabling to suppress:
 #   warning: Insecure world writable dir
     && { \
         echo '#define ENABLE_PATH_CHECK 0'; \
@@ -422,8 +422,8 @@ RUN gem install bundler --version "$BUNDLER_VERSION"
 RUN npm install -g yarn@0.18.1
 ENV PATH "$PATH:/root/.yarn/bin/:/usr/local/bin"
 
-# グローバルにインストールします。
-# すべてのアプリケーションで ".bundle" を作成しません。
+# install things globally, for great justice
+# and don't create ".bundle" in all our apps
 ENV GEM_HOME /usr/local/bundle
 ENV BUNDLE_PATH="$GEM_HOME" \
     BUNDLE_BIN="$GEM_HOME/bin" \
@@ -436,32 +436,32 @@ RUN mkdir -p "$GEM_HOME" "$BUNDLE_BIN" \
 CMD [ "irb" ]
 ```
 
-これをビルドするには、以下のコマンドを実行します。
+To build it, run the following command:
 
 `docker build -t ruby-node:0.1 .`
 
-コマンドの実行が完了すると、次のようなメッセージが表示されます。
+When it completes, it should display the following:
 
 ```
 Removing intermediate container e75339607356
 Successfully built 52b773cf50e2
 ```
 
-コンパイルが終了したら、Docker 出力から SHA を取り出し、以下のように実行します。
+After it finishes compiling, take the sha from the Docker output and run it as follows:
 
 ```
 $ docker run -it 52b773cf50e2 /bin/bash
 root@6cd398c7b61d:/# exit
 ```
 
-次に、以下のように指定してそのホスト名をコミットし、ruby-node を Docker ハブ でのユーザー名に置き換えます。
+Then, commit that hostname replacing ruby-node with your Docker Hub username as follows:
 
 ```
 docker commit 6cd398c7b61d username/ruby-node:0.1
 docker push username/ruby-node:0.1
 ```
 
-カスタム イメージを使用するには、`.circleci/config.yml` イメージ キーから ruby-node/bar:0.1 を参照します。 これで、プライマリ コンテナによってイメージが実行されます。 gist を使用して Dockerfile をコミットし、Docker ハブからリンクすると、設定が失われることを回避できます。
+To use the custom image, reference ruby-node/bar:0.1 in your `.circleci/config.yml` image key and your primary container will run it. It is worth it to commit your Dockerfile using a gist and link to it from Docker Hub to avoid losing your configuration.
 
 ## Caching Docker images
 {: #caching-docker-images }
