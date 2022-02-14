@@ -4,15 +4,15 @@ title: "Projects and Pipelines"
 short-title: "Projects and Pipelines"
 description: "Starting point for CircleCI projects"
 categories:
-  - はじめよう
+  - getting-started
 order: 1
 version:
-  - クラウド
+  - Cloud
 ---
 
 This document describes how CircleCI automates your pipelines.
 
-## 概要
+## Overview
 {: #overview }
 
 After a software repository on GitHub or Bitbucket is authorized and added as a [project]({{ site.baseurl }}/2.0/glossary/#project) to circleci.com, every code change triggers your project's [pipeline]({{ site.baseurl }}/2.0/concepts/#pipelines). A pipeline represents the entire configuration, including all workflows that are run when you trigger work on your projects that use CircleCI. The entirety of a `.circleci/config.yml` file is executed by a pipeline. Jobs run in clean containers or VMs configured to the requirements set out in your configuration file.
@@ -36,7 +36,7 @@ On the Projects Dashboard, you can either:
 ![header]({{ site.baseurl }}/assets/img/docs/CircleCI-2.0-setup-project-circle101_cloud.png)
 
 {:.tab.addprojectpage.Server_2}
-![ヘッダー]({{ site.baseurl }}/assets/img/docs/CircleCI-2.0-setup-project-circle101.png)
+![header]({{ site.baseurl }}/assets/img/docs/CircleCI-2.0-setup-project-circle101.png)
 
 *Following* a project enables a user to subscribe to [email notifications]({{ site.baseurl }}/2.0/notifications/) for the project [build status]({{ site.baseurl }}/2.0/status/) and adds the project to their CircleCI dashboard.
 
@@ -44,7 +44,7 @@ The *Project Administrator* is the user who adds a GitHub or Bitbucket repositor
 
 ### Org switching
 {: #org-switching }
-If you do not see your project and it is not currently building on CircleCI, check your Organization in the top left corner of the CircleCI application.  たとえば、左上にユーザー `my-user` と表示されているなら、`my-user` に属する GitHub プロジェクトのみが `Add Projects` の下に表示されます。  `your-org/project` の GitHub プロジェクトをビルドするには、CircleCI アプリケーションの [Switch Organization (組織の切り替え)] メニューで `your-org` を選択する必要があります。
+If you do not see your project and it is not currently building on CircleCI, check your Organization in the top left corner of the CircleCI application.  For example, if the top left shows your user `my-user`, only GitHub projects belonging to `my-user` will be available under `Add Projects`.  If you want to build the GitHub project `your-org/project`, you must select `your-org` on the application Switch Organization menu.
 
 {:.tab.switcher.Cloud}
 ![Switch Organization Menu]({{ site.baseurl }}/assets/img/docs/org-centric-ui_newui.png)
@@ -64,7 +64,7 @@ When viewing a single job in a pipeline, you can use the breadcrumbs at the top 
 
 ![Pipelines Breadcrumbs]({{ site.baseurl }}/assets/img/docs/pipeline-breadcrumbs.png)
 
-## 関連項目
+## See also
 {: #see-also }
 
-[Settings]({{ site.baseurl }}/ja/2.0/settings)
+[Settings]({{ site.baseurl }}/2.0/settings)
