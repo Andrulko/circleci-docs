@@ -1,13 +1,13 @@
 ---
 layout: classic-docs
-title: Insights データの連携
+title: Insights Partnerships
 description: This document describes how users may track and visualize analytical data across all of their jobs on CircleCI with third party integrations.
 version:
   - Cloud
   - Server v3.x
 ---
 
-## 概要
+## Overview
 {: #overview }
 
 {:toc}
@@ -34,26 +34,26 @@ Sign in to [Datadog](https://app.datadoghq.com/account/login) and visit the Pipe
 
 **Note**: The Pipelines page will only show data for the default branch of each repository.
 
-## Sumo Logic とのインテグレーション
+## Sumo Logic integration
 {: #sumo-logic-integration }
 
 The CircleCI app for Sumo Logic provides advanced views to track the performance and health of your continuous integration and deployment pipelines.
 
 
-### Sumo Logic の CircleCI ダッシュボード
+### The CircleCI dashboard for Sumo Logic
 {: #the-circleci-dashboard-for-sumo-logic }
 
 Use this dashboard to:
   - Monitor real-time CI performance, activity, and health, or track over time.
   - Identify opportunities for optimization.
 
-![ヘッダー]({{ site.baseurl }}/assets/img/docs/Sumologic_Demo.png)
+![header]({{ site.baseurl }}/assets/img/docs/Sumologic_Demo.png)
 
 Gain insights into your pipelines with the included dashboard panels. Filter each panel for specific projects or jobs, over any period of time. Available dashboard panels include:
 
   - Total Jobs Ran
   - Job Health (% success)
-  - 概要
+  - Summary
   - Jobs Ran Per Project
   - Daily Performance
   - Jobs Per Day
@@ -63,11 +63,11 @@ Gain insights into your pipelines with the included dashboard panels. Filter eac
   - Top 10 Longest Running Jobs
   - Average Job Runtime Per Day
 
-CircleCI ダッシュボードは、ダッシュボードのホームページからアプリケーション カタログを使用してインストールできます。
+Install the CircleCI dashboard by using the App Catalog from the dashboard home page.
 
 ![header]({{ site.baseurl }}/assets/img/docs/sumologic_app_catalog.png)
 
-ダッシュボードは CircleCI Sumo Logic Orb を介してデータを受け取ります。 この Orb は、追跡するプロジェクトに含まれている必要があります。
+This dashboard receives data through the CircleCI Sumo Logic orb which must be included in your projects to be tracked.
 
 ### Set up Sumo Logic metrics using CircleCI webhooks
 {: #set-up-sumo-logic-metrics-using-circleci-webhooks }
@@ -75,19 +75,19 @@ CircleCI ダッシュボードは、ダッシュボードのホームページ�
 To begin collecting and visualizing data with Sumo Logic, first configure CircleCI webhooks to send metrics data to Sumo Logic.
 #### Configure Webhooks
 {: #configure-webhooks }
-##### **ステップ 1。 Configure Hosted Collector**
+##### **Step 1. Configure Hosted Collector**
 {: #step-1-configure-hosted-collector }
 
 Follow the Sumo Logic documentation for [Configuring a Hosted Collector](https://help.sumologic.com/03Send-Data/Hosted-Collectors/Configure-a-Hosted-Collector).
 
-##### **ステップ 2。 Add an HTTP Source**
+##### **Step 2. Add an HTTP Source**
 {: #step-2-add-an-http-source }
 
 To get the URL where the CircleCI Webhooks will be sent, and then recorded to the collector, we must [add an HTTP Source](https://help.sumologic.com/03Send-Data/Sources/02Sources-for-Hosted-Collectors/HTTP-Source).
 
 When complete, copy the generated “HTTP Source Address”. You can always get this link from Sumo Logic again in the future. This is the URL that will need to be entered in the CircleCI Webhooks UI in the next step.
 
-##### **ステップ 3。 Configure Project Webhooks**
+##### **Step 3. Configure Project Webhooks**
 {: #step-3-configure-project-webhooks }
 
 For each project on CircleCI you wish to track, configure a webhook directed at the HTTP Source Address. Follow the [CircleCI docs for configuring webhooks]({{ site.baseurl }}/2.0/webhooks/#setting-up-a-hook).
