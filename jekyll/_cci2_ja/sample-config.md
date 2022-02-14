@@ -1,22 +1,22 @@
 ---
 layout: classic-docs
-title: "config.yml のサンプル ファイル"
-short-title: "config.yml のサンプル ファイル"
-description: "config.yml のサンプル ファイル"
+title: "Sample config.yml Files"
+short-title: "Sample config.yml File"
+description: "Sample config.yml File"
 categories:
-  - 移行
+  - migration
 order: 2
 version:
-  - クラウド
+  - Cloud
   - Server v3.x
   - Server v2.x
 suggested:
   - 
-    title: ダイナミック コンフィグの使用
-    link: https://circleci.com/ja/blog/building-cicd-pipelines-using-dynamic-config/
+    title: Using dynamic config
+    link: https://circleci.com/blog/building-cicd-pipelines-using-dynamic-config/
   - 
     title: How to create a webhook
-    link: https://circleci.com/ja/blog/create-customizable-experiences-with-circleci-webhooks/
+    link: https://circleci.com/blog/using-circleci-webhooks/
   - 
     title: Automate your releases
     link: https://circleci.com/blog/automating-your-releases-with-circleci-and-the-github-cli-orb/
@@ -24,54 +24,54 @@ suggested:
     title: Customize your Slack notifications
     link: https://support.circleci.com/hc/en-us/articles/360052728991-How-to-customize-your-Slack-messages-when-using-CircleCI-s-Slack-Orb
   - 
-    title: ローカル CLI を使用した設定のバリデーション
-    link: https://support.circleci.com/hc/ja/articles/360006735753?input_string=configuration+error
+    title: Validate your config using local CLI
+    link: https://support.circleci.com/hc/en-us/articles/360006735753?input_string=configuration+error
   - 
     title: Deploy with approval-based workflows
     link: https://circleci.com/blog/deploying-with-approvals/
 ---
 
-[`.circleci/config.yml`]({{ site.baseurl }}/2.0/configuration-reference/) のサンプル ファイルをご紹介します。
+This document provides sample [`.circleci/config.yml`]({{ site.baseurl }}/2.0/configuration-reference/) files, as follows:
 
-* 目次
+* TOC
 {:toc}
 
-## シンプルな設定ファイル サンプル
+## Simple configuration examples
 {: #simple-configuration-examples }
 
-### 同時実行ワークフロー
+### Concurrent workflow
 {: #concurrent-workflow }
 
-上記の例では、順次実行ワークフローを使用し、かつ `test` ジョブをマスター ブランチでのみ実行するよう設定しています。 ジョブ制御の同時実行化、シーケンシャル化、もしくは承認して処理を続行するワークフローについて、詳しくは[ワークフローに関するページ]({{ site.baseurl }}/2.0/workflows)を参照してください。
+The configuration example below shows a concurrent  workflow in which the `build` and `test` jobs run at the same time. Refer to the [Workflows]({{ site.baseurl }}/2.0/workflows) document for complete details about orchestrating job runs with concurrent, sequential, and manual approval workflows.
 
-次の図に、以下の設定ファイル サンプルのワークフロー ビューを示します。 ![同時実行ワークフローのグラフ]({{ site.baseurl }}/assets/img/docs/concurrent-workflow-map.png)
+This image shows the workflow view for the following configuration example: ![Concurrent Workflow Graph]({{ site.baseurl }}/assets/img/docs/concurrent-workflow-map.png)
 
 {:.tab.basic-concurrent.Cloud}
 ```yaml
 version: 2.1
 
-# このプロジェクトで実行するジョブの定義
+# Define the jobs we want to run for this project
 jobs:
   build:
     docker:
-      - image: circleci/<language>:<version TAG>
+      - image: cimg/<language>:<version TAG>
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数の参照
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
       - checkout
       - run: echo "this is the build job"
   test:
     docker:
-      - image: circleci/<language>:<version TAG>
+      - image: cimg/<language>:<version TAG>
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数の参照
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
       - checkout
       - run: echo "this is the test job"
 
-# ジョブの実行順の指定
+# Orchestrate our job run sequence
 workflows:
   build_and_test:
     jobs:
@@ -81,32 +81,31 @@ workflows:
 
 {:.tab.basic-concurrent.Server_3}
 ```yaml
-version: 2
+version: 2.1
 
-# このプロジェクトで実行するジョブの定義
+# Define the jobs we want to run for this project
 jobs:
   build:
     docker:
-      - image: circleci/<language>:<version TAG>
+      - image: cimg/<language>:<version TAG>
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数の参照
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
       - checkout
       - run: echo "this is the build job"
   test:
     docker:
-      - image: circleci/<language>:<version TAG>
+      - image: cimg/<language>:<version TAG>
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数の参照
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
       - checkout
       - run: echo "this is the test job"
 
-# ジョブの実行順の指定
+# Orchestrate our job run sequence
 workflows:
-  version: 2
   build_and_test:
     jobs:
       - build
@@ -147,44 +146,44 @@ workflows:
       - test
 ```
 
-### 順次実行ワークフロー
+### Sequential workflow
 {: #sequential-workflow }
 
-上記の例では、順次実行ワークフローを使用し、かつ `test` ジョブをマスター ブランチでのみ実行するよう設定しています。 ジョブ制御の同時実行化、シーケンシャル化、もしくは承認して処理を続行するワークフローについて、詳しくは[ワークフローに関するページ]({{ site.baseurl }}/2.0/workflows)を参照してください。
+The configuration example below shows a sequential job workflow where the `build` job runs and then the `test` job runs once `build` has completed. Refer to the [Workflows]({{ site.baseurl }}/2.0/workflows) document for complete details about orchestrating job runs with concurrent, sequential, and manual approval workflows.
 
-次の図に、ジョブを 1 つずつ順番に実行する以下の設定ファイル サンプルのワークフロー ビューを示します。![順次実行ワークフローのグラフ]({{ site.baseurl }}/assets/img/docs/sequential-workflow-map.png)
+This image shows the workflow view for the following configuration example, in which jobs run sequentially; one after the other: ![Sequential Workflow Graph]({{ site.baseurl }}/assets/img/docs/sequential-workflow-map.png)
 
 {:.tab.basic-sequential.Cloud}
 ```yaml
-version: 2
-# このプロジェクトで実行するジョブの定義
+version: 2.1
+
+# Define the jobs we want to run for this project
 jobs:
   build:
     docker:
-      - image: circleci/<language>:<version TAG>
+      - image: cimg/<language>:<version TAG>
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数の参照
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
       - checkout
       - run: echo "this is the build job"
   test:
     docker:
-      - image: circleci/<language>:<version TAG>
+      - image: cimg/<language>:<version TAG>
         auth:
           username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # コンテキスト/プロジェクト UI 環境変数の参照
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
     steps:
       - checkout
       - run: echo "this is the test job"
 
-# ジョブの実行順の指定
+# Orchestrate our job run sequence
 workflows:
-  version: 2
   build_and_test:
     jobs:
       - build
-      - test
+      - test:
           requires:
             - build
 ```
@@ -259,14 +258,14 @@ workflows:
             - build
 ```
 
-### 承認ジョブ
+### Approval job
 {: #approval-job }
 
-以下に、ジョブの順次実行ワークフローの設定ファイル サンプルを示します。 ここでは、まず `build` ジョブを実行し、`build` ジョブの完了後 `test` ジョブを実行しています。 ジョブ制御の同時実行化、シーケンシャル化、もしくは承認して処理を続行するワークフローについて、詳しくは[ワークフローに関するページ]({{ site.baseurl }}/2.0/workflows)を参照してください。
+The example below shows a sequential job workflow with an approval step. The `build` job runs, then the `test` job, then a `hold` job, with `type: approval` ensures the workflow waits for manual approval before the `deploy` job can run. Refer to the [Workflows]({{ site.baseurl }}/2.0/workflows) document for complete details about orchestrating job runs with concurrent, sequential, and manual approval workflows.
 
-次の図に、以下の設定ファイル サンプルのワークフロー ビューを示します。 この図は 3 部構成であり、アプリで hold ステップをクリックすると表示される承認ポップアップと、`hold` ジョブが承認され `deploy` ジョブが実行された後のワークフロー ビューも示されています。
+This image shows the workflow view for the following configuration example. This image has three parts to show the approval popup that appears when you click on a hold step in the app, and then the workflow view again once the `hold` job has been approved and the `deploy` job has run:
 
-![承認ワークフローのグラフ]({{ site.baseurl }}/assets/img/docs/approval-workflow-map.png)
+![Approval Workflow Graph]({{ site.baseurl }}/assets/img/docs/approval-workflow-map.png)
 
 {:.tab.approval.Cloud}
 ```yaml
@@ -425,16 +424,16 @@ workflows:
             - hold
 ```
 
-## 順次実行ワークフローの設定例
+## Sample configuration with sequential workflow
 {: #sample-configuration-with-sequential-workflow }
 
-以下に、次の CircleCI 設定機能を使用した `.circleci/config.yml` ファイル サンプルを示します。
+Following is a sample `.circleci/config.yml` file using the following configuration features:
 
-* 順次実行ワークフロー
-* Orb (Cloud の `version: 2.1` 設定ファイルのみ): node Orb でキャッシュを自動処理しています。 キャッシュの保存と復元の方法については Server の `version: 2.0` サンプルを参照してください。
-* セカンダリ サービス コンテナ
-* ワークスペース
-* アーティファクトの保存
+* A sequential workflow
+* An orb (`version: 2.1` config only, and server 3 users will need to ensure the orb has been imported) - the node orb handles caching automatically, but you can see saving and restoring caches in the `version: 2.0`/Server v2 example
+* A secondary services container
+* Workspaces
+* Storing artifacts
 
 {:.tab.complex-sequential.Cloud}
 ```yaml
@@ -596,7 +595,7 @@ jobs:
     working_directory: ~/mern-starter
     # The primary container is an instance of the first image listed. The job's commands run in this container.
     docker:
-      - image: circleci/node:14.17.3-buster
+      - image: cimg/node:16.13.1
         auth:
           username: mydockerhub-user
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
@@ -621,7 +620,7 @@ jobs:
             - node_modules
   test:
     docker:
-      - image: circleci/node:14.17.3-buster
+      - image: cimg/node:16.13.1
         auth:
           username: mydockerhub-user
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
@@ -658,19 +657,19 @@ workflows:
 ```
 {% endraw %}
 
-This example shows a sequential workflow with the `test` job configured to run only on the main branch. ジョブ制御の同時実行化、シーケンシャル化、もしくは承認して処理を続行するワークフローについて、詳しくは[ワークフローに関するページ]({{ site.baseurl }}/2.0/workflows)を参照してください。
+This example shows a sequential workflow with the `test` job configured to run only on the main branch. Refer to the [Workflows]({{ site.baseurl }}/2.0/workflows) document for complete details about orchestrating job runs with concurrent, sequential, and manual approval workflows.
 
-## ファンイン・ファンアウト ワークフローの設定例
+## Sample configuration with fan-in/fan-out workflow
 {: #sample-configuration-with-fan-infan-out-workflow }
-{:.tab.fan-in-our.Cloud}
+Below are two sample configurations for a Fan-in/Fan-out workflow.
 
-Server の `2.0` 設定ファイル サンプルの詳細については、[GitHub 上の完全版デモ リポジトリ](https://github.com/CircleCI-Public/circleci-demo-workflows/blob/fan-in-fan-out/.circleci/config.yml)を参照してください。
+For the Server/`2.0` config example, refer to [the complete demo repo on GitHub](https://github.com/CircleCI-Public/circleci-demo-workflows/blob/fan-in-fan-out/.circleci/config.yml) for details.
 
-Cloud の `2.1` 設定ファイル サンプルの詳細については、次のワークフローのグラフを参照してください
+For the Cloud/`2.1` example, see the following workflow graph:
 
-![ファンイン・ファンアウト]({{ site.baseurl }}/assets/img/docs/fan-in-out-example.png)
+![Fan-in-out]({{ site.baseurl }}/assets/img/docs/fan-in-out-example.png)
 
-{:.tab.fan-in-our.Server}
+{:.tab.fan-in-out.Cloud}
 {% raw %}
 ```yaml
 version: 2.1
@@ -966,11 +965,11 @@ version: 2.0
 jobs:
   checkout_code:
     docker:
-      - image: circleci/ruby:2.4-node-jessie
+      - image: circleci/ruby:3.1.0-node
         auth:
           username: mydockerhub-user
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
-      - image: circleci/postgres:9.4.12-alpine
+      - image: cimg/postgres:14.0
         auth:
           username: mydockerhub-user
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
@@ -984,11 +983,11 @@ jobs:
 
   bundle_dependencies:
     docker:
-      - image: circleci/ruby:2.4-node-jessie
+      - image: circleci/ruby:3.1.0-node
         auth:
           username: mydockerhub-user
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
-      - image: circleci/postgres:9.4.12-alpine
+      - image: cimg/postgres:14.0
         auth:
           username: mydockerhub-user
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
@@ -1006,11 +1005,11 @@ jobs:
 
   rake_test:
     docker:
-      - image: circleci/ruby:2.4-node-jessie
+      - image: circleci/ruby:3.1.0-node
         auth:
           username: mydockerhub-user
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
-      - image: circleci/postgres:9.4.12-alpine
+      - image: cimg/postgres:14.0
         auth:
           username: mydockerhub-user
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
@@ -1028,11 +1027,11 @@ jobs:
 
   precompile_assets:
     docker:
-      - image: circleci/ruby:2.4-node-jessie
+      - image: circleci/ruby:3.1.0-node
         auth:
           username: mydockerhub-user
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
-      - image: circleci/postgres:9.4.12-alpine
+      - image: cimg/postgres:14.0
         auth:
           username: mydockerhub-user
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
@@ -1090,16 +1089,16 @@ workflows:
 ```
 {% endraw %}
 
-**注:** ジョブを実行できるのは、そのジョブの依存関係が満たされているときのみなので、事前に実行される上流ジョブすべての依存関係が必要になります。 そのため、`requires:` キーのブロックで、直近の依存関係のみを指定する必要があります。
+**Note:** a job can only run when its dependencies are satisfied therefore it requires the dependencies of all upstream jobs. This means only the immediate upstream dependencies need to be specified in the `requires:` blocks.
 
-## 複数の Executor タイプを利用する設定例
+## Sample configuration with multiple executor types
 {: #sample-configuration-with-multiple-executor-types }
 
-1 つのワークフローのなかで、複数の [Executor タイプ](https://circleci.com/docs/2.0/executor-types/)を利用できます。
+It is possible to use multiple [executor types](https://circleci.com/docs/2.0/executor-types/) in the same workflow.
 
-`Example-1` では、Linux、Windows、macOS のそれぞれでプロジェクトのビルドおよびテストを行っています。
+In `Example-1` each push will build and test the project on Linux, Windows and macOS.
 
-`Example-2` では、iOS アプリのプロジェクトに関する部分を macOS でビルドし、それ以外の iOS ツール([SwiftLint](https://github.com/realm/SwiftLint) と [Danger](https://github.com/danger/danger)) は Docker でビルドしています。
+In `Example-2` each push of an iOS project will be built on macOS, and additional iOS tools ([SwiftLint](https://github.com/realm/SwiftLint) and [Danger](https://github.com/danger/danger)) will be run in Docker.
 
 {:.tab.multiple-executors.Example-1}
 ```yaml
@@ -1288,7 +1287,7 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: iperf3-cygwin64.zip の展開
+          name: Extract iperf3-cygwin64.zip
           command: |
             $ProgressPreference = "SilentlyContinue"
             Expand-Archive .\\<< parameters.label >>.zip .
@@ -1314,20 +1313,20 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: プリインストールされている OpenSSL のアンインストール
+          name: Uninstall pre-installed OpenSSL
           command: brew uninstall --ignore-dependencies openssl
       - run:
-          name: << parameters.label >> の展開
+          name: Extract << parameters.label >>
           command: unzip << parameters.label >>
       - run:
-          name: 実行可能ファイルのテスト
+          name: Test executable
           command: << parameters.label >>/bin/iperf3 -v
       - run:
-          name: サーバーとして実行
+          name: Run as a server
           command: << parameters.label >>/bin/iperf3 -s
           background: true
       - run:
-          name: クライアントとして実行
+          name: Run as a client
           command: << parameters.label >>/bin/iperf3 -c localhost -R
 
   release:
@@ -1336,7 +1335,7 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: コンピューティングのバージョン番号
+          name: Compute version number
           command: |
             echo "export IPERF3_BUILD_VERSION=\"<< pipeline.parameters.branch-name>>-${CIRCLE_BUILD_NUM}-${CIRCLE_SHA1:0:7}\"" | tee -a $BASH_ENV
       - github-release/release:
@@ -1433,10 +1432,10 @@ workflows:
 ```
 {% endraw %}
 
-## 関連項目
+## See also
 {: #see-also }
 {:.no_toc}
 
-* このページのサンプルで扱った各コンセプトの詳細については、[コンセプトに関するページ]({{ site.baseurl }}/2.0/concepts/#configuration)および[ワークフローに関するページ]({{ site.baseurl }}/2.0/workflows/)を参照してください。
-* 個々の構成キーの詳細については、[設定ファイルのリファレンス ページ]({{ site.baseurl }}/2.0/configuration-reference/)を参照してください。
-* CircleCI を使用するパブリック プロジェクトの一覧については、「[パブリック リポジトリの例]({{ site.baseurl }}/2.0/example-configs/)」を参照してください。
+* See the [Concepts document]({{ site.baseurl }}/2.0/concepts/#configuration) and [Workflows]({{ site.baseurl }}/2.0/workflows/) for more details of the concepts covered in this example.
+* See the [Configuration Reference]({{ site.baseurl }}/2.0/configuration-reference/) document for full details of each individual configuration key.
+* See the [Example Public Repos]({{ site.baseurl }}/2.0/example-configs/) document for a list of public projects that use CircleCI.
