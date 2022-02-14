@@ -1,8 +1,8 @@
 ---
 layout: classic-docs
-title: "設定"
-short-title: "設定"
-description: "プロジェクト設定および組織設定の概要"
+title: "Settings"
+short-title: "Settings"
+description: "Summary of project and org settings"
 categories:
   - settings
 order: 2
@@ -20,7 +20,7 @@ The guides included in this Settings section of the CircleCI docs cover features
 * [Using Contexts]({{ site.baseurl }}/2.0/contexts/), including creating, managing and restricting contexts, and security considerations.
 * [Setting up iOS code signing]({{ site.baseurl }}/2.0/ios-codesigning/) for your iOS project on CircleCI.
 
-CircleCI は、CircleCI アプリケーション内でプロジェクト設定と組織設定のための暗号化ストレージを提供しています。
+CircleCI provides Project and Org settings with encrypted storage in the CircleCI app.
 
 ## Project settings page
 {: #project-settings-page }
